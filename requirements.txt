@@ -4,12 +4,10 @@ bokeh==0.12.2
 certifi==2016.9.26
 click==6.6
 cycler==0.10.0
-Flask==0.11.1
 futures==3.0.5
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.10
 MarkupSafe==0.23
-matplotlib==1.5.3
 nmrglue==0.5
 numpy==1.11.2
 pyparsing==2.1.10
