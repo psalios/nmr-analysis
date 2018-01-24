@@ -1,6 +1,7 @@
 backports-abc==0.4
+backports.functools-lru-cache==1.4
 backports.ssl-match-hostname==3.5.0.1
-bokeh==0.12.2
+bokeh==0.12.13
 certifi==2016.9.26
 click==6.6
 cycler==0.10.0
@@ -8,8 +9,10 @@ futures==3.0.5
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==0.23
-nmrglue==0.5
+matplotlib==2.1.2
+nmrglue==0.6
 numpy==1.11.2
+pandas==0.22.0
 pyparsing==2.1.10
 python-dateutil==2.5.3
 pytz==2016.7
@@ -18,5 +21,6 @@ requests==2.11.1
 scipy==0.18.1
 singledispatch==3.4.0.3
 six==1.10.0
+subprocess32==3.2.7
 tornado==4.4.2
 Werkzeug==0.11.11
