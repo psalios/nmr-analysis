@@ -33,8 +33,9 @@ class Plot:
                     column(self.plot),
                     column(
                         row(self.par),
+                        row(self.peakPicking.auto),
                         row(
-                            column(self.peakPicking.button),
+                            column(self.peakPicking.manual),
                             column(self.peakPicking.resetButton)
                         ),
                         row(self.peakPicking.data_table)
@@ -70,7 +71,7 @@ class Plot:
         #Constants
         xr = Range1d(start=int(max(self.ppm_scale)+1),end=int(min(self.ppm_scale)-1))
 
-        self.plot = figure(x_axis_label='x', y_axis_label='y', x_range=xr, tools="pan,box_zoom,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
+        self.plot = figure(x_axis_label='ppm', y_axis_label='y', x_range=xr, tools="pan,box_zoom,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
 
         # Remove grid from plot
         self.plot.xgrid.grid_line_color = None
@@ -94,7 +95,7 @@ class Plot:
         self.ppm_scale = uc.ppm_scale()
 
     def customBoxSelect(self):
-        callback = CustomJS(args=dict(source=self.boxSelectDataSource, button=self.peakPicking.button), code="""
+        callback = CustomJS(args=dict(source=self.boxSelectDataSource, button=self.peakPicking.manual), code="""
             // get data source from Callback args
             var data = source.data;
             data['x'] = [];

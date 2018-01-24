@@ -25,20 +25,23 @@ class PeakPicking:
 
         self.source = ColumnDataSource(dict(x=[], y=[]))
         columns = [
-                TableColumn(field="x", title="x"),
+                TableColumn(field="x", title="ppm"),
                 TableColumn(field="y", title="y"),
             ]
-        self.data_table = DataTable(source=self.source, columns=columns, width=400, height=280)
+        self.data_table = DataTable(source=self.source, columns=columns, width=500)
         self.source.on_change('selected', lambda attr, old, new: self.rowSelect(new))
 
-        self.button = ManualPeakPickingButton(label="Calculate Peaks", button_type="primary")
-        self.button.on_click(self.manualPeakPicking)
+        self.auto = Button(label="Automatic Peak Picking", button_type="success", width=500)
+        self.auto.on_click(self.autoPeakPicking)
+
+        self.manual = ManualPeakPickingButton(label="Calculate Peaks", button_type="primary", width=250)
+        self.manual.on_click(self.manualPeakPicking)
 
         self.createResetButton()
 
     def createResetButton(self):
-        self.resetButton = Button(label="Clear Selected Area", button_type="default")
-        resetButtonCallback = CustomJS(args=dict(source=self.boxSelectDataSource, button=self.button), code="""
+        self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
+        resetButtonCallback = CustomJS(args=dict(source=self.boxSelectDataSource, button=self.manual), code="""
             // get data source from Callback args
             var data = source.data;
             data['x'] = [];
@@ -52,6 +55,13 @@ class PeakPicking:
         """)
         self.resetButton.js_on_click(resetButtonCallback);
 
+    def autoPeakPicking(self):
+        peaks = ng.peakpick.pick(self.pdata, 0)
+        self.peaksIndices = [int(peak[0]) for peak in peaks]
+
+        self.updateDataValues()
+
+
     def manualPeakPicking(self, dimensions):
 
         peaks = ng.peakpick.pick(self.pdata, dimensions['y0'] if dimensions['y0'] > 0 else 0)
@@ -64,6 +74,11 @@ class PeakPicking:
         # Filter right
         self.peaksIndices = [i for i in self.peaksIndices if self.ppm_scale[i] >= dimensions['x1']]
 
+        self.updateDataValues()
+
+        self.boxSelectDataSource.data = dict(x=[], y=[], width=[], height=[])
+
+    def updateDataValues(self):
         # Update DataTable Values
         newData = list(OrderedDict.fromkeys(
             zip(
@@ -77,15 +92,12 @@ class PeakPicking:
             'y': newY
         }
 
-        self.boxSelectDataSource.data = dict(x=[], y=[], width=[], height=[])
-
     def rowSelect(self, rows):
         ids = rows['1d']['indices']
         self.peaksDataSource.data = {
             'x': [self.source.data['x'][i] for i in ids],
             'y': [self.source.data['y'][i] for i in ids]
         }
-        print(self.peaksDataSource.data)
 
     def draw(self, plot):
         circle = Circle(
