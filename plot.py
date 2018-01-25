@@ -33,18 +33,21 @@ class Plot:
                 row(
                     column(self.plot),
                     column(
-                        row(self.integrationPar),
-                        row(
-                            column(self.integration.manual),
-                            column(self.integration.resetButton)
-                        ),
                         row(self.peakPickingPar),
                         row(self.peakPicking.auto),
                         row(
                             column(self.peakPicking.manual),
                             column(self.peakPicking.resetButton)
                         ),
-                        row(self.peakPicking.data_table)
+                        row(self.peakPicking.data_table),
+                        row(self.peakPicking.deselectButton),
+                        row(self.integrationPar),
+                        row(
+                            column(self.integration.manual),
+                            column(self.integration.resetButton)
+                        ),
+                        row(self.integration.data_table),
+                        row(self.integration.deselectButton)
                     )
                 )
             )

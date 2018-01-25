@@ -42,6 +42,7 @@ class PeakPicking:
         self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual)
 
         self.createResetButton()
+        self.createDeselectButton()
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
@@ -57,7 +58,21 @@ class PeakPicking:
 
             source.change.emit();
         """)
-        self.resetButton.js_on_click(resetButtonCallback);
+        self.resetButton.js_on_click(resetButtonCallback)
+
+    def createDeselectButton(self):
+        self.deselectButton = Button(label="Deselect all peaks", button_type="default", width=500)
+        callback = CustomJS(args=dict(source=self.peaksDataSource), code="""
+            // get data source from Callback args
+            var data = source.data;
+            data['x'] = [];
+            data['y'] = [];
+            data['width'] = [];
+            data['height'] = [];
+
+            source.change.emit();
+        """)
+        self.deselectButton.js_on_click(callback)
 
     def autoPeakPicking(self):
         peaks = ng.peakpick.pick(self.pdata, 0)
@@ -80,6 +95,7 @@ class PeakPicking:
 
         self.updateDataValues()
 
+        # Clear selected area
         self.selectDataSource.data = dict(x=[], y=[], width=[], height=[])
 
     def updateDataValues(self):
