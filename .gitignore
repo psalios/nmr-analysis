@@ -2,5 +2,4 @@
 venv
 data
 *.pyc
-Spectrum.html
 template
