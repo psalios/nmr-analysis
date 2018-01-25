@@ -14,6 +14,7 @@ export class CustomButtonView extends AbstractButtonView {
       this.model.trigger_event(new ButtonClick({}))
       this.model.clicks = this.model.clicks + 1
       super.change_input()
+      this.model.data = {}
     }
   }
 }
