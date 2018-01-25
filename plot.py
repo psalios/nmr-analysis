@@ -12,6 +12,7 @@ from bokeh.embed import components
 from bokeh.plotting import figure, show
 from bokeh.models import Range1d, Action, BoxZoomTool, CustomJS, HoverTool, DataTable, TableColumn, ColumnDataSource
 from bokeh.models.widgets import Button, Div
+from bokeh.models.widgets.panels import Tabs, Panel
 from bokeh.io import curdoc
 
 class Plot:
@@ -29,26 +30,34 @@ class Plot:
 
     def draw(self):
         try:
+
+            layout1 = column(
+                row(self.peakPicking.auto),
+                row(
+                    column(self.peakPicking.manual),
+                    column(self.peakPicking.resetButton)
+                ),
+                row(self.peakPicking.data_table),
+                row(self.peakPicking.deselectButton)
+            )
+
+            layout2 = column(
+                row(
+                    column(self.integration.manual),
+                    column(self.integration.resetButton)
+                ),
+                row(self.integration.data_table),
+                row(self.integration.deselectButton)
+            )
+
+            tab1 = Panel(child=layout1, title="Peak Picking")
+            tab2 = Panel(child=layout2, title="Integration")
+            tabs = Tabs(tabs=[tab1, tab2])
+
             curdoc().add_root(
                 row(
                     column(self.plot),
-                    column(
-                        row(self.peakPickingPar),
-                        row(self.peakPicking.auto),
-                        row(
-                            column(self.peakPicking.manual),
-                            column(self.peakPicking.resetButton)
-                        ),
-                        row(self.peakPicking.data_table),
-                        row(self.peakPicking.deselectButton),
-                        row(self.integrationPar),
-                        row(
-                            column(self.integration.manual),
-                            column(self.integration.resetButton)
-                        ),
-                        row(self.integration.data_table),
-                        row(self.integration.deselectButton)
-                    )
+                    column(tabs)
                 )
             )
         except NameError:
@@ -72,9 +81,6 @@ class Plot:
         self.integration.draw(self.plot)
 
         self.plot.line(self.ppm_scale, self.pdata, line_width=2)
-
-        self.peakPickingPar = Div(text="<strong>Peak Picking</strong>", width=400)
-        self.integrationPar = Div(text="<strong>Integration</strong>", width=400)
 
     # make ppm scale
     def makePPMScale(self):
