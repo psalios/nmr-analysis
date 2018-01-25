@@ -10,8 +10,11 @@ from bokeh.layouts import row, column, widgetbox
 from bokeh.core.properties import Float
 from bokeh.embed import components
 from bokeh.plotting import figure, show
-from bokeh.models import Range1d, Action, BoxZoomTool, CustomJS, HoverTool, DataTable, TableColumn, ColumnDataSource
-from bokeh.models.widgets import Button, Div
+from bokeh.models.callbacks import CustomJS
+from bokeh.models.ranges import Range1d
+from bokeh.models.sources import ColumnDataSource
+from bokeh.models.tools import HoverTool
+from bokeh.models.widgets import Button, Div, DataTable, TableColumn
 from bokeh.models.widgets.panels import Tabs, Panel
 from bokeh.io import curdoc
 
