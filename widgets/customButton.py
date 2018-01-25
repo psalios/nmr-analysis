@@ -2,9 +2,9 @@
 from bokeh.core.properties import Int, Dict, String, Float
 from bokeh.models.widgets import Button, AbstractButton
 
-class ManualPeakPickingButton(AbstractButton):
+class CustomButton(AbstractButton):
 
-    __implementation__ = "ManualPeakPickingButton.ts"
+    __implementation__ = "CustomButton.ts"
     clicks = Int(0)
     data = Dict(String, Float)
 

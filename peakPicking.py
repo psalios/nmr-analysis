@@ -1,7 +1,9 @@
 import nmrglue as ng
 from collections import OrderedDict
 
-from widgets.manualPeakPickingButton import ManualPeakPickingButton
+from customBoxSelect import CustomBoxSelect
+
+from widgets.customButton import CustomButton
 
 from bokeh.embed import components
 from bokeh.plotting import figure, show
@@ -13,12 +15,12 @@ from bokeh.io import curdoc
 
 class PeakPicking:
 
-    def __init__(self, logger, pdata, ppm_scale, boxSelectDataSource):
+    def __init__(self, logger, pdata, ppm_scale, selectDataSource):
         self.logger = logger
 
         self.pdata = pdata
         self.ppm_scale = ppm_scale
-        self.boxSelectDataSource = boxSelectDataSource
+        self.selectDataSource = selectDataSource
         self.peaksDataSource = ColumnDataSource(data=dict(x=[], y=[]))
 
     def create(self):
@@ -34,14 +36,16 @@ class PeakPicking:
         self.auto = Button(label="Automatic Peak Picking", button_type="success", width=500)
         self.auto.on_click(self.autoPeakPicking)
 
-        self.manual = ManualPeakPickingButton(label="Calculate Peaks", button_type="primary", width=250)
+        self.manual = CustomButton(label="Manual Peaks", button_type="primary", width=250)
         self.manual.on_click(self.manualPeakPicking)
+
+        self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual)
 
         self.createResetButton()
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
-        resetButtonCallback = CustomJS(args=dict(source=self.boxSelectDataSource, button=self.manual), code="""
+        resetButtonCallback = CustomJS(args=dict(source=self.selectDataSource, button=self.manual), code="""
             // get data source from Callback args
             var data = source.data;
             data['x'] = [];
@@ -76,7 +80,7 @@ class PeakPicking:
 
         self.updateDataValues()
 
-        self.boxSelectDataSource.data = dict(x=[], y=[], width=[], height=[])
+        self.selectDataSource.data = dict(x=[], y=[], width=[], height=[])
 
     def updateDataValues(self):
         # Update DataTable Values
@@ -109,3 +113,6 @@ class PeakPicking:
             line_width=1
         )
         plot.add_glyph(self.peaksDataSource, circle, selection_glyph=circle, nonselection_glyph=circle)
+
+        self.tool.addTool(plot)
+        self.tool.addGlyph(plot, "#009933")

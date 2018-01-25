@@ -4,8 +4,8 @@ import {register_with_event, ButtonClick} from "core/bokeh_events"
 
 import {AbstractButton, AbstractButtonView} from "models/widgets/abstract_button"
 
-export class ManualPeakPickingButtonView extends AbstractButtonView {
-  model: ManualPeakPickingButton
+export class CustomButtonView extends AbstractButtonView {
+  model: CustomButton
 
   change_input(): void {
     if (Object.keys(this.model.data).length === 0) {
@@ -18,11 +18,11 @@ export class ManualPeakPickingButtonView extends AbstractButtonView {
   }
 }
 
-export class ManualPeakPickingButton extends AbstractButton {
+export class CustomButton extends AbstractButton {
 
   static initClass() {
-    this.prototype.type = "ManualPeakPickingButton"
-    this.prototype.default_view = ManualPeakPickingButtonView
+    this.prototype.type = "CustomButton"
+    this.prototype.default_view = CustomButtonView
 
     this.define({
       clicks: [ p.Number, 0 ],
@@ -36,4 +36,4 @@ export class ManualPeakPickingButton extends AbstractButton {
   data: any;
 }
 
-ManualPeakPickingButton.initClass()
+CustomButton.initClass()

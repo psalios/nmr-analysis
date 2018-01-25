@@ -1,6 +1,7 @@
 import nmrglue as ng
 
 from peakPicking import PeakPicking
+from integration import Integration
 
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
@@ -9,7 +10,7 @@ from bokeh.layouts import row, column, widgetbox
 from bokeh.core.properties import Float
 from bokeh.embed import components
 from bokeh.plotting import figure, show
-from bokeh.models import Range1d, Action, BoxZoomTool, CustomJS, HoverTool, DataTable, TableColumn, ColumnDataSource, BoxSelectTool, Rect
+from bokeh.models import Range1d, Action, BoxZoomTool, CustomJS, HoverTool, DataTable, TableColumn, ColumnDataSource
 from bokeh.models.widgets import Button, Div
 from bokeh.io import curdoc
 
@@ -32,7 +33,12 @@ class Plot:
                 row(
                     column(self.plot),
                     column(
-                        row(self.par),
+                        row(self.integrationPar),
+                        row(
+                            column(self.integration.manual),
+                            column(self.integration.resetButton)
+                        ),
+                        row(self.peakPickingPar),
                         row(self.peakPicking.auto),
                         row(
                             column(self.peakPicking.manual),
@@ -54,17 +60,27 @@ class Plot:
 
         self.newPlot()
 
-        self.boxSelectDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+        self.manualPeakPickingDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+        self.integrationDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
 
-        self.peakPicking = PeakPicking(self.logger, self.pdata, self.ppm_scale, self.boxSelectDataSource)
+        self.peakPicking = PeakPicking(self.logger, self.pdata, self.ppm_scale, self.manualPeakPickingDataSource)
         self.peakPicking.create()
         self.peakPicking.draw(self.plot)
 
-        self.customBoxSelect()
+        self.integration = Integration(self.logger, self.pdata, self.ppm_scale, self.integrationDataSource)
+        self.integration.create()
+        self.integration.draw(self.plot)
 
         self.plot.line(self.ppm_scale, self.pdata, line_width=2)
 
-        self.par = Div(text="<strong>Peak Picking</strong>", width=200)
+        self.peakPickingPar = Div(text="<strong>Peak Picking</strong>", width=400)
+        self.integrationPar = Div(text="<strong>Integration</strong>", width=400)
+
+    # make ppm scale
+    def makePPMScale(self):
+        udic = ng.bruker.guess_udic(self.dic, self.pdata)
+        uc = ng.fileiobase.uc_from_udic(udic)
+        self.ppm_scale = uc.ppm_scale()
 
     # create a new plot with a title and axis labels
     def newPlot(self):
@@ -86,55 +102,3 @@ class Plot:
         self.plot.toolbar.active_scroll = fixedWheelZoomTool
         hover = HoverTool(tooltips="($x, $y)")
         self.plot.add_tools(hover)
-
-
-    def makePPMScale(self):
-        # make ppm scale
-        udic = ng.bruker.guess_udic(self.dic, self.pdata)
-        uc = ng.fileiobase.uc_from_udic(udic)
-        self.ppm_scale = uc.ppm_scale()
-
-    def customBoxSelect(self):
-        callback = CustomJS(args=dict(source=self.boxSelectDataSource, button=self.peakPicking.manual), code="""
-            // get data source from Callback args
-            var data = source.data;
-            data['x'] = [];
-            data['y'] = [];
-            data['width'] = [];
-            data['height'] = [];
-
-            /// get BoxSelectTool dimensions from cb_data parameter of Callback
-            var geometry = cb_data['geometry'];
-
-            /// calculate Rect attributes
-            var width = geometry['x1'] - geometry['x0'];
-            var height = geometry['y1'] - geometry['y0'];
-            var x = geometry['x0'] + width/2;
-            var y = geometry['y0'] + height/2;
-
-            /// update data source with new Rect attributes
-            data['x'].push(x);
-            data['y'].push(y);
-            data['width'].push(width);
-            data['height'].push(height);
-
-            button.data = {
-                x0: geometry['x0'],
-                y0: geometry['y0'],
-                x1: geometry['x1'],
-                y1: geometry['y1']
-            };
-
-            // trigger update of data source
-            source.change.emit();
-        """)
-        boxSelectTool = BoxSelectTool(callback=callback)
-        self.plot.add_tools(boxSelectTool)
-
-        rect = Rect(x='x',
-                    y='y',
-                    width='width',
-                    height='height',
-                    fill_alpha=0.3,
-                    fill_color='#009933')
-        self.plot.add_glyph(self.boxSelectDataSource, rect, selection_glyph=rect, nonselection_glyph=rect)
