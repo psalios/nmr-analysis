@@ -23,7 +23,7 @@ class Plot:
         self.logger = logger
 
         self.logger.info("Parsing experiment data")
-        self.dic, self.data = ng.bruker.read(path)
+        self.dic, _ = ng.bruker.read(path)
         _, self.pdata = ng.bruker.read_pdata(path+'/pdata/1/')
         self.logger.info("Experiment data parsed successfully")
 
@@ -52,9 +52,6 @@ class Plot:
             print("Please create plot first")
 
     def create(self):
-
-        self.data = ng.proc_base.di(self.data)
-        self.data = ng.proc_base.rev(self.data)
 
         self.makePPMScale()
 
