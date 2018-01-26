@@ -2,6 +2,7 @@ import nmrglue as ng
 import numpy as np
 
 from customBoxSelect import CustomBoxSelect
+from tools.integrationSelectTool import IntegrationSelectTool
 
 from widgets.customButton import CustomButton
 
@@ -40,7 +41,7 @@ class Integration:
         self.createResetButton()
         self.createDeselectButton()
 
-        self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual, "width")
+        self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual, selectTool=IntegrationSelectTool, dimensions="width")
 
     def manualIntegration(self, dimensions):
 

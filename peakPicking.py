@@ -2,9 +2,11 @@ import nmrglue as ng
 from collections import OrderedDict
 
 from customBoxSelect import CustomBoxSelect
+from tools.peakPickingSelectTool import PeakPickingSelectTool
 
 from widgets.customButton import CustomButton
 
+from bokeh.core.properties import Instance
 from bokeh.embed import components
 from bokeh.plotting import figure, show
 from bokeh.models.sources import ColumnDataSource
@@ -39,7 +41,7 @@ class PeakPicking:
         self.manual = CustomButton(label="Manual Peaks", button_type="primary", width=250)
         self.manual.on_click(self.manualPeakPicking)
 
-        self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual)
+        self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual, selectTool=PeakPickingSelectTool)
 
         self.createResetButton()
         self.createDeselectButton()

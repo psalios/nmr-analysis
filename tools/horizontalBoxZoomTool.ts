@@ -190,7 +190,7 @@ export class HorizontalBoxZoomTool extends GestureTool {
   match_aspect: boolean
 
   tool_name = "Box Zoom"
-  icon = "bk-tool-icon-box-zoom"
+  icon = "my_icon_horizontal_zoom"
   event_type = "pan"
   default_order = 20
 

@@ -102,6 +102,9 @@ class Plot:
         self.plot.xgrid.grid_line_color = None
         self.plot.ygrid.grid_line_color = None
 
+        # Remove Bokeh logo
+        self.plot.toolbar.logo = None
+
         horizontalBoxZoomTool = HorizontalBoxZoomTool(dimensions="width")
         self.plot.add_tools(horizontalBoxZoomTool)
         self.plot.toolbar.active_drag = horizontalBoxZoomTool

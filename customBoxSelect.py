@@ -1,4 +1,6 @@
 
+from tools.peakPickingSelectTool import PeakPickingSelectTool
+
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.tools import BoxSelectTool
 from bokeh.models.glyphs import Rect
@@ -39,13 +41,13 @@ class CustomBoxSelect:
         source.change.emit();
     """
 
-    def __init__(self, logger, source, button, dimensions="both"):
+    def __init__(self, logger, source, button, selectTool=BoxSelectTool, dimensions="both"):
         self.logger = logger
 
         self.source = source
 
         callback = CustomJS(args=dict(source=source, button=button), code=self.CALLBACK)
-        self.boxSelectTool = BoxSelectTool(dimensions=dimensions, callback=callback)
+        self.boxSelectTool = selectTool(dimensions=dimensions, callback=callback)
 
     def addTool(self, plot):
         plot.add_tools(self.boxSelectTool)
