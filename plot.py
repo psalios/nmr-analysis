@@ -1,5 +1,6 @@
 import nmrglue as ng
 
+from reference import Reference
 from peakPicking import PeakPicking
 from integration import Integration
 
@@ -34,7 +35,11 @@ class Plot:
     def draw(self):
         try:
 
-            layout1 = column(
+            referenceLayout = column(
+                row(self.reference.slider)
+            )
+
+            peakPickingLayout = column(
                 row(self.peakPicking.auto),
                 row(
                     column(self.peakPicking.manual),
@@ -44,7 +49,7 @@ class Plot:
                 row(self.peakPicking.deselectButton)
             )
 
-            layout2 = column(
+            integrationLayout = column(
                 row(
                     column(self.integration.manual),
                     column(self.integration.resetButton)
@@ -53,9 +58,10 @@ class Plot:
                 row(self.integration.deselectButton)
             )
 
-            tab1 = Panel(child=layout1, title="Peak Picking")
-            tab2 = Panel(child=layout2, title="Integration")
-            tabs = Tabs(tabs=[tab1, tab2])
+            referenceTab = Panel(child=referenceLayout, title="Reference")
+            peakPickingTab = Panel(child=peakPickingLayout, title="Peak Picking")
+            integrationTab = Panel(child=integrationLayout, title="Integration")
+            tabs = Tabs(tabs=[referenceTab, peakPickingTab, integrationTab], width=500)
 
             curdoc().add_root(
                 row(
@@ -74,6 +80,9 @@ class Plot:
 
         self.manualPeakPickingDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
         self.integrationDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+
+        self.reference = Reference(self.logger, self.pdata, self.ppm_scale)
+        self.reference.create()
 
         self.peakPicking = PeakPicking(self.logger, self.pdata, self.ppm_scale, self.manualPeakPickingDataSource)
         self.peakPicking.create()
