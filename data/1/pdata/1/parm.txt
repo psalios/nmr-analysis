@@ -1,0 +1,40 @@
+
+Current Data Parameters
+NAME     02212017-24-tl-jm220-H              
+EXPNO                10              
+PROCNO                1              
+
+F2 - Acquisition Parameters
+Date_          20170221              
+Time              16.03              
+INSTRUM           spect              
+PROBHD   5 mm CPPTCI 1H              
+PULPROG              zg              
+TD                65536              
+SOLVENT            DMSO              
+NS                    4              
+DS                    2              
+SWH            9803.922 Hz           
+FIDRES         0.149596 Hz           
+AQ            3.3423359 sec          
+RG                 8.89              
+DW               51.000 usec         
+DE                56.38 usec         
+TE                295.0 K            
+D1          30.00000000 sec          
+TD0                   1              
+
+======== CHANNEL f1 ========
+SFO1        700.1342008 MHz          
+NUC1                 1H              
+P1                 8.00 usec         
+PLW1        15.30000019 W            
+
+F2 - Processing parameters
+SI                65536              
+SF          700.1300000 MHz          
+WDW                  EM              
+SSB      0              
+LB                 0.30 Hz           
+GB       0              
+PC                 1.00              

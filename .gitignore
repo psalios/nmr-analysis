@@ -1,5 +1,3 @@
 .idea
 venv
-data
 *.pyc
-template
