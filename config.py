@@ -3,7 +3,7 @@ import os
 import re
 import sys
 
-SETTINGS_FILE = "/etc/nomad/settings.properties"
+SETTINGS_FILE = "settings.properties"
 envRegex = re.compile(r"\$\{(.+?)}")
 logger = logging.getLogger()
 class ConfigurationReadException(Exception):

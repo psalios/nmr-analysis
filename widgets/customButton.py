@@ -4,7 +4,7 @@ from bokeh.models.widgets import Button, AbstractButton
 
 class CustomButton(AbstractButton):
 
-    __implementation__ = "CustomButton.ts"
+    __implementation__ = "customButton.ts"
     clicks = Int(0)
     data = Dict(String, Float)
 
