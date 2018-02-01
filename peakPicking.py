@@ -17,23 +17,25 @@ from bokeh.io import curdoc
 
 class PeakPicking:
 
-    def __init__(self, logger, pdata, ppm_scale, selectDataSource):
+    def __init__(self, logger, pdata, dataSource):
         self.logger = logger
 
         self.pdata = pdata
-        self.ppm_scale = ppm_scale
-        self.selectDataSource = selectDataSource
-        self.peaksDataSource = ColumnDataSource(data=dict(x=[], y=[]))
+        self.dataSource = dataSource
+
+        self.sources = dict()
+        self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+        self.sources['peaks'] = ColumnDataSource(data=dict(x=[], y=[]))
 
     def create(self):
 
-        self.source = ColumnDataSource(dict(x=[], y=[]))
+        self.sources['table'] = ColumnDataSource(dict(x=[], y=[]))
         columns = [
                 TableColumn(field="x", title="ppm"),
                 TableColumn(field="y", title="y"),
             ]
-        self.data_table = DataTable(source=self.source, columns=columns, width=500)
-        self.source.on_change('selected', lambda attr, old, new: self.rowSelect(new))
+        self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
+        self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
 
         self.auto = Button(label="Automatic Peak Picking", button_type="success", width=500)
         self.auto.on_click(self.autoPeakPicking)
@@ -41,14 +43,14 @@ class PeakPicking:
         self.manual = CustomButton(label="Manual Peaks", button_type="primary", width=250)
         self.manual.on_click(self.manualPeakPicking)
 
-        self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual, selectTool=PeakPickingSelectTool)
+        self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)
 
         self.createResetButton()
         self.createDeselectButton()
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
-        resetButtonCallback = CustomJS(args=dict(source=self.selectDataSource, button=self.manual), code="""
+        resetButtonCallback = CustomJS(args=dict(source=self.sources['select'], button=self.manual), code="""
             // get data source from Callback args
             var data = source.data;
             data['x'] = [];
@@ -64,17 +66,10 @@ class PeakPicking:
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all peaks", button_type="default", width=500)
-        callback = CustomJS(args=dict(source=self.peaksDataSource), code="""
-            // get data source from Callback args
-            var data = source.data;
-            data['x'] = [];
-            data['y'] = [];
-            data['width'] = [];
-            data['height'] = [];
+        self.deselectButton.on_click(self.deselectData)
 
-            source.change.emit();
-        """)
-        self.deselectButton.js_on_click(callback)
+    def deselectData(self):
+        self.sources['peaks'].data = dict(x=[], y=[])
 
     def autoPeakPicking(self):
         peaks = ng.peakpick.pick(self.pdata, 0)
@@ -91,34 +86,34 @@ class PeakPicking:
         # Filter top
         self.peaksIndices = [i for i in self.peaksIndices if self.pdata[i] <= dimensions['y1']]
         # Filter left
-        self.peaksIndices = [i for i in self.peaksIndices if self.ppm_scale[i] <= dimensions['x0']]
+        self.peaksIndices = [i for i in self.peaksIndices if self.dataSource.data['ppm'][i] <= dimensions['x0']]
         # Filter right
-        self.peaksIndices = [i for i in self.peaksIndices if self.ppm_scale[i] >= dimensions['x1']]
+        self.peaksIndices = [i for i in self.peaksIndices if self.dataSource.data['ppm'][i] >= dimensions['x1']]
 
         self.updateDataValues()
 
         # Clear selected area
-        self.selectDataSource.data = dict(x=[], y=[], width=[], height=[])
+        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
     def updateDataValues(self):
         # Update DataTable Values
         newData = list(OrderedDict.fromkeys(
             zip(
-                self.source.data['x'] + [self.ppm_scale[i] for i in self.peaksIndices],
-                self.source.data['y'] + [self.pdata[i] for i in self.peaksIndices]
+                self.sources['table'].data['x'] + [self.dataSource.data['ppm'][i] for i in self.peaksIndices],
+                self.sources['table'].data['y'] + [self.pdata[i] for i in self.peaksIndices]
             )
         ))
         newX, newY = zip(*newData)
-        self.source.data = {
+        self.sources['table'].data = {
             'x': newX,
             'y': newY
         }
 
     def rowSelect(self, rows):
         ids = rows['1d']['indices']
-        self.peaksDataSource.data = {
-            'x': [self.source.data['x'][i] for i in ids],
-            'y': [self.source.data['y'][i] for i in ids]
+        self.sources['peaks'].data = {
+            'x': [self.sources['table'].data['x'][i] for i in ids],
+            'y': [self.sources['table'].data['y'][i] for i in ids]
         }
 
     def draw(self, plot):
@@ -130,7 +125,7 @@ class PeakPicking:
             fill_color="#ff0000",
             line_width=1
         )
-        plot.add_glyph(self.peaksDataSource, circle, selection_glyph=circle, nonselection_glyph=circle)
+        plot.add_glyph(self.sources['peaks'], circle, selection_glyph=circle, nonselection_glyph=circle)
 
         self.tool.addTool(plot)
         self.tool.addGlyph(plot, "#009933")

@@ -9,6 +9,8 @@ class CustomBoxSelect:
 
     CALLBACK = """
         // get data source from Callback args
+
+        // clear the data
         var data = source.data;
         data['x'] = [];
         data['y'] = [];

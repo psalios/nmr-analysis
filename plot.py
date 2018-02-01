@@ -14,7 +14,7 @@ from bokeh.plotting import figure, show
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.ranges import Range1d
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.tools import HoverTool
+from bokeh.models.tools import HoverTool, TapTool
 from bokeh.models.widgets import Button, Div, DataTable, TableColumn
 from bokeh.models.widgets.panels import Tabs, Panel
 from bokeh.io import curdoc
@@ -36,7 +36,7 @@ class Plot:
         try:
 
             referenceLayout = column(
-                row(self.reference.slider)
+                row(self.reference.textInput)
             )
 
             peakPickingLayout = column(
@@ -45,7 +45,7 @@ class Plot:
                     column(self.peakPicking.manual),
                     column(self.peakPicking.resetButton)
                 ),
-                row(self.peakPicking.data_table),
+                row(self.peakPicking.dataTable),
                 row(self.peakPicking.deselectButton)
             )
 
@@ -54,7 +54,7 @@ class Plot:
                     column(self.integration.manual),
                     column(self.integration.resetButton)
                 ),
-                row(self.integration.data_table),
+                row(self.integration.dataTable),
                 row(self.integration.deselectButton)
             )
 
@@ -78,32 +78,32 @@ class Plot:
 
         self.newPlot()
 
-        self.manualPeakPickingDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
-        self.integrationDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+        self.dataSource = ColumnDataSource(data=dict(ppm=self.ppmScale, data=self.pdata))
 
-        self.reference = Reference(self.logger, self.pdata, self.ppm_scale)
-        self.reference.create()
-
-        self.peakPicking = PeakPicking(self.logger, self.pdata, self.ppm_scale, self.manualPeakPickingDataSource)
+        self.peakPicking = PeakPicking(self.logger, self.pdata, self.dataSource)
         self.peakPicking.create()
         self.peakPicking.draw(self.plot)
 
-        self.integration = Integration(self.logger, self.pdata, self.ppm_scale, self.integrationDataSource)
+        self.integration = Integration(self.logger, self.dataSource)
         self.integration.create()
         self.integration.draw(self.plot)
 
-        self.plot.line(self.ppm_scale, self.pdata, line_width=2)
+        sources = self.peakPicking.sources.values() + self.integration.sources.values()
+        self.reference = Reference(self.logger, self.dataSource, sources)
+        self.reference.create()
+
+        self.plot.line('ppm', 'data', source=self.dataSource, line_width=2)
 
     # make ppm scale
     def makePPMScale(self):
         udic = ng.bruker.guess_udic(self.dic, self.pdata)
         uc = ng.fileiobase.uc_from_udic(udic)
-        self.ppm_scale = uc.ppm_scale()
+        self.ppmScale = uc.ppm_scale()
 
     # create a new plot with a title and axis labels
     def newPlot(self):
         #Constants
-        xr = Range1d(start=int(max(self.ppm_scale)+1),end=int(min(self.ppm_scale)-1))
+        xr = Range1d(start=int(max(self.ppmScale)+1),end=int(min(self.ppmScale)-1))
 
         self.plot = figure(x_axis_label='ppm', y_axis_label='y', x_range=xr, tools="pan,box_zoom,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
 
@@ -121,5 +121,6 @@ class Plot:
         fixedWheelZoomTool = FixedWheelZoomTool(dimensions="height")
         self.plot.add_tools(fixedWheelZoomTool)
         self.plot.toolbar.active_scroll = fixedWheelZoomTool
-        hover = HoverTool(tooltips="($x, $y)")
-        self.plot.add_tools(hover)
+
+        hoverTool = HoverTool(tooltips="($x, $y)")
+        self.plot.add_tools(hoverTool)

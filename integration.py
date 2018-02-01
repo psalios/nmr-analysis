@@ -13,27 +13,27 @@ from bokeh.models.glyphs import Rect
 
 class Integration:
 
-    def __init__(self, logger, pdata, ppm_scale, selectDataSource):
+    def __init__(self, logger, dataSource):
         self.logger = logger
 
-        self.pdata = pdata
-        self.ppm_scale = ppm_scale
+        self.dataSource = dataSource
 
-        self.selectDataSource = selectDataSource
-        self.integrationDataSource = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+        self.sources = dict()
+        self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
+        self.sources['integration'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
 
         self.initIntegral = None
 
     def create(self):
 
-        self.source = ColumnDataSource(dict(start=[], stop=[], top=[], bottom=[], integral=[]))
+        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], top=[], bottom=[], integral=[]))
         columns = [
-                TableColumn(field="start", title="start"),
-                TableColumn(field="stop", title="stop"),
+                TableColumn(field="xStart", title="start"),
+                TableColumn(field="xStop", title="stop"),
                 TableColumn(field="integral", title="integral")
             ]
-        self.data_table = DataTable(source=self.source, columns=columns, width=500)
-        self.source.on_change('selected', lambda attr, old, new: self.rowSelect(new))
+        self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
+        self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
 
         self.manual = CustomButton(label="Manual Integration", button_type="primary", width=250)
         self.manual.on_click(self.manualIntegration)
@@ -41,11 +41,11 @@ class Integration:
         self.createResetButton()
         self.createDeselectButton()
 
-        self.tool = CustomBoxSelect(self.logger, self.selectDataSource, self.manual, selectTool=IntegrationSelectTool, dimensions="width")
+        self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=IntegrationSelectTool, dimensions="width")
 
     def manualIntegration(self, dimensions):
 
-        points = [point for (point, pos) in zip(self.pdata, self.ppm_scale) if pos <= dimensions['x0'] and pos >= dimensions['x1']]
+        points = [point for (point, pos) in zip(self.dataSource.data['data'], self.dataSource.data['ppm']) if pos <= dimensions['x0'] and pos >= dimensions['x1']]
         integral = np.trapz(points, axis = 0)
 
         ratio = 1.0
@@ -55,33 +55,33 @@ class Integration:
             ratio = integral / self.initIntegral
 
         # Update DataTable Values
-        newStart = self.source.data['start'] + [dimensions['x0']]
-        newStop = self.source.data['stop'] + [dimensions['x1']]
-        newTop = self.source.data['top'] + [dimensions['y1']]
-        newBottom = self.source.data['bottom'] + [dimensions['y0']]
-        newIntegral = self.source.data['integral'] + [ratio]
-        self.source.data = {
-            'start': newStart,
-            'stop': newStop,
+        newStart = self.sources['table'].data['xStart'] + [dimensions['x0']]
+        newStop = self.sources['table'].data['xStop'] + [dimensions['x1']]
+        newTop = self.sources['table'].data['top'] + [dimensions['y1']]
+        newBottom = self.sources['table'].data['bottom'] + [dimensions['y0']]
+        newIntegral = self.sources['table'].data['integral'] + [ratio]
+        self.sources['table'].data = {
+            'xStart': newStart,
+            'xStop': newStop,
             'top': newTop,
             'bottom': newBottom,
             'integral': newIntegral
         }
 
         # Clear selected area
-        self.selectDataSource.data = dict(x=[], y=[], width=[], height=[])
+        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
     def rowSelect(self, rows):
         ids = rows['1d']['indices']
 
-        maxBottom = max(self.source.data['bottom'])
-        minTop = min(self.source.data['top'])
+        maxBottom = max(self.sources['table'].data['bottom'])
+        minTop = min(self.sources['table'].data['top'])
         tempHeight = minTop - maxBottom
 
         x, y, width, height = [], [], [], []
         for i in ids:
-            sx0 = self.source.data['start'][i]
-            sx1 = self.source.data['stop'][i]
+            sx0 = self.sources['table'].data['xStart'][i]
+            sx1 = self.sources['table'].data['xStop'][i]
 
             tempWidth = sx1 - sx0
 
@@ -90,7 +90,7 @@ class Integration:
             width.append(tempWidth)
             height.append(tempHeight)
 
-        self.integrationDataSource.data = {
+        self.sources['integration'].data = {
             'x': x,
             'y': y,
             'width': width,
@@ -99,7 +99,7 @@ class Integration:
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
-        resetButtonCallback = CustomJS(args=dict(source=self.selectDataSource, button=self.manual), code="""
+        resetButtonCallback = CustomJS(args=dict(source=self.sources['select'], button=self.manual), code="""
             // get data source from Callback args
             var data = source.data;
             data['x'] = [];
@@ -115,17 +115,10 @@ class Integration:
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all integrals", button_type="default", width=500)
-        callback = CustomJS(args=dict(source=self.integrationDataSource), code="""
-            // get data source from Callback args
-            var data = source.data;
-            data['x'] = [];
-            data['y'] = [];
-            data['width'] = [];
-            data['height'] = [];
+        self.deselectButton.on_click(self.deselectData)
 
-            source.change.emit();
-        """)
-        self.deselectButton.js_on_click(callback)
+    def deselectData(self):
+        self.sources['integration'].data = dict(x=[], y=[], width=[], height=[])
 
     def draw(self, plot):
         rect = Rect(
@@ -136,7 +129,7 @@ class Integration:
             fill_alpha=0.3,
             fill_color="#de5eff"
         )
-        plot.add_glyph(self.integrationDataSource, rect, selection_glyph=rect, nonselection_glyph=rect)
+        plot.add_glyph(self.sources['integration'], rect, selection_glyph=rect, nonselection_glyph=rect)
 
         self.tool.addTool(plot)
         self.tool.addGlyph(plot, "#b3ffff")

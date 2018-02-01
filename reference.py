@@ -1,19 +1,52 @@
-from bokeh.models.widgets import Slider
+from bokeh.models.widgets import TextInput
 
 class Reference:
 
-    def __init__(self, logger, pdata, ppm_scale):
+    def __init__(self, logger, source, updateSources):
         self.logger = logger
 
-        self.pdata = pdata
-        self.ppm_scale = ppm_scale
+        self.source = source
+        self.updateSources = updateSources
 
     def create(self):
 
-        minValue, maxValue = min(self.ppm_scale), max(self.ppm_scale)
-        self.slider = Slider(start=minValue, end=maxValue, value=0.000, step=.001, title="Reference Change")
-        self.slider.on_change('value', self.updateData)
+        self.skip = False
+        self.oldValue = 0.000
+        self.textInput = TextInput(value="0.000", title="Reference")
+        self.textInput.on_change('value', self.updateData)
 
     def updateData(self, attrname, old, new):
-        diff = old - new
-        print(diff)
+        if not self.skip and new:
+            try:
+                n = float(new)
+
+                newPPM = [point - n for point in self.source.data['ppm']]
+                newData = list(self.source.data['data'])
+                self.source.data = {
+                    'ppm': newPPM,
+                    'data': newData
+                }
+
+                self.updateDataSources(n)
+
+                self.oldValue = n
+                self.skip = True
+                self.textInput.value = "0.000"
+            except ValueError:
+                self.skip = True
+                self.textInput.value= "0.000"
+        elif self.skip:
+            self.skip = False
+
+    def updateDataSources(self, n):
+
+        for source in self.updateSources:
+            data = dict(source.data)
+
+            if 'x' in data:
+                data['x'] = [point - n for point in data['x']]
+            if 'xStart' in data:
+                data['xStart'] = [point - n for point in data['xStart']]
+            if 'xStop' in data:
+                data['xStop'] = [point - n for point in data['xStop']]
+            source.data = data
