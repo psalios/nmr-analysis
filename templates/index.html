@@ -34,6 +34,9 @@
             selector: '.select_pick_peaking',
             callback: function(key, options) {
                 switch(key){
+                case 'reference':
+                    $($('button').filter(':contains("Set Reference")')[0]).click();
+                    break;
                 case 'peakPicking':
                     $($('button').filter(':contains("Manual Peaks")')[0]).click();
                     break;
@@ -48,6 +51,7 @@
                 }
             },
             items: {
+                "reference": {name: "Set Reference"},
                 "peakPicking": {name: "Manual Peak Picking"},
                 "integration": {name: "Manual Integration"},
                 "clear": {name: "Clear Selected Areas"}

@@ -35,7 +35,7 @@ class Integration:
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
 
-        self.manual = CustomButton(label="Manual Integration", button_type="primary", width=250)
+        self.manual = CustomButton(label="Manual Integration", button_type="primary", width=250, error="Please select area using the integration tool.")
         self.manual.on_click(self.manualIntegration)
 
         self.createResetButton()

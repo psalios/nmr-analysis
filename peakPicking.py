@@ -40,7 +40,7 @@ class PeakPicking:
         self.auto = Button(label="Automatic Peak Picking", button_type="success", width=500)
         self.auto.on_click(self.autoPeakPicking)
 
-        self.manual = CustomButton(label="Manual Peaks", button_type="primary", width=250)
+        self.manual = CustomButton(label="Manual Peaks", button_type="primary", width=250, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
 
         self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)

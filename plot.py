@@ -6,6 +6,7 @@ from integration import Integration
 
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
+from tools.referenceTool import ReferenceTool
 
 from bokeh.layouts import row, column, widgetbox
 from bokeh.core.properties import Float
@@ -36,7 +37,8 @@ class Plot:
         try:
 
             referenceLayout = column(
-                row(self.reference.textInput)
+                row(self.reference.textInput),
+                row(self.reference.button)
             )
 
             peakPickingLayout = column(
@@ -91,6 +93,7 @@ class Plot:
         sources = self.peakPicking.sources.values() + self.integration.sources.values()
         self.reference = Reference(self.logger, self.dataSource, sources)
         self.reference.create()
+        self.reference.draw(self.plot)
 
         self.plot.line('ppm', 'data', source=self.dataSource, line_width=2)
 

@@ -9,7 +9,7 @@ export class CustomButtonView extends AbstractButtonView {
 
   change_input(): void {
     if (Object.keys(this.model.data).length === 0) {
-      alert("Please select area using the select tool.")
+      alert(this.model.error)
     } else {
       this.model.trigger_event(new ButtonClick({}))
       this.model.clicks = this.model.clicks + 1
@@ -27,14 +27,16 @@ export class CustomButton extends AbstractButton {
 
     this.define({
       clicks: [ p.Number, 0 ],
-      data: [ p.Any, {} ]
+      data: [ p.Any, {} ],
+      error: [ p.String, "" ]
     })
 
     register_with_event(ButtonClick, this)
   }
 
   clicks: number
-  data: any;
+  data: any
+  error: string
 }
 
 CustomButton.initClass()
