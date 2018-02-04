@@ -93,7 +93,7 @@ class Plot:
         self.integration.draw(self.plot)
 
         sources = self.peakPicking.sources.values() + self.integration.sources.values()
-        self.reference = Reference(self.logger, self.dataSource, sources)
+        self.reference = Reference(self.logger, self.dataSource, sources, self.peakPicking)
         self.reference.create()
         self.reference.draw(self.plot)
 

@@ -7,11 +7,12 @@ from bokeh.models.callbacks import CustomJS
 
 class Reference:
 
-    def __init__(self, logger, source, updateSources):
+    def __init__(self, logger, source, updateSources, peakPicking):
         self.logger = logger
 
         self.source = source
         self.updateSources = updateSources
+        self.peakPicking = peakPicking
 
     def create(self):
 
@@ -82,6 +83,9 @@ class Reference:
             if 'xStop' in data:
                 data['xStop'] = [point - n for point in data['xStop']]
             source.data = data
+
+        # Update Chemical Shift Report
+        self.peakPicking.updateChemicalShiftReport()
 
     def draw(self, plot):
         plot.add_tools(self.tool)

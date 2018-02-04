@@ -56,6 +56,9 @@ class PeakPicking:
         self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>")
         self.chemicalShiftReport = Paragraph(text=self.getChemicalShiftReport(), width=500)
 
+    def updateChemicalShiftReport(self):
+        self.chemicalShiftReport.text = self.getChemicalShiftReport()
+
     def getChemicalShiftReport(self):
         label = self.getLabel()
         if label == "1H":
@@ -126,7 +129,7 @@ class PeakPicking:
         self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
         # Update chemical shift report
-        self.chemicalShiftReport.text = self.getChemicalShiftReport()
+        self.updateChemicalShiftReport()
 
     def updateDataValues(self):
         # Update DataTable Values
