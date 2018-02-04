@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import nmrglue as ng
 from collections import OrderedDict
 
@@ -51,7 +54,16 @@ class PeakPicking:
         self.createDeselectButton()
 
         self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>")
-        self.chemicalShiftReport = Paragraph(text=self.getMetadata())
+        self.chemicalShiftReport = Paragraph(text=self.getChemicalShiftReport(), width=500)
+
+    def getChemicalShiftReport(self):
+        label = self.getLabel()
+        if label == "1H":
+            return self.getMetadata() + " δ = "
+        elif label == "13C":
+            return self.getMetadata() + " δ " + ", ".join(str("{:0.2f}").format(x) for x in sorted([round(x, 2) for x in self.sources['table'].data['x']], reverse=True)) + "."
+        else:
+            return ""
 
     def getMetadata(self):
         return self.getLabel() + " NMR (" + self.getFrequency() + ", " + self.getSolvent() + ")"
@@ -112,6 +124,9 @@ class PeakPicking:
 
         # Clear selected area
         self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
+
+        # Update chemical shift report
+        self.chemicalShiftReport.text = self.getChemicalShiftReport()
 
     def updateDataValues(self):
         # Update DataTable Values
