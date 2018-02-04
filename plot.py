@@ -48,7 +48,9 @@ class Plot:
                     column(self.peakPicking.resetButton)
                 ),
                 row(self.peakPicking.dataTable),
-                row(self.peakPicking.deselectButton)
+                row(self.peakPicking.deselectButton),
+                row(self.peakPicking.chemicalShiftReportTitle),
+                row(self.peakPicking.chemicalShiftReport)
             )
 
             integrationLayout = column(
@@ -82,7 +84,7 @@ class Plot:
 
         self.dataSource = ColumnDataSource(data=dict(ppm=self.ppmScale, data=self.pdata))
 
-        self.peakPicking = PeakPicking(self.logger, self.pdata, self.dataSource)
+        self.peakPicking = PeakPicking(self.logger, self.dic, self.udic, self.pdata, self.dataSource)
         self.peakPicking.create()
         self.peakPicking.draw(self.plot)
 
@@ -99,8 +101,8 @@ class Plot:
 
     # make ppm scale
     def makePPMScale(self):
-        udic = ng.bruker.guess_udic(self.dic, self.pdata)
-        uc = ng.fileiobase.uc_from_udic(udic)
+        self.udic = ng.bruker.guess_udic(self.dic, self.pdata)
+        uc = ng.fileiobase.uc_from_udic(self.udic)
         self.ppmScale = uc.ppm_scale()
 
     # create a new plot with a title and axis labels

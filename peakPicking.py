@@ -10,16 +10,18 @@ from bokeh.core.properties import Instance
 from bokeh.embed import components
 from bokeh.plotting import figure, show
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button, DataTable, TableColumn
+from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.markers import Circle
 from bokeh.io import curdoc
 
 class PeakPicking:
 
-    def __init__(self, logger, pdata, dataSource):
+    def __init__(self, logger, dic, udic, pdata, dataSource):
         self.logger = logger
 
+        self.dic = dic
+        self.udic = udic
         self.pdata = pdata
         self.dataSource = dataSource
 
@@ -47,6 +49,21 @@ class PeakPicking:
 
         self.createResetButton()
         self.createDeselectButton()
+
+        self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>")
+        self.chemicalShiftReport = Paragraph(text=self.getMetadata())
+
+    def getMetadata(self):
+        return self.getLabel() + " NMR (" + self.getFrequency() + ", " + self.getSolvent() + ")"
+
+    def getSolvent(self):
+        return self.dic['acqus']['SOLVENT']
+
+    def getLabel(self):
+        return self.udic[0]['label']
+
+    def getFrequency(self):
+        return str(int(round(self.udic[0]['obs'], 0))) + " MHz"
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
@@ -80,7 +97,7 @@ class PeakPicking:
 
     def manualPeakPicking(self, dimensions):
 
-        peaks = ng.peakpick.pick(self.pdata, dimensions['y0'] if dimensions['y0'] > 0 else 0)
+        peaks = ng.peakpick.pick(self.pdata, dimensions['y0'])
         self.peaksIndices = [int(peak[0]) for peak in peaks]
 
         # Filter top
@@ -90,7 +107,8 @@ class PeakPicking:
         # Filter right
         self.peaksIndices = [i for i in self.peaksIndices if self.dataSource.data['ppm'][i] >= dimensions['x1']]
 
-        self.updateDataValues()
+        if len(self.peaksIndices) > 0:
+            self.updateDataValues()
 
         # Clear selected area
         self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
