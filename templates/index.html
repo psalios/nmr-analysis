@@ -28,13 +28,16 @@
             callback: function(key, options) {
                 switch(key){
                 case 'reference':
-                    $($('button').filter(':contains("Set Reference")')[0]).click();
+                    $('span:contains("Reference")').click();
+                    $('button:contains("Set Reference")').click();
                     break;
                 case 'peakPicking':
-                    $($('button').filter(':contains("Manual Peaks")')[0]).click();
+                    $('span:contains("Peak Picking")').click();
+                    $('button:contains("Manual Peaks")').click();
                     break;
                 case 'integration':
-                    $($('button').filter(':contains("Manual Integration")')[0]).click();
+                    $('span:contains("Integration")').click();
+                    $('button:contains("Manual Integration")').click();
                     break;
                 case 'clear':
                     $('button').filter(':contains("Clear Selected Area")').each(function() {
