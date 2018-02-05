@@ -37,7 +37,7 @@ class PeakPicking:
         self.sources['table'] = ColumnDataSource(dict(x=[], y=[]))
         columns = [
                 TableColumn(field="x", title="ppm"),
-                TableColumn(field="y", title="y"),
+                TableColumn(field="y", title="y")
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
