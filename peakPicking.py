@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import nmrglue as ng
+import numpy as np
 from collections import OrderedDict
 
 from customBoxSelect import CustomBoxSelect
@@ -26,6 +27,7 @@ class PeakPicking:
         self.dic = dic
         self.udic = udic
         self.pdata = pdata
+        self.mpdata = np.array(map(lambda x: -x, pdata))
         self.dataSource = dataSource
 
         self.sources = dict()
@@ -109,10 +111,19 @@ class PeakPicking:
 
         self.updateDataValues()
 
+        # Update chemical shift report
+        self.updateChemicalShiftReport()
 
     def manualPeakPicking(self, dimensions):
 
-        peaks = ng.peakpick.pick(self.pdata, dimensions['y0'])
+        data = self.pdata
+        if abs(dimensions['y0']) > abs(dimensions['y1']):
+            data = self.mpdata
+            dimensions['y0'], dimensions['y1'] = -dimensions['y1'], -dimensions['y0']
+
+            print("HERE")
+            print(dimensions)
+        peaks = ng.peakpick.pick(data, dimensions['y0'])
         self.peaksIndices = [int(peak[0]) for peak in peaks]
 
         # Filter top
