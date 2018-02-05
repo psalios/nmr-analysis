@@ -8,7 +8,7 @@ from widgets.customButton import CustomButton
 
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button, DataTable, TableColumn
+from bokeh.models.widgets import Button, DataTable, TableColumn, NumberFormatter
 from bokeh.models.glyphs import Rect
 
 class Integration:
@@ -28,9 +28,9 @@ class Integration:
 
         self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], top=[], bottom=[], integral=[]))
         columns = [
-                TableColumn(field="xStart", title="start"),
-                TableColumn(field="xStop", title="stop"),
-                TableColumn(field="integral", title="integral")
+                TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
+                TableColumn(field="xStop", title="stop", formatter=NumberFormatter(format="0.00")),
+                TableColumn(field="integral", title="integral", formatter=NumberFormatter(format="0.00"))
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))

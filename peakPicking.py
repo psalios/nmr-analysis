@@ -14,7 +14,7 @@ from bokeh.core.properties import Instance
 from bokeh.embed import components
 from bokeh.plotting import figure, show
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph
+from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph, NumberFormatter
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.markers import Circle
 from bokeh.io import curdoc
@@ -38,8 +38,8 @@ class PeakPicking:
 
         self.sources['table'] = ColumnDataSource(dict(x=[], y=[]))
         columns = [
-                TableColumn(field="x", title="ppm"),
-                TableColumn(field="y", title="y")
+                TableColumn(field="x", title="ppm", formatter=NumberFormatter(format="0.00")),
+                TableColumn(field="y", title="y", formatter=NumberFormatter(format="0.00"))
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
@@ -119,10 +119,9 @@ class PeakPicking:
         data = self.pdata
         if abs(dimensions['y0']) > abs(dimensions['y1']):
             data = self.mpdata
-            dimensions['y0'], dimensions['y1'] = -dimensions['y1'], -dimensions['y0']
 
-            print("HERE")
-            print(dimensions)
+            # Swap and invert y-dimensions
+            dimensions['y0'], dimensions['y1'] = -dimensions['y1'], -dimensions['y0']
         peaks = ng.peakpick.pick(data, dimensions['y0'])
         self.peaksIndices = [int(peak[0]) for peak in peaks]
 
