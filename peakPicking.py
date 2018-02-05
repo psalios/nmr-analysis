@@ -54,6 +54,7 @@ class PeakPicking:
 
         self.createResetButton()
         self.createDeselectButton()
+        self.createDeleteButton()
 
         self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>")
         self.chemicalShiftReport = Paragraph(text=self.getChemicalShiftReport(), width=500)
@@ -99,11 +100,33 @@ class PeakPicking:
         self.resetButton.js_on_click(resetButtonCallback)
 
     def createDeselectButton(self):
-        self.deselectButton = Button(label="Deselect all peaks", button_type="default", width=500)
+        self.deselectButton = Button(label="Deselect all peaks", button_type="default", width=250)
         self.deselectButton.on_click(self.deselectData)
 
     def deselectData(self):
         self.sources['peaks'].data = dict(x=[], y=[])
+
+    def createDeleteButton(self):
+        self.ids = []
+        self.deleteButton = Button(label="Delete selected peaks", button_type="danger", width=250)
+        self.deleteButton.on_click(self.deletePeaks)
+
+    def deletePeaks(self):
+        self.sources['peaks'].data = dict(x=[], y=[])
+
+        newX = list(self.sources['table'].data['x'])
+        newY = list(self.sources['table'].data['y'])
+        for i in self.ids:
+            newX.pop(i)
+            newY.pop(i)
+
+        self.sources['table'].data = {
+            'x': newX,
+            'y': newY
+        }
+        self.ids = []
+
+        self.updateChemicalShiftReport()
 
     def autoPeakPicking(self):
         peaks = ng.peakpick.pick(self.pdata, 0)
@@ -156,10 +179,10 @@ class PeakPicking:
         }
 
     def rowSelect(self, rows):
-        ids = rows['1d']['indices']
+        self.ids = rows['1d']['indices']
         self.sources['peaks'].data = {
-            'x': [self.sources['table'].data['x'][i] for i in ids],
-            'y': [self.sources['table'].data['y'][i] for i in ids]
+            'x': [self.sources['table'].data['x'][i] for i in self.ids],
+            'y': [self.sources['table'].data['y'][i] for i in self.ids]
         }
 
     def draw(self, plot):

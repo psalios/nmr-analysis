@@ -48,7 +48,10 @@ class Plot:
                     column(self.peakPicking.resetButton)
                 ),
                 row(self.peakPicking.dataTable),
-                row(self.peakPicking.deselectButton),
+                row(
+                    column(self.peakPicking.deselectButton),
+                    column(self.peakPicking.deleteButton)
+                ),
                 row(self.peakPicking.chemicalShiftReportTitle),
                 row(self.peakPicking.chemicalShiftReport)
             )
