@@ -62,7 +62,10 @@ class Plot:
                     column(self.integration.resetButton)
                 ),
                 row(self.integration.dataTable),
-                row(self.integration.deselectButton)
+                row(
+                    column(self.integration.deselectButton),
+                    column(self.integration.deleteButton)
+                )
             )
 
             referenceTab = Panel(child=referenceLayout, title="Reference")

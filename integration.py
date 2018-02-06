@@ -40,6 +40,7 @@ class Integration:
 
         self.createResetButton()
         self.createDeselectButton()
+        self.createDeleteButton()
 
         self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=IntegrationSelectTool, dimensions="width")
 
@@ -114,11 +115,43 @@ class Integration:
         self.resetButton.js_on_click(resetButtonCallback)
 
     def createDeselectButton(self):
-        self.deselectButton = Button(label="Deselect all integrals", button_type="default", width=500)
+        self.deselectButton = Button(label="Deselect all integrals", button_type="default", width=250)
         self.deselectButton.on_click(self.deselectData)
 
     def deselectData(self):
         self.sources['integration'].data = dict(x=[], y=[], width=[], height=[])
+
+    def createDeleteButton(self):
+        self.deleteButton = Button(label="Delete selected integrals", button_type="danger", width=250)
+        self.deleteButton.on_click(self.deleteIntegrals)
+
+    def deleteIntegrals(self):
+        self.sources['integration'].data = dict(x=[], y=[], width=[], height=[])
+
+        newStart = list(self.sources['table'].data['xStart'])
+        newStop = list(self.sources['table'].data['xStop'])
+        newTop = list(self.sources['table'].data['top'])
+        newBottom = list(self.sources['table'].data['bottom'])
+        newIntegral = list(self.sources['table'].data['integral'])
+
+        ids = self.sources['table'].selected['1d']['indices']
+        for i in ids:
+            try:
+                newStart.pop(i)
+                newStop.pop(i)
+                newTop.pop(i)
+                newBottom.pop(i)
+                newIntegral.pop(i)
+            except IndexError:
+                pass
+
+        self.sources['table'].data = {
+            'xStart': newStart,
+            'xStop': newStop,
+            'top': newTop,
+            'bottom': newBottom,
+            'integral': newIntegral
+        }
 
     def draw(self, plot):
         rect = Rect(
