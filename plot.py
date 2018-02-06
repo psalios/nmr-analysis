@@ -37,7 +37,10 @@ class Plot:
         try:
 
             referenceLayout = column(
-                row(self.reference.textInput),
+                row(
+                    column(self.reference.old),
+                    column(self.reference.new)
+                ),
                 row(self.reference.button)
             )
 

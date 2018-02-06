@@ -16,9 +16,13 @@ class Reference:
 
     def create(self):
 
-        self.value = 0.000
-        self.textInput = TextInput(value="0.000", title="Reference Point", placeholder="Reference", width=550, disabled=True)
-        self.textInput.on_change('value', lambda attr, old, new: self.updateValue(new))
+        self.oldValue = self.newValue = None
+
+        self.old = TextInput(title="Old Shift", placeholder="Old Shift", width=250, disabled=True)
+        self.old.on_change('value', lambda attr, old, new: self.updateOldValue(new))
+
+        self.new = TextInput(title="New Shift", placeholder="New Shift", width=250)
+        self.new.on_change('value', lambda attr, old, new: self.updateNewValue(new))
 
         self.createButton()
 
@@ -33,7 +37,7 @@ class Reference:
         self.button.js_on_click(buttonCallback)
 
     def createTool(self):
-        callback = CustomJS(args=dict(text=self.textInput, button=self.button), code="""
+        callback = CustomJS(args=dict(text=self.old, button=self.button), code="""
 
             /// get BoxSelectTool dimensions from cb_data parameter of Callback
             var geometry = cb_data['geometries'];
@@ -49,13 +53,18 @@ class Reference:
         """)
         self.tool = ReferenceTool(callback=callback)
 
-    def updateValue(self, value):
-        self.value = value
+    def updateOldValue(self, value):
+        self.oldValue = value
+
+    def updateNewValue(self, value):
+        self.newValue = value
 
     def updateData(self, position):
 
         try:
-            n = float(self.value)
+            oldValue = float(self.oldValue)
+            newValue = float(self.newValue)
+            n = oldValue - newValue
 
             newPPM = [point - n for point in self.source.data['ppm']]
             newData = list(self.source.data['data'])
@@ -65,11 +74,11 @@ class Reference:
             }
 
             self.updateDataSources(n)
-
-            self.oldValue = n
-            self.textInput.value = "0.000"
         except ValueError:
-            self.textInput.value= "0.000"
+            pass
+        finally:
+            self.oldValue = self.newValue = None
+            self.old.value = self.new.value = ""
 
     def updateDataSources(self, n):
 
