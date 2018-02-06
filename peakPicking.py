@@ -116,15 +116,19 @@ class PeakPicking:
 
         newX = list(self.sources['table'].data['x'])
         newY = list(self.sources['table'].data['y'])
-        for i in self.ids:
-            newX.pop(i)
-            newY.pop(i)
+
+        ids = self.sources['table'].selected['1d']['indices']
+        for i in ids:
+            try:
+                newX.pop(i)
+                newY.pop(i)
+            except IndexError:
+                pass
 
         self.sources['table'].data = {
             'x': newX,
             'y': newY
         }
-        self.ids = []
 
         self.updateChemicalShiftReport()
 
@@ -179,10 +183,10 @@ class PeakPicking:
         }
 
     def rowSelect(self, rows):
-        self.ids = rows['1d']['indices']
+        ids = rows['1d']['indices']
         self.sources['peaks'].data = {
-            'x': [self.sources['table'].data['x'][i] for i in self.ids],
-            'y': [self.sources['table'].data['y'][i] for i in self.ids]
+            'x': [self.sources['table'].data['x'][i] for i in ids],
+            'y': [self.sources['table'].data['y'][i] for i in ids]
         }
 
     def draw(self, plot):
