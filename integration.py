@@ -8,7 +8,7 @@ from widgets.customButton import CustomButton
 
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button, DataTable, TableColumn, NumberFormatter
+from bokeh.models.widgets import Button, DataTable, TableColumn, NumberFormatter, NumberEditor
 from bokeh.models.glyphs import Rect
 
 class Integration:
@@ -28,12 +28,13 @@ class Integration:
 
         self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], top=[], bottom=[], integral=[]))
         columns = [
-                TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
-                TableColumn(field="xStop", title="stop", formatter=NumberFormatter(format="0.00")),
-                TableColumn(field="integral", title="integral", formatter=NumberFormatter(format="0.00"))
+                TableColumn(field="xStart", title="start", editor=NumberEditor(step=0.01), formatter=NumberFormatter(format="0.00")),
+                TableColumn(field="xStop", title="stop", editor=NumberEditor(step=0.01), formatter=NumberFormatter(format="0.00")),
+                TableColumn(field="integral", title="integral", editor=NumberEditor(step=0.01), formatter=NumberFormatter(format="0.00"))
             ]
-        self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
+        self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500, editable=True)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
+        self.sources['table'].on_change('data', lambda attr, old, new: self.changeData(old, new))
 
         self.manual = CustomButton(label="Manual Integration", button_type="primary", width=250, error="Please select area using the integration tool.")
         self.manual.on_click(self.manualIntegration)
@@ -43,6 +44,21 @@ class Integration:
         self.createDeleteButton()
 
         self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=IntegrationSelectTool, dimensions="width")
+
+    def changeData(self, old, new):
+        diff = 1
+        if len(old['integral']) == len(new['integral']):
+            for o, n in zip(old['integral'], new['integral']):
+                if o != n:
+                    diff = n / o
+                    break
+
+        if diff != 1:
+            self.initIntegral /= diff
+            patch = {
+                'integral': [(i, old['integral'][i] * diff) for i in xrange(len(old['integral']))]
+            }
+            self.sources['table'].patch(patch)
 
     def manualIntegration(self, dimensions):
 
@@ -164,5 +180,5 @@ class Integration:
         )
         plot.add_glyph(self.sources['integration'], rect, selection_glyph=rect, nonselection_glyph=rect)
 
-        self.tool.addTool(plot)
+        self.tool.addToPlot(plot)
         self.tool.addGlyph(plot, "#b3ffff")

@@ -7,7 +7,7 @@ from plot import Plot
 logger = get_logger()
 logger.info("Spectrum Viewer started")
 
-path = "data/3/"
+path = "data/2/"
 
 plot = Plot(logger, path)
 plot.create()

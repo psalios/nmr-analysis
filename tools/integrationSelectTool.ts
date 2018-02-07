@@ -124,7 +124,7 @@ export class IntegrationSelectTool extends SelectTool {
   callback: any // XXX
   overlay: BoxAnnotation
 
-  tool_name = "Manual Integration"
+  tool_name = "Integration"
   icon = "my_icon_integration"
   event_type = "pan"
   default_order = 30

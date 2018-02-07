@@ -51,7 +51,7 @@ class CustomBoxSelect:
         callback = CustomJS(args=dict(source=source, button=button), code=self.CALLBACK)
         self.boxSelectTool = selectTool(dimensions=dimensions, callback=callback)
 
-    def addTool(self, plot):
+    def addToPlot(self, plot):
         plot.add_tools(self.boxSelectTool)
 
     def addGlyph(self, plot, fillColor="#ff0000"):

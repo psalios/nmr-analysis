@@ -15,9 +15,9 @@ export interface BkEv {
   }
 }
 
-export class PeakPickingSelectToolView extends SelectToolView {
+export class MultipletAnalysisSelectToolView extends SelectToolView {
 
-  model: PeakPickingSelectTool
+  model: MultipletAnalysisSelectTool
 
   protected _base_point: [number, number] | null
 
@@ -104,12 +104,12 @@ const DEFAULT_BOX_OVERLAY = () => {
   })
 }
 
-export class PeakPickingSelectTool extends SelectTool {
+export class MultipletAnalysisSelectTool extends SelectTool {
 
   static initClass() {
-    this.prototype.type = "PeakPickingSelectTool"
+    this.prototype.type = "MultipletAnalysisSelectTool"
 
-    this.prototype.default_view = PeakPickingSelectToolView
+    this.prototype.default_view = MultipletAnalysisSelectToolView
 
     this.define({
       dimensions:             [ p.Dimensions, "both"            ],
@@ -124,8 +124,8 @@ export class PeakPickingSelectTool extends SelectTool {
   callback: any // XXX
   overlay: BoxAnnotation
 
-  tool_name = "Peak Picking"
-  icon = "my_icon_peak_picking"
+  tool_name = "Multiplet Analysis"
+  icon = "my_icon_multiplet_analysis"
   event_type = "pan"
   default_order = 30
 
@@ -134,4 +134,4 @@ export class PeakPickingSelectTool extends SelectTool {
   }
 }
 
-PeakPickingSelectTool.initClass()
+MultipletAnalysisSelectTool.initClass()

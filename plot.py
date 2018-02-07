@@ -3,6 +3,7 @@ import nmrglue as ng
 from reference import Reference
 from peakPicking import PeakPicking
 from integration import Integration
+from multipletAnalysis import MultipletAnalysis
 
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
@@ -71,10 +72,18 @@ class Plot:
                 )
             )
 
+            multipletManagerLayout = column(
+                row(
+                    column(self.multipletAnalysis.manual),
+                    column(self.multipletAnalysis.resetButton)
+                )
+            )
+
             referenceTab = Panel(child=referenceLayout, title="Reference")
             peakPickingTab = Panel(child=peakPickingLayout, title="Peak Picking")
             integrationTab = Panel(child=integrationLayout, title="Integration")
-            tabs = Tabs(tabs=[referenceTab, peakPickingTab, integrationTab], width=500)
+            multipletManagerTab = Panel(child=multipletManagerLayout, title="Multiplet Analysis")
+            tabs = Tabs(tabs=[referenceTab, peakPickingTab, integrationTab, multipletManagerTab], width=500)
 
             curdoc().add_root(
                 row(
@@ -101,7 +110,11 @@ class Plot:
         self.integration.create()
         self.integration.draw(self.plot)
 
-        sources = self.peakPicking.sources.values() + self.integration.sources.values()
+        self.multipletAnalysis = MultipletAnalysis(self.logger, self.pdata, self.dataSource, self.peakPicking, self.integration)
+        self.multipletAnalysis.create()
+        self.multipletAnalysis.draw(self.plot)
+
+        sources = self.peakPicking.sources.values() + self.integration.sources.values() + self.multipletAnalysis.sources.values()
         self.reference = Reference(self.logger, self.dataSource, sources, self.peakPicking)
         self.reference.create()
         self.reference.draw(self.plot)

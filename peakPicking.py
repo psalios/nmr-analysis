@@ -10,9 +10,6 @@ from tools.peakPickingSelectTool import PeakPickingSelectTool
 
 from widgets.customButton import CustomButton
 
-from bokeh.core.properties import Instance
-from bokeh.embed import components
-from bokeh.plotting import figure, show
 from bokeh.models.sources import ColumnDataSource
 from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph, NumberFormatter
 from bokeh.models.callbacks import CustomJS
@@ -200,5 +197,5 @@ class PeakPicking:
         )
         plot.add_glyph(self.sources['peaks'], circle, selection_glyph=circle, nonselection_glyph=circle)
 
-        self.tool.addTool(plot)
+        self.tool.addToPlot(plot)
         self.tool.addGlyph(plot, "#009933")
