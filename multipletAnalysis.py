@@ -4,7 +4,7 @@ from tools.multipletAnalysisSelectTool import MultipletAnalysisSelectTool
 from widgets.customButton import CustomButton
 
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button
+from bokeh.models.widgets import Button, DataTable, TableColumn, Div, NumberFormatter, Select, TextInput
 from bokeh.models.callbacks import CustomJS
 
 class MultipletAnalysis:
@@ -23,6 +23,14 @@ class MultipletAnalysis:
 
     def create(self):
 
+        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[]))
+        columns = [
+            TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
+            TableColumn(field="xStop",  title="stop",  formatter=NumberFormatter(format="0.00")),
+        ]
+        self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
+        # self.sources['table'].on_change('selected', lambda attr, old, new: pass)
+
         self.manual = CustomButton(label="Multiplet Analysis", button_type="primary", width=250, error="Please select area using the multiplet analysis tool.")
         self.manual.on_click(self.manualMultipletAnalysis)
 
@@ -30,10 +38,19 @@ class MultipletAnalysis:
 
         self.createResetButton()
 
+        self.title = Div(text="<strong>Select Multiplet To Edit</strong>", width=500)
+        self.name = TextInput(title="Name:", value="", placeholder="Name", width=250, disabled=True)
+        self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h"], width=250, disabled=True)
+        self.delete = Button(label="Delete Multiplet", button_type="danger", width=500, disabled=True)
+
     def manualMultipletAnalysis(self, dimensions):
         self.peakPicking.manualPeakPicking(dimensions)
-
         print(self.peakPicking.peaksIndices)
+
+        self.peakPicking.rowSelectFromPeaks(self.peakPicking.peaksIndices)
+
+        # Clear selected area
+        self.sources['select'].data = dict(x=[], y=[])
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)

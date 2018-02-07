@@ -14,7 +14,6 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph, NumberFormatter
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.markers import Circle
-from bokeh.io import curdoc
 
 class PeakPicking:
 
@@ -39,7 +38,7 @@ class PeakPicking:
                 TableColumn(field="y", title="y", formatter=NumberFormatter(format="0.00"))
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
-        self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
+        self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
 
         self.auto = Button(label="Automatic Peak Picking", button_type="success", width=500)
         self.auto.on_click(self.autoPeakPicking)
@@ -179,11 +178,16 @@ class PeakPicking:
             'y': newY
         }
 
-    def rowSelect(self, rows):
-        ids = rows['1d']['indices']
+    def rowSelect(self, ids):
         self.sources['peaks'].data = {
             'x': [self.sources['table'].data['x'][i] for i in ids],
             'y': [self.sources['table'].data['y'][i] for i in ids]
+        }
+
+    def rowSelectFromPeaks(self, ids):
+        self.sources['peaks'].data = {
+            'x': [self.pdata[i] for i in ids],
+            'y': [self.dataSource.data['ppm'][i] for i in ids]
         }
 
     def draw(self, plot):

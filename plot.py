@@ -7,17 +7,13 @@ from multipletAnalysis import MultipletAnalysis
 
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
-from tools.referenceTool import ReferenceTool
 
-from bokeh.layouts import row, column, widgetbox
-from bokeh.core.properties import Float
-from bokeh.embed import components
-from bokeh.plotting import figure, show
+from bokeh.layouts import row, column
+from bokeh.plotting import figure
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.ranges import Range1d
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.tools import HoverTool, TapTool
-from bokeh.models.widgets import Button, Div, DataTable, TableColumn
+from bokeh.models.tools import HoverTool
 from bokeh.models.widgets.panels import Tabs, Panel
 from bokeh.io import curdoc
 
@@ -76,7 +72,14 @@ class Plot:
                 row(
                     column(self.multipletAnalysis.manual),
                     column(self.multipletAnalysis.resetButton)
-                )
+                ),
+                row(self.multipletAnalysis.dataTable),
+                row(self.multipletAnalysis.title),
+                row(
+                    column(self.multipletAnalysis.name),
+                    column(self.multipletAnalysis.classes)
+                ),
+                row(self.multipletAnalysis.delete)
             )
 
             referenceTab = Panel(child=referenceLayout, title="Reference")
