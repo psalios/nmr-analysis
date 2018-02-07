@@ -172,7 +172,7 @@ class PeakPicking:
                 self.sources['table'].data['y'] + [self.pdata[i] for i in self.peaksIndices]
             )
         ))
-        newX, newY = zip(*newData)
+        newX, newY = zip(*sorted(newData, reverse=True))
         self.sources['table'].data = {
             'x': newX,
             'y': newY
