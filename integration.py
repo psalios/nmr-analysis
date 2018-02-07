@@ -88,6 +88,8 @@ class Integration:
         # Clear selected area
         self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
+        return ratio
+
     def rowSelect(self, ids):
 
         maxBottom = min(max(self.sources['table'].data['bottom']), 0)

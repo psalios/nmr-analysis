@@ -1,3 +1,5 @@
+from math import ceil
+
 from customBoxSelect import CustomBoxSelect
 from tools.multipletAnalysisSelectTool import MultipletAnalysisSelectTool
 
@@ -37,13 +39,13 @@ class MultipletAnalysis:
 
     def create(self):
 
-        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[]))
+        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], h=[]))
         columns = [
             TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
             TableColumn(field="xStop",  title="stop",  formatter=NumberFormatter(format="0.00")),
-            # TableColumn(field="name", title="Name"),
-            # TableColumn(field="class", title="Class"),
-            # TableColumn(field="h", title="H")
+            TableColumn(field="name", title="Name"),
+            TableColumn(field="classes", title="Class"),
+            TableColumn(field="h", title="H", formatter=NumberFormatter(format="0"))
         ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
@@ -73,16 +75,18 @@ class MultipletAnalysis:
         self.peakPicking.manualPeakPicking(dimensions)
         self.peakPicking.rowSelectFromPeaks(self.peakPicking.peaksIndices)
 
-        self.integration.manualIntegration(dimensions)
+        hydrogen = ceil(self.integration.manualIntegration(dimensions))
         self.integration.rowSelect([len(self.integration.sources['table'].data['xStart']) - 1])
 
         peaks = [self.pdata[i] for i in self.peakPicking.peaksIndices]
-        print(peaks)
-        self.predictMultiplet(peaks)
+        multiplet = self.predictMultiplet(peaks)
 
         data = {
             'xStart': [dimensions['x0']],
-            'xStop': [dimensions['x1']]
+            'xStop':  [dimensions['x1']],
+            'name':   ['A' if not self.sources['table'].data['name'] else chr(ord(self.sources['table'].data['name'][-1])+1)],
+            'classes':  [multiplet],
+            'h': [hydrogen]
         }
 
         # Add to DataTable
@@ -93,18 +97,11 @@ class MultipletAnalysis:
 
     def predictMultiplet(self, peaks):
 
-        found = False
         for key, value in self.MULTIPLETS.iteritems():
-            print(len(peaks), value['sum'])
             if len(peaks) == value['sum'] and self.checkMultiplet(value['table'], peaks):
-                print(key)
-                found = True
-                self.classes.value = key
-                break
+                return key
 
-        if not found:
-            print("Not found")
-            self.classes.value = "dd"
+        return "m"
 
     def checkMultiplet(self, multiplet, peaks):
 
