@@ -45,7 +45,6 @@ class MultipletAnalysis:
 
     def manualMultipletAnalysis(self, dimensions):
         self.peakPicking.manualPeakPicking(dimensions)
-        print(self.peakPicking.peaksIndices)
 
         self.peakPicking.rowSelectFromPeaks(self.peakPicking.peaksIndices)
 

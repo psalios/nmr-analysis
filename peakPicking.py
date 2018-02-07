@@ -186,8 +186,8 @@ class PeakPicking:
 
     def rowSelectFromPeaks(self, ids):
         self.sources['peaks'].data = {
-            'x': [self.pdata[i] for i in ids],
-            'y': [self.dataSource.data['ppm'][i] for i in ids]
+            'x': [self.dataSource.data['ppm'][i] for i in ids],
+            'y': [self.pdata[i] for i in ids]
         }
 
     def draw(self, plot):
