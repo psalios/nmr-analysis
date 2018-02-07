@@ -1,6 +1,7 @@
 from tools.referenceTool import ReferenceTool
 
 from widgets.customButton import CustomButton
+from customTapTool import CustomTapTool
 
 from bokeh.models.widgets import TextInput
 from bokeh.models.callbacks import CustomJS
@@ -26,7 +27,7 @@ class Reference:
 
         self.createButton()
 
-        self.createTool()
+        self.tool = CustomTapTool(self.logger, self.old, self.button, ReferenceTool)
 
     def createButton(self):
         self.button = CustomButton(label="Set Reference", button_type="success", width=500, error="Please select point using the reference tool.")
@@ -35,23 +36,6 @@ class Reference:
             button.data = {};
         """)
         self.button.js_on_click(buttonCallback)
-
-    def createTool(self):
-        callback = CustomJS(args=dict(text=self.old, button=self.button), code="""
-
-            /// get BoxSelectTool dimensions from cb_data parameter of Callback
-            var geometry = cb_data['geometries'];
-
-            var frame = this.plot_model.frame;
-            var xm = frame.xscales['default'];
-
-            var x = xm.invert(geometry.sx);
-            button.data = {
-                'x': x
-            };
-            text.value = x.toString();
-        """)
-        self.tool = ReferenceTool(callback=callback)
 
     def updateOldValue(self, value):
         self.oldValue = value
@@ -97,5 +81,5 @@ class Reference:
         self.peakPicking.updateChemicalShiftReport()
 
     def draw(self, plot):
-        plot.add_tools(self.tool)
+        self.tool.addToPlot(plot)
         plot.toolbar.active_tap = None

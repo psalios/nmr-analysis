@@ -44,6 +44,7 @@ class Plot:
 
             peakPickingLayout = column(
                 row(self.peakPicking.manual),
+                row(self.peakPicking.peakInput),
                 row(
                     column(self.peakPicking.peak),
                     column(self.peakPicking.resetButton)

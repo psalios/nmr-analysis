@@ -6,12 +6,13 @@ import numpy as np
 from collections import OrderedDict
 
 from customBoxSelect import CustomBoxSelect
+from customTapTool import CustomTapTool
 from tools.peakPickingSelectTool import PeakPickingSelectTool
 
 from widgets.customButton import CustomButton
 
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph, NumberFormatter
+from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph, NumberFormatter, TextInput
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.markers import Circle
 
@@ -43,9 +44,12 @@ class PeakPicking:
         self.manual = CustomButton(label="Manual Peaks", button_type="success", width=500, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
 
+        self.peakInput = TextInput(title="Peak By Peak", width=550, disabled=True)
         self.peak = CustomButton(label="Peak By Peak", button_type="primary", width=250, error="Please select area using the peak by peak tool.")
+        self.peak.on_click(self.peakPeakPicking)
+        self.peakTool = CustomTapTool(self.logger, self.peakInput, self.peak)
 
-        self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)
+        self.manualTool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)
 
         self.createResetButton()
         self.createDeselectButton()
@@ -154,6 +158,9 @@ class PeakPicking:
         # Update chemical shift report
         self.updateChemicalShiftReport()
 
+    def peakPeakPicking(self, dimensions):
+        print(dimensions)
+
     def updateDataValues(self):
         # Update DataTable Values
         newData = list(OrderedDict.fromkeys(
@@ -191,5 +198,7 @@ class PeakPicking:
         )
         plot.add_glyph(self.sources['peaks'], circle, selection_glyph=circle, nonselection_glyph=circle)
 
-        self.tool.addToPlot(plot)
-        self.tool.addGlyph(plot, "#009933")
+        self.manualTool.addToPlot(plot)
+        self.manualTool.addGlyph(plot, "#009933")
+
+        self.peakTool.addToPlot(plot)
