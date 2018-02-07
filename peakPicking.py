@@ -40,11 +40,10 @@ class PeakPicking:
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
 
-        self.auto = Button(label="Automatic Peak Picking", button_type="success", width=500)
-        self.auto.on_click(self.autoPeakPicking)
-
-        self.manual = CustomButton(label="Manual Peaks", button_type="primary", width=250, error="Please select area using the peak picking tool.")
+        self.manual = CustomButton(label="Manual Peaks", button_type="success", width=500, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
+
+        self.peak = CustomButton(label="Peak By Peak", button_type="primary", width=250, error="Please select area using the peak by peak tool.")
 
         self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)
 
@@ -128,15 +127,6 @@ class PeakPicking:
 
         self.updateChemicalShiftReport()
 
-    def autoPeakPicking(self):
-        peaks = ng.peakpick.pick(self.pdata, 0)
-        self.peaksIndices = [int(peak[0]) for peak in peaks]
-
-        self.updateDataValues()
-
-        # Update chemical shift report
-        self.updateChemicalShiftReport()
-
     def manualPeakPicking(self, dimensions):
 
         data = self.pdata
@@ -145,7 +135,7 @@ class PeakPicking:
 
             # Swap and invert y-dimensions
             dimensions['y0'], dimensions['y1'] = -dimensions['y1'], -dimensions['y0']
-        peaks = ng.peakpick.pick(data, dimensions['y0'])
+        peaks = ng.peakpick.pick(data, dimensions['y0'], algorithm="downward")
         self.peaksIndices = [int(peak[0]) for peak in peaks]
 
         # Filter top

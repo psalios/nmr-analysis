@@ -29,7 +29,7 @@ class MultipletAnalysis:
             TableColumn(field="xStop",  title="stop",  formatter=NumberFormatter(format="0.00")),
         ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
-        # self.sources['table'].on_change('selected', lambda attr, old, new: pass)
+        self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
 
         self.manual = CustomButton(label="Multiplet Analysis", button_type="primary", width=250, error="Please select area using the multiplet analysis tool.")
         self.manual.on_click(self.manualMultipletAnalysis)
@@ -43,10 +43,31 @@ class MultipletAnalysis:
         self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h"], width=250, disabled=True)
         self.delete = Button(label="Delete Multiplet", button_type="danger", width=500, disabled=True)
 
+    def rowSelect(self, ids):
+
+        if len(ids) == 1:
+
+            # Enable options
+            self.name.disabled = False
+            self.classes.disabled = False
+            self.delete.disabled = False
+
     def manualMultipletAnalysis(self, dimensions):
         self.peakPicking.manualPeakPicking(dimensions)
-
         self.peakPicking.rowSelectFromPeaks(self.peakPicking.peaksIndices)
+
+        self.integration.manualIntegration(dimensions)
+        self.integration.rowSelect([len(self.integration.sources['table'].data['xStart']) - 1])
+
+        ppm = sorted([self.dataSource.data['ppm'][i] for i in self.peakPicking.peaksIndices], reverse=True)
+
+        data = {
+            'xStart': [dimensions['x0']],
+            'xStop': [dimensions['x1']]
+        }
+
+        # Add to DataTable
+        self.sources['table'].stream(data)
 
         # Clear selected area
         self.sources['select'].data = dict(x=[], y=[])

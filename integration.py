@@ -33,7 +33,7 @@ class Integration:
                 TableColumn(field="integral", title="integral", editor=NumberEditor(step=0.01), formatter=NumberFormatter(format="0.00"))
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500, editable=True)
-        self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new))
+        self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
         self.sources['table'].on_change('data', lambda attr, old, new: self.changeData(old, new))
 
         self.manual = CustomButton(label="Manual Integration", button_type="primary", width=250, error="Please select area using the integration tool.")
@@ -88,10 +88,9 @@ class Integration:
         # Clear selected area
         self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
-    def rowSelect(self, rows):
-        ids = rows['1d']['indices']
+    def rowSelect(self, ids):
 
-        maxBottom = max(self.sources['table'].data['bottom'])
+        maxBottom = min(max(self.sources['table'].data['bottom']), 0)
         minTop = min(self.sources['table'].data['top'])
         tempHeight = minTop - maxBottom
 

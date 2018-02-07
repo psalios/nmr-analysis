@@ -42,9 +42,9 @@ class Plot:
             )
 
             peakPickingLayout = column(
-                row(self.peakPicking.auto),
+                row(self.peakPicking.manual),
                 row(
-                    column(self.peakPicking.manual),
+                    column(self.peakPicking.peak),
                     column(self.peakPicking.resetButton)
                 ),
                 row(self.peakPicking.dataTable),
