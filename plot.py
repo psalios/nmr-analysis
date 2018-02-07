@@ -6,6 +6,7 @@ from integration import Integration
 from multipletAnalysis import MultipletAnalysis
 
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
+from tools.fixedZoomOutTool import FixedZoomOutTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
 
 from bokeh.layouts import row, column
@@ -135,7 +136,7 @@ class Plot:
         #Constants
         xr = Range1d(start=int(max(self.ppmScale)+1),end=int(min(self.ppmScale)-1))
 
-        self.plot = figure(x_axis_label='ppm', y_axis_label='y', x_range=xr, tools="pan,box_zoom,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
+        self.plot = figure(x_axis_label='ppm', y_axis_label='y', x_range=xr, tools="pan,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
 
         # Remove grid from plot
         self.plot.xgrid.grid_line_color = None
@@ -151,6 +152,9 @@ class Plot:
         fixedWheelZoomTool = FixedWheelZoomTool(dimensions="height")
         self.plot.add_tools(fixedWheelZoomTool)
         self.plot.toolbar.active_scroll = fixedWheelZoomTool
+
+        fixedZoomOutTool = FixedZoomOutTool(factor=0.4)
+        self.plot.add_tools(fixedZoomOutTool)
 
         hoverTool = HoverTool(tooltips="($x, $y)")
         self.plot.add_tools(hoverTool)
