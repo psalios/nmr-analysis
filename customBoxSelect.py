@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.tools import BoxSelectTool
 from bokeh.models.glyphs import Rect

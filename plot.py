@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import nmrglue as ng
 
 from reference import Reference

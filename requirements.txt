@@ -10,6 +10,7 @@ itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
 matplotlib==2.1.2
+MySQL-python==1.2.5
 nmrglue==0.6
 numpy==1.14.0
 packaging==16.8

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from tools.referenceTool import ReferenceTool
 
 from widgets.customButton import CustomButton
