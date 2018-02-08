@@ -159,7 +159,14 @@ class PeakPicking:
         self.updateChemicalShiftReport()
 
     def peakPeakPicking(self, dimensions):
-        print(dimensions)
+
+        data = {
+            'x': [dimensions['x']],
+            'y': [self.pdata[np.abs(self.dataSource.data['ppm'] - dimensions['x']).argmin()]]
+        }
+        self.sources['table'].stream(data)
+
+        self.updateChemicalShiftReport()
 
     def updateDataValues(self):
         # Update DataTable Values
