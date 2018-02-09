@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from math import ceil
+import numpy as np
 
 from customBoxSelect import CustomBoxSelect
 from tools.multipletAnalysisSelectTool import MultipletAnalysisSelectTool
@@ -41,12 +42,13 @@ class MultipletAnalysis:
 
     def create(self):
 
-        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], h=[]))
+        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[]))
         columns = [
             TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
             TableColumn(field="xStop",  title="stop",  formatter=NumberFormatter(format="0.00")),
             TableColumn(field="name", title="Name"),
             TableColumn(field="classes", title="Class"),
+            TableColumn(field="j", title="J"),
             TableColumn(field="h", title="H", formatter=NumberFormatter(format="0"))
         ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
@@ -92,11 +94,14 @@ class MultipletAnalysis:
         peaks = [self.pdata[i] for i in self.peakPicking.peaksIndices]
         multiplet = self.predictMultiplet(peaks)
 
+        ppm = sorted([self.dataSource.data['ppm'][i] for i in self.peakPicking.peaksIndices])
+
         data = {
             'xStart': [dimensions['x0']],
             'xStop':  [dimensions['x1']],
             'name':   ['A' if not self.sources['table'].data['name'] else chr(ord(self.sources['table'].data['name'][-1])+1)],
             'classes':  [multiplet],
+            'j': [round(np.ediff1d(ppm).mean() * 500, 1)],
             'h': [hydrogen]
         }
 
@@ -153,12 +158,14 @@ class MultipletAnalysis:
         xStop   = list(self.sources['table'].data['xStop'])
         name    = list(self.sources['table'].data['name'])
         classes = list(self.sources['table'].data['classes'])
+        j       = list(self.sources['table'].data['j'])
         h       = list(self.sources['table'].data['h'])
 
         xStart.pop(self.selected)
         xStop.pop(self.selected)
         name.pop(self.selected)
         classes.pop(self.selected)
+        j.pop(self.selected)
         h.pop(self.selected)
 
         self.sources['table'].data = {
@@ -166,6 +173,7 @@ class MultipletAnalysis:
             'xStop': xStop,
             'name': name,
             'classes': classes,
+            'j': j,
             'h': h
         }
         self.deselectRows()
