@@ -56,7 +56,7 @@ class PeakPicking:
         self.createDeselectButton()
         self.createDeleteButton()
 
-        self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>")
+        self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>" if self.getLabel() == "13C" else "")
         self.chemicalShiftReport = Paragraph(text=self.getChemicalShiftReport(), width=500)
 
     def updateChemicalShiftReport(self):
@@ -64,9 +64,7 @@ class PeakPicking:
 
     def getChemicalShiftReport(self):
         label = self.getLabel()
-        if label == "1H":
-            return self.getMetadata() + " δ = "
-        elif label == "13C":
+        if label == "13C":
             return self.getMetadata() + " δ " + ", ".join(str("{:0.2f}").format(x) for x in sorted([round(x, 2) for x in self.sources['table'].data['x']], reverse=True)) + "."
         else:
             return ""

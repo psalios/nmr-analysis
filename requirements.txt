@@ -1,7 +1,7 @@
 backports-abc==0.5
 backports.functools-lru-cache==1.4
 backports.ssl-match-hostname==3.5.0.1
-bokeh==0.12.14rc2
+bokeh==0.12.14
 certifi==2018.1.18
 click==6.6
 cycler==0.10.0
@@ -15,7 +15,7 @@ nmrglue==0.6
 numpy==1.14.0
 packaging==16.8
 pandas==0.22.0
-pyparsing==2.1.10
+pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2016.7
 PyYAML==3.12

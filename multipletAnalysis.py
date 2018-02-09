@@ -9,7 +9,7 @@ from tools.multipletAnalysisSelectTool import MultipletAnalysisSelectTool
 from widgets.customButton import CustomButton
 
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.widgets import Button, DataTable, TableColumn, Div, NumberFormatter, Select, TextInput
+from bokeh.models.widgets import Button, DataTable, TableColumn, Div, NumberFormatter, Select, TextInput, Paragraph
 from bokeh.models.callbacks import CustomJS
 
 class MultipletAnalysis:
@@ -66,6 +66,8 @@ class MultipletAnalysis:
         self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","td","ddt"], width=250, disabled=True)
         self.delete = Button(label="Delete Multiplet", button_type="danger", width=500, disabled=True)
         self.delete.on_click(self.deleteMultiplet)
+
+        self.report = Paragraph(text=self.peakPicking.getMetadata(), width=500)
 
     def rowSelect(self, ids):
 
