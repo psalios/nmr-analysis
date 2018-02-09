@@ -8,6 +8,7 @@ from collections import OrderedDict
 from customBoxSelect import CustomBoxSelect
 from customTapTool import CustomTapTool
 from tools.peakPickingSelectTool import PeakPickingSelectTool
+from tools.peakByPeakTapTool import PeakByPeakTapTool
 
 from widgets.customButton import CustomButton
 
@@ -47,7 +48,7 @@ class PeakPicking:
         self.peakInput = TextInput(title="Peak By Peak", width=550, disabled=True)
         self.peak = CustomButton(label="Peak By Peak", button_type="primary", width=250, error="Please select area using the peak by peak tool.")
         self.peak.on_click(self.peakPeakPicking)
-        self.peakTool = CustomTapTool(self.logger, self.peakInput, self.peak)
+        self.peakTool = CustomTapTool(self.logger, self.peakInput, self.peak, tapTool=PeakByPeakTapTool)
 
         self.manualTool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)
 
