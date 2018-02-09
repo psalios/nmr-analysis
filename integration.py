@@ -15,9 +15,10 @@ from bokeh.models.glyphs import Rect
 
 class Integration:
 
-    def __init__(self, logger, dataSource):
+    def __init__(self, logger, pdata, dataSource):
         self.logger = logger
 
+        self.pdata = pdata
         self.dataSource = dataSource
 
         self.sources = dict()
@@ -95,7 +96,7 @@ class Integration:
     def rowSelect(self, ids):
 
         maxBottom = min(max(self.sources['table'].data['bottom']), 0)
-        minTop = min(self.sources['table'].data['top'])
+        minTop = max( min(self.sources['table'].data['top']), self.pdata.max())
         tempHeight = minTop - maxBottom
 
         x, y, width, height = [], [], [], []

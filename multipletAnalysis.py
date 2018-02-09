@@ -95,13 +95,12 @@ class MultipletAnalysis:
         multiplet = self.predictMultiplet(peaks)
 
         ppm = sorted([self.dataSource.data['ppm'][i] for i in self.peakPicking.peaksIndices])
-
         data = {
             'xStart': [dimensions['x0']],
             'xStop':  [dimensions['x1']],
             'name':   ['A' if not self.sources['table'].data['name'] else chr(ord(self.sources['table'].data['name'][-1])+1)],
             'classes':  [multiplet],
-            'j': [round(np.ediff1d(ppm).mean() * 500, 1)],
+            'j': [round(np.ediff1d(ppm).mean() * 500 if len(ppm) > 1 else 0, 1)],
             'h': [hydrogen]
         }
 
@@ -109,7 +108,7 @@ class MultipletAnalysis:
         self.sources['table'].stream(data)
 
         # Clear selected area
-        self.sources['select'].data = dict(x=[], y=[])
+        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
     def predictMultiplet(self, peaks):
 

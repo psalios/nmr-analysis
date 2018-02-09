@@ -18,8 +18,6 @@ export class FixedZoomOutToolView extends ActionToolView {
     // zooming out requires a negative factor to scale_range
     const zoom_info = scale_range(frame, -this.model.factor, h_axis, v_axis)
 
-    console.log(zoom_info)
-
     this.plot_view.push_state('zoom_out', {range: zoom_info})
     this.plot_view.update_range(zoom_info, false, true)
 

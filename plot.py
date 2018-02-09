@@ -113,7 +113,7 @@ class Plot:
         self.peakPicking.create()
         self.peakPicking.draw(self.plot)
 
-        self.integration = Integration(self.logger, self.dataSource)
+        self.integration = Integration(self.logger, self.pdata, self.dataSource)
         self.integration.create()
         self.integration.draw(self.plot)
 
