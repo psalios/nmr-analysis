@@ -105,6 +105,7 @@ class PeakPicking:
 
     def deselectData(self):
         self.sources['peaks'].data = dict(x=[], y=[])
+        self.deselectRows()
 
     def createDeleteButton(self):
         self.ids = []
@@ -129,8 +130,16 @@ class PeakPicking:
             'x': newX,
             'y': newY
         }
+        self.deselectRows()
 
         self.updateChemicalShiftReport()
+
+    def deselectRows(self):
+        self.sources['table'].selected = {
+            '0d': {'glyph': None, 'indices': []},
+            '1d': {'indices': []},
+            '2d': {'indices': {}}
+        }
 
     def manualPeakPicking(self, dimensions):
 

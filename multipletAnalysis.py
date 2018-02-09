@@ -63,14 +63,23 @@ class MultipletAnalysis:
         self.name = TextInput(title="Name:", value="", placeholder="Name", width=250, disabled=True)
         self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","td","ddt"], width=250, disabled=True)
         self.delete = Button(label="Delete Multiplet", button_type="danger", width=500, disabled=True)
+        self.delete.on_click(self.deleteMultiplet)
 
     def rowSelect(self, ids):
 
         if len(ids) == 1:
 
+            multiplet = ids[0]
+
+            self.selected = multiplet
+
             # Enable options
             self.name.disabled = False
+            self.name.value = self.sources['table'].data['name'][multiplet]
+
             self.classes.disabled = False
+            self.classes.value = self.sources['table'].data['classes'][multiplet]
+
             self.delete.disabled = False
 
     def manualMultipletAnalysis(self, dimensions):
@@ -138,6 +147,42 @@ class MultipletAnalysis:
 
         return False
 
+    def deleteMultiplet(self):
+
+        xStart  = list(self.sources['table'].data['xStart'])
+        xStop   = list(self.sources['table'].data['xStop'])
+        name    = list(self.sources['table'].data['name'])
+        classes = list(self.sources['table'].data['classes'])
+        h       = list(self.sources['table'].data['h'])
+
+        xStart.pop(self.selected)
+        xStop.pop(self.selected)
+        name.pop(self.selected)
+        classes.pop(self.selected)
+        h.pop(self.selected)
+
+        self.sources['table'].data = {
+            'xStart': xStart,
+            'xStop': xStop,
+            'name': name,
+            'classes': classes,
+            'h': h
+        }
+        self.deselectRows()
+
+        self.disableOptions()
+
+    def deselectRows(self):
+        self.sources['table'].selected = {
+            '0d': {'glyph': None, 'indices': []},
+            '1d': {'indices': []},
+            '2d': {'indices': {}}
+        }
+
+    def disableOptions(self):
+        self.name.disabled = True
+        self.classes.disabled = True
+        self.delete.disabled = True
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)

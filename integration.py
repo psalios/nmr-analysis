@@ -139,6 +139,7 @@ class Integration:
 
     def deselectData(self):
         self.sources['integration'].data = dict(x=[], y=[], width=[], height=[])
+        self.deselectRows()
 
     def createDeleteButton(self):
         self.deleteButton = Button(label="Delete selected integrals", button_type="danger", width=250)
@@ -170,6 +171,14 @@ class Integration:
             'top': newTop,
             'bottom': newBottom,
             'integral': newIntegral
+        }
+        self.deselectRows()
+
+    def deselectRows(self):
+        self.sources['table'].selected = {
+            '0d': {'glyph': None, 'indices': []},
+            '1d': {'indices': []},
+            '2d': {'indices': {}}
         }
 
     def draw(self, plot):
