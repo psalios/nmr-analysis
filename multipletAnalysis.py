@@ -36,6 +36,7 @@ class MultipletAnalysis:
         self.dataSource = dataSource
 
         self.peakPicking = peakPicking
+        self.peakPicking.sources['table'].on_change('data', lambda attr, old, new: self.recalculateAllMultiplets())
         self.integration = integration
 
         self.sources = dict()
@@ -43,7 +44,7 @@ class MultipletAnalysis:
 
     def create(self):
 
-        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[], peak=[]))
+        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[], peak=[], top=[], bottom=[]))
         columns = [
             TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
             TableColumn(field="xStop",  title="stop",  formatter=NumberFormatter(format="0.00")),
@@ -93,8 +94,29 @@ class MultipletAnalysis:
 
             self.delete.disabled = False
 
+    def recalculateAllMultiplets(self):
+        data = dict(self.sources['table'].data)
+        for pos, start, stop in zip(range(len(data['xStart'])), data['xStart'], data['xStop']):
+            ppm = self.peakPicking.getPPMInSpace(start, stop)
+            peaks = self.peakPicking.getPeaksInSpace(start, stop)
+
+            multiplet = self.predictMultiplet(peaks)
+
+            patch = {
+                'classes': [(pos, multiplet)],
+                'j': [(pos, self.calcJ(ppm))]
+            }
+            self.sources['table'].patch(patch)
+
     def manualMultipletAnalysis(self, dimensions):
+        # Clear selected area
+        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
+
         self.peakPicking.manualPeakPicking(dimensions)
+        # Check if empty
+        if not self.peakPicking.peaksIndices:
+            return
+
         self.peakPicking.rowSelectFromPeaks(self.peakPicking.peaksIndices)
 
         hydrogen = ceil(self.integration.manualIntegration(dimensions))
@@ -109,16 +131,18 @@ class MultipletAnalysis:
             'xStop':  [dimensions['x1']],
             'name':   ['A' if not self.sources['table'].data['name'] else chr(ord(self.sources['table'].data['name'][-1])+1)],
             'classes':  [multiplet],
-            'j': [round(np.ediff1d(ppm).mean() * 500 if len(ppm) > 1 else 0, 1)],
+            'j': [self.calcJ(ppm)],
             'h': [hydrogen],
-            'peak': [np.median(ppm)]
+            'peak': [np.median(ppm)],
+            'top': [dimensions['y1']],
+            'bottom': [dimensions['y0']]
         }
 
         # Add to DataTable
         self.sources['table'].stream(data)
 
-        # Clear selected area
-        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
+    def calcJ(self, ppm):
+        return round(abs(np.ediff1d(ppm).mean()) * self.peakPicking.getFrequency() if len(ppm) > 1 else 0, 1)
 
     def predictMultiplet(self, peaks):
 
@@ -193,6 +217,8 @@ class MultipletAnalysis:
         j       = list(self.sources['table'].data['j'])
         h       = list(self.sources['table'].data['h'])
         peak    = list(self.sources['table'].data['peak'])
+        top     = list(self.sources['table'].data['top'])
+        bottom  = list(self.sources['table'].data['bottom'])
 
         xStart.pop(self.selected)
         xStop.pop(self.selected)
@@ -201,6 +227,8 @@ class MultipletAnalysis:
         j.pop(self.selected)
         h.pop(self.selected)
         peak.pop(self.selected)
+        top.pop(self.selected)
+        bottom.pop(self.selected)
 
         self.sources['table'].data = {
             'xStart': xStart,
@@ -209,7 +237,9 @@ class MultipletAnalysis:
             'classes': classes,
             'j': j,
             'h': h,
-            'peak': peak
+            'peak': peak,
+            'top': top,
+            'bottom': bottom
         }
         self.deselectRows()
 

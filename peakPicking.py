@@ -41,7 +41,7 @@ class PeakPicking:
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
-        self.sources['table'].on_change('data', lambda attr, old, new: self.updateChemicalShiftReport())
+        # self.sources['table'].on_change('data', lambda attr, old, new: self.updateChemicalShiftReport())
 
         self.manual = CustomButton(label="Manual Peaks", button_type="success", width=500, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
@@ -71,7 +71,7 @@ class PeakPicking:
             return ""
 
     def getMetadata(self):
-        return self.getLabel() + " NMR (" + self.getFrequency() + ", " + self.getSolvent() + ")"
+        return self.getLabel() + " NMR (" + self.getFrequencyStr() + ", " + self.getSolvent() + ")"
 
     def getSolvent(self):
         return self.dic['acqus']['SOLVENT']
@@ -79,8 +79,11 @@ class PeakPicking:
     def getLabel(self):
         return self.udic[0]['label']
 
+    def getFrequencyStr(self):
+        return str(self.getFrequency()) + " MHz"
+
     def getFrequency(self):
-        return str(int(round(self.udic[0]['obs'], 0))) + " MHz"
+        return int(round(self.udic[0]['obs'], 0))
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
@@ -195,6 +198,12 @@ class PeakPicking:
             'x': [self.dataSource.data['ppm'][i] for i in ids],
             'y': [self.pdata[i] for i in ids]
         }
+
+    def getPeaksInSpace(self, start, stop):
+        return [y for x, y in zip(self.sources['table'].data['x'], self.sources['table'].data['y']) if x <= start and x >= stop]
+
+    def getPPMInSpace(self, start, stop):
+        return [x for x in self.sources['table'].data['x'] if x <= start and x >= stop]
 
     def draw(self, plot):
         circle = Circle(
