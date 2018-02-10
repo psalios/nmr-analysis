@@ -41,7 +41,7 @@ class PeakPicking:
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
-        # self.sources['table'].on_change('data', lambda attr, old, new: self.updateChemicalShiftReport())
+        self.sources['table'].on_change('data', lambda attr, old, new: self.updateChemicalShiftReport())
 
         self.manual = CustomButton(label="Manual Peaks", button_type="success", width=500, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
