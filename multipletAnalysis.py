@@ -63,7 +63,11 @@ class MultipletAnalysis:
 
         self.title = Div(text="<strong>Select Multiplet To Edit</strong>", width=500)
         self.name = TextInput(title="Name:", value="", placeholder="Name", width=250, disabled=True)
+        self.name.on_change('value', lambda attr, old, new: self.manualChange('name', new))
+
         self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","td","ddt"], width=250, disabled=True)
+        self.classes.on_change('value', lambda attr, old, new: self.manualChange('classes', new))
+
         self.delete = Button(label="Delete Multiplet", button_type="danger", width=500, disabled=True)
         self.delete.on_click(self.deleteMultiplet)
 
@@ -152,6 +156,12 @@ class MultipletAnalysis:
                         return True
 
         return False
+
+    def manualChange(self, key, new):
+        patch = {
+            key: [(self.selected, new)]
+        }
+        self.sources['table'].patch(patch)
 
     def deleteMultiplet(self):
 
