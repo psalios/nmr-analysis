@@ -36,8 +36,10 @@ class MultipletAnalysis:
         self.dataSource = dataSource
 
         self.peakPicking = peakPicking
-        self.peakPicking.sources['table'].on_change('data', lambda attr, old, new: self.recalculateAllMultiplets())
+        self.peakPicking.sources['table'].on_change('data', lambda attr, old, new: self.recalculateAllMultipletsForPeaks())
+
         self.integration = integration
+        self.integration.sources['table'].on_change('data', lambda attr, old, new: self.recalculateAllMultipletsForIntegrals())
 
         self.sources = dict()
         self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
@@ -94,8 +96,8 @@ class MultipletAnalysis:
 
             self.delete.disabled = False
 
-    def recalculateAllMultiplets(self):
-        data = dict(self.sources['table'].data)
+    def recalculateAllMultipletsForPeaks(self):
+        data = self.sources['table'].data
         for pos, start, stop in zip(range(len(data['xStart'])), data['xStart'], data['xStop']):
             ppm = self.peakPicking.getPPMInSpace(start, stop)
             peaks = self.peakPicking.getPeaksInSpace(start, stop)
@@ -105,6 +107,15 @@ class MultipletAnalysis:
             patch = {
                 'classes': [(pos, multiplet)],
                 'j': [(pos, self.calcJ(ppm))]
+            }
+            self.sources['table'].patch(patch)
+
+    def recalculateAllMultipletsForIntegrals(self):
+        data = self.sources['table'].data
+        for pos, start, stop in zip(range(len(data['xStart'])), data['xStart'], data['xStop']):
+
+            patch = {
+                'h': [(pos, ceil(self.integration.getIntegral(start, stop)))]
             }
             self.sources['table'].patch(patch)
 

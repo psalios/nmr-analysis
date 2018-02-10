@@ -182,6 +182,11 @@ class Integration:
             '2d': {'indices': {}}
         }
 
+    def getIntegral(self, start, stop):
+        return self.sources['table'].data['integral'][
+            zip(self.sources['table'].data['xStart'], self.sources['table'].data['xStop']).index((start, stop))
+        ]
+
     def draw(self, plot):
         rect = Rect(
             x="x",
