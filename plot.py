@@ -1,11 +1,13 @@
 #!/usr/bin/python
 
 import nmrglue as ng
+import hashlib
 
 from reference import Reference
 from peakPicking import PeakPicking
 from integration import Integration
 from multipletAnalysis import MultipletAnalysis
+from spectrumDB import SpectrumDB
 
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.fixedZoomOutTool import FixedZoomOutTool
@@ -32,6 +34,8 @@ class Plot:
         self.dic, _ = ng.bruker.read(path)
         _, self.pdata = ng.bruker.read_pdata(path+'/pdata/1/')
         self.logger.info("Experiment data parsed successfully")
+
+        self.id = SpectrumDB.Add(hashlib.sha256(self.pdata.tostring()).hexdigest())
 
     def draw(self):
         try:

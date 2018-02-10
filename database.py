@@ -13,7 +13,7 @@ class Database:
     password = Properties.GetProperty("db.password")
 
     @staticmethod
-    def getConnection():
+    def GetConnection():
         return MySQLdb.connect(
             host   = Database.host,
             port   = Database.port,
@@ -22,7 +22,7 @@ class Database:
             passwd = Database.password
         )
 
-# conn = Database.getConnection()
+# conn = Database.GetConnection()
 # query = "SELECT name FROM user"
 # cursor = conn.cursor()
 # cursor.execute(query)
