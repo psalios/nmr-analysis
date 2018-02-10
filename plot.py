@@ -83,7 +83,9 @@ class Plot:
                     column(self.multipletAnalysis.name),
                     column(self.multipletAnalysis.classes)
                 ),
-                row(self.multipletAnalysis.delete)
+                row(self.multipletAnalysis.delete),
+                row(self.multipletAnalysis.reportTitle),
+                row(self.multipletAnalysis.report)
             )
 
             referenceTab = Panel(child=referenceLayout, title="Reference")

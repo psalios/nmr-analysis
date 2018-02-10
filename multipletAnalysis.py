@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from math import ceil
 import numpy as np
@@ -42,7 +43,7 @@ class MultipletAnalysis:
 
     def create(self):
 
-        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[]))
+        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[], peak=[]))
         columns = [
             TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
             TableColumn(field="xStop",  title="stop",  formatter=NumberFormatter(format="0.00")),
@@ -53,6 +54,7 @@ class MultipletAnalysis:
         ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
+        self.sources['table'].on_change('data', lambda attr, old, new: self.updateMultipletReport())
 
         self.manual = CustomButton(label="Multiplet Analysis", button_type="primary", width=250, error="Please select area using the multiplet analysis tool.")
         self.manual.on_click(self.manualMultipletAnalysis)
@@ -61,7 +63,7 @@ class MultipletAnalysis:
 
         self.createResetButton()
 
-        self.title = Div(text="<strong>Select Multiplet To Edit</strong>", width=500)
+        self.title = Div(text="<strong>Edit Multiplet:</strong>", width=500)
         self.name = TextInput(title="Name:", value="", placeholder="Name", width=250, disabled=True)
         self.name.on_change('value', lambda attr, old, new: self.manualChange('name', new))
 
@@ -71,7 +73,8 @@ class MultipletAnalysis:
         self.delete = Button(label="Delete Multiplet", button_type="danger", width=500, disabled=True)
         self.delete.on_click(self.deleteMultiplet)
 
-        self.report = Paragraph(text=self.peakPicking.getMetadata(), width=500)
+        self.reportTitle = Div(text="<strong>Multiplet Report:</strong>")
+        self.report = Paragraph(width=500)
 
     def rowSelect(self, ids):
 
@@ -107,7 +110,8 @@ class MultipletAnalysis:
             'name':   ['A' if not self.sources['table'].data['name'] else chr(ord(self.sources['table'].data['name'][-1])+1)],
             'classes':  [multiplet],
             'j': [round(np.ediff1d(ppm).mean() * 500 if len(ppm) > 1 else 0, 1)],
-            'h': [hydrogen]
+            'h': [hydrogen],
+            'peak': [np.median(ppm)]
         }
 
         # Add to DataTable
@@ -157,6 +161,23 @@ class MultipletAnalysis:
 
         return False
 
+    def updateMultipletReport(self):
+        label = self.peakPicking.getLabel()
+
+        text = ""
+        if label == "1H":
+            data = self.sources['table'].data
+            text = self.peakPicking.getMetadata() + " δ = " + ", ".join(
+                "{:0.2f} ({}, ".format(peak, classes) +
+                ("J={}, ".format(j) if j != 0 else "") +
+                "{:d}H)".format(int(h))
+                for (peak, classes, j, h) in sorted(zip(data['peak'], data['classes'], data['j'], data['h']), reverse=True)
+            ) + "."
+        elif label == "13C":
+            text = self.peakPicking.getChemicalShiftReport()
+
+        self.report.text = text
+
     def manualChange(self, key, new):
         patch = {
             key: [(self.selected, new)]
@@ -171,6 +192,7 @@ class MultipletAnalysis:
         classes = list(self.sources['table'].data['classes'])
         j       = list(self.sources['table'].data['j'])
         h       = list(self.sources['table'].data['h'])
+        peak    = list(self.sources['table'].data['peak'])
 
         xStart.pop(self.selected)
         xStop.pop(self.selected)
@@ -178,6 +200,7 @@ class MultipletAnalysis:
         classes.pop(self.selected)
         j.pop(self.selected)
         h.pop(self.selected)
+        peak.pop(self.selected)
 
         self.sources['table'].data = {
             'xStart': xStart,
@@ -185,7 +208,8 @@ class MultipletAnalysis:
             'name': name,
             'classes': classes,
             'j': j,
-            'h': h
+            'h': h,
+            'peak': peak
         }
         self.deselectRows()
 

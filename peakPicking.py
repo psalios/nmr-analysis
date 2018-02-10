@@ -41,6 +41,7 @@ class PeakPicking:
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
+        self.sources['table'].on_change('data', lambda attr, old, new: self.updateChemicalShiftReport())
 
         self.manual = CustomButton(label="Manual Peaks", button_type="success", width=500, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
@@ -65,7 +66,7 @@ class PeakPicking:
     def getChemicalShiftReport(self):
         label = self.getLabel()
         if label == "13C":
-            return self.getMetadata() + " δ " + ", ".join(str("{:0.2f}").format(x) for x in sorted([round(x, 2) for x in self.sources['table'].data['x']], reverse=True)) + "."
+            return self.getMetadata() + " δ " + ", ".join("{:0.2f}".format(x) for x in [round(x, 2) for x in self.sources['table'].data['x']]) + "."
         else:
             return ""
 
@@ -130,8 +131,6 @@ class PeakPicking:
         }
         self.deselectRows()
 
-        self.updateChemicalShiftReport()
-
     def deselectRows(self):
         self.sources['table'].selected = {
             '0d': {'glyph': None, 'indices': []},
@@ -163,9 +162,6 @@ class PeakPicking:
         # Clear selected area
         self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
-        # Update chemical shift report
-        self.updateChemicalShiftReport()
-
     def peakPeakPicking(self, dimensions):
 
         data = {
@@ -173,8 +169,6 @@ class PeakPicking:
             'y': [self.pdata[np.abs(self.dataSource.data['ppm'] - dimensions['x']).argmin()]]
         }
         self.sources['table'].stream(data)
-
-        self.updateChemicalShiftReport()
 
     def updateDataValues(self):
         # Update DataTable Values
