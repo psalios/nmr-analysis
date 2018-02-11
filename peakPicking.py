@@ -5,6 +5,8 @@ import nmrglue as ng
 import numpy as np
 from collections import OrderedDict
 
+from common import *
+from observer import Observer
 from customBoxSelect import CustomBoxSelect
 from customTapTool import CustomTapTool
 from tools.peakPickingSelectTool import PeakPickingSelectTool
@@ -17,9 +19,10 @@ from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph,
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.markers import Circle
 
-class PeakPicking:
+class PeakPicking(Observer):
 
-    def __init__(self, logger, dic, udic, pdata, dataSource):
+    def __init__(self, logger, dic, udic, pdata, dataSource, reference):
+        Observer.__init__(self, logger)
         self.logger = logger
 
         self.dic = dic
@@ -27,6 +30,8 @@ class PeakPicking:
         self.pdata = pdata
         self.mpdata = np.array(map(lambda x: -x, pdata))
         self.dataSource = dataSource
+
+        reference.addObserver(lambda n: referenceObserver(self, n))
 
         self.sources = dict()
         self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
@@ -134,6 +139,8 @@ class PeakPicking:
         }
         self.deselectRows()
 
+        self.notifyObservers()
+
     def deselectRows(self):
         self.sources['table'].selected = {
             '0d': {'glyph': None, 'indices': []},
@@ -142,6 +149,9 @@ class PeakPicking:
         }
 
     def manualPeakPicking(self, dimensions):
+
+        # Clear selected area
+        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
         data = self.pdata
         if abs(dimensions['y0']) > abs(dimensions['y1']):
@@ -161,9 +171,7 @@ class PeakPicking:
 
         if len(self.peaksIndices) > 0:
             self.updateDataValues()
-
-        # Clear selected area
-        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
+            self.notifyObservers()
 
     def peakPeakPicking(self, dimensions):
 
@@ -172,6 +180,7 @@ class PeakPicking:
             'y': [self.pdata[np.abs(self.dataSource.data['ppm'] - dimensions['x']).argmin()]]
         }
         self.sources['table'].stream(data)
+        self.notifyObservers()
 
     def updateDataValues(self):
         # Update DataTable Values

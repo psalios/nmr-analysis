@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from observer import Observer
 
 from tools.referenceTool import ReferenceTool
 
@@ -8,14 +9,13 @@ from customTapTool import CustomTapTool
 from bokeh.models.widgets import TextInput
 from bokeh.models.callbacks import CustomJS
 
-class Reference:
+class Reference(Observer):
 
-    def __init__(self, logger, source, updateSources, peakPicking):
+    def __init__(self, logger, source):
+        Observer.__init__(self, logger)
         self.logger = logger
 
         self.source = source
-        self.updateSources = updateSources
-        self.peakPicking = peakPicking
 
     def create(self):
 
@@ -59,28 +59,12 @@ class Reference:
                 'data': newData
             }
 
-            self.updateDataSources(n)
+            self.notifyObservers(n)
         except ValueError:
             pass
         finally:
             self.oldValue = self.newValue = None
             self.old.value = self.new.value = ""
-
-    def updateDataSources(self, n):
-
-        for source in self.updateSources:
-            data = dict(source.data)
-
-            if 'x' in data:
-                data['x'] = [point - n for point in data['x']]
-            if 'xStart' in data:
-                data['xStart'] = [point - n for point in data['xStart']]
-            if 'xStop' in data:
-                data['xStop'] = [point - n for point in data['xStop']]
-            source.data = data
-
-        # Update Chemical Shift Report
-        self.peakPicking.updateChemicalShiftReport()
 
     def draw(self, plot):
         self.tool.addToPlot(plot)

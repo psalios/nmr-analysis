@@ -3,6 +3,8 @@
 import nmrglue as ng
 import numpy as np
 
+from common import *
+from observer import Observer
 from customBoxSelect import CustomBoxSelect
 from tools.integrationSelectTool import IntegrationSelectTool
 
@@ -13,13 +15,16 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.models.widgets import Button, DataTable, TableColumn, NumberFormatter, NumberEditor
 from bokeh.models.glyphs import Rect
 
-class Integration:
+class Integration(Observer):
 
-    def __init__(self, logger, pdata, dataSource):
+    def __init__(self, logger, pdata, dataSource, reference):
+        Observer.__init__(self, logger)
         self.logger = logger
 
         self.pdata = pdata
         self.dataSource = dataSource
+
+        reference.addObserver(lambda n: referenceObserver(self, n))
 
         self.sources = dict()
         self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
@@ -62,8 +67,12 @@ class Integration:
                 'integral': [(i, old['integral'][i] * diff) for i in xrange(len(old['integral']))]
             }
             self.sources['table'].patch(patch)
+            self.notifyObservers()
 
     def manualIntegration(self, dimensions):
+
+        # Clear selected area
+        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
         points = [point for (point, pos) in zip(self.dataSource.data['data'], self.dataSource.data['ppm']) if pos <= dimensions['x0'] and pos >= dimensions['x1']]
         integral = np.trapz(points, axis = 0)
@@ -87,9 +96,7 @@ class Integration:
             'bottom': newBottom,
             'integral': newIntegral
         }
-
-        # Clear selected area
-        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
+        self.notifyObservers()
 
         return ratio
 
@@ -174,6 +181,7 @@ class Integration:
             'integral': newIntegral
         }
         self.deselectRows()
+        self.notifyObservers()
 
     def deselectRows(self):
         self.sources['table'].selected = {

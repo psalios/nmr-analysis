@@ -115,22 +115,21 @@ class Plot:
 
         self.dataSource = ColumnDataSource(data=dict(ppm=self.ppmScale, data=self.pdata))
 
-        self.peakPicking = PeakPicking(self.logger, self.dic, self.udic, self.pdata, self.dataSource)
+        self.reference = Reference(self.logger, self.dataSource)
+        self.reference.create()
+        self.reference.draw(self.plot)
+
+        self.peakPicking = PeakPicking(self.logger, self.dic, self.udic, self.pdata, self.dataSource, self.reference)
         self.peakPicking.create()
         self.peakPicking.draw(self.plot)
 
-        self.integration = Integration(self.logger, self.pdata, self.dataSource)
+        self.integration = Integration(self.logger, self.pdata, self.dataSource, self.reference)
         self.integration.create()
         self.integration.draw(self.plot)
 
-        self.multipletAnalysis = MultipletAnalysis(self.logger, self.pdata, self.dataSource, self.peakPicking, self.integration)
+        self.multipletAnalysis = MultipletAnalysis(self.logger, self.pdata, self.dataSource, self.peakPicking, self.integration, self.reference)
         self.multipletAnalysis.create()
         self.multipletAnalysis.draw(self.plot)
-
-        sources = self.peakPicking.sources.values() + self.integration.sources.values() + self.multipletAnalysis.sources.values()
-        self.reference = Reference(self.logger, self.dataSource, sources, self.peakPicking)
-        self.reference.create()
-        self.reference.draw(self.plot)
 
         self.plot.line('ppm', 'data', source=self.dataSource, line_width=2)
 

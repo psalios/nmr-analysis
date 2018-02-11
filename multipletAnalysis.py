@@ -4,6 +4,7 @@
 from math import ceil
 import numpy as np
 
+from common import *
 from customBoxSelect import CustomBoxSelect
 from tools.multipletAnalysisSelectTool import MultipletAnalysisSelectTool
 
@@ -29,17 +30,19 @@ class MultipletAnalysis:
         'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7}
     }
 
-    def __init__(self, logger, pdata, dataSource, peakPicking, integration):
+    def __init__(self, logger, pdata, dataSource, peakPicking, integration, reference):
         self.logger = logger
 
         self.pdata = pdata
         self.dataSource = dataSource
 
         self.peakPicking = peakPicking
-        self.peakPicking.sources['table'].on_change('data', lambda attr, old, new: self.recalculateAllMultipletsForPeaks())
+        peakPicking.addObserver(self.recalculateAllMultipletsForPeaks)
 
         self.integration = integration
-        self.integration.sources['table'].on_change('data', lambda attr, old, new: self.recalculateAllMultipletsForIntegrals())
+        self.integration.addObserver(self.recalculateAllMultipletsForIntegrals)
+
+        reference.addObserver(lambda n: referenceObserver(self, n))
 
         self.sources = dict()
         self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
@@ -98,26 +101,25 @@ class MultipletAnalysis:
 
     def recalculateAllMultipletsForPeaks(self):
         data = self.sources['table'].data
+
+        patch = dict(classes=[], j=[])
         for pos, start, stop in zip(range(len(data['xStart'])), data['xStart'], data['xStop']):
             ppm = self.peakPicking.getPPMInSpace(start, stop)
             peaks = self.peakPicking.getPeaksInSpace(start, stop)
 
             multiplet = self.predictMultiplet(peaks)
 
-            patch = {
-                'classes': [(pos, multiplet)],
-                'j': [(pos, self.calcJ(ppm))]
-            }
-            self.sources['table'].patch(patch)
+            patch['classes'].append((pos, multiplet))
+            patch['j'].append((pos, self.calcJ(ppm)))
+        self.sources['table'].patch(patch)
 
     def recalculateAllMultipletsForIntegrals(self):
         data = self.sources['table'].data
-        for pos, start, stop in zip(range(len(data['xStart'])), data['xStart'], data['xStop']):
 
-            patch = {
-                'h': [(pos, ceil(self.integration.getIntegral(start, stop)))]
-            }
-            self.sources['table'].patch(patch)
+        patch = dict(h=[])
+        for pos, start, stop in zip(xrange(len(data['xStart'])), data['xStart'], data['xStop']):
+            patch['h'].append((pos, ceil(self.integration.getIntegral(start, stop))))
+        self.sources['table'].patch(patch)
 
     def manualMultipletAnalysis(self, dimensions):
         # Clear selected area
@@ -131,7 +133,6 @@ class MultipletAnalysis:
         self.peakPicking.rowSelectFromPeaks(self.peakPicking.peaksIndices)
 
         hydrogen = ceil(self.integration.manualIntegration(dimensions))
-        self.integration.rowSelect([len(self.integration.sources['table'].data['xStart']) - 1])
 
         peaks = [self.pdata[i] for i in self.peakPicking.peaksIndices]
         multiplet = self.predictMultiplet(peaks)

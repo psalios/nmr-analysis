@@ -4,7 +4,6 @@ class SpectrumDB:
 
     @staticmethod
     def Add(h):
-        print(h)
         conn = Database.GetConnection()
 
         cur = conn.cursor()
