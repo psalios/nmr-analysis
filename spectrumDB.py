@@ -6,12 +6,13 @@ class SpectrumDB:
     def Add(h):
         conn = Database.GetConnection()
 
-        cur = conn.cursor()
-        cur.execute("INSERT IGNORE INTO spectrum SET hash=%s", (h,))
-        conn.commit()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("INSERT IGNORE INTO spectrum SET hash=%s", (h,))
+            conn.commit()
 
-        cur.execute("SELECT id FROM spectrum WHERE hash=%s", (h,))
-        spectrumId = cur.fetchone()[0]
-        conn.close()
-
-        return spectrumId
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT id FROM spectrum WHERE hash=%s", (h,))
+                return cursor.fetchone()[0]
+        finally:
+            conn.close()

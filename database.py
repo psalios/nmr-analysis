@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import MySQLdb
+import pymysql.cursors
 
 from config import Properties
 
@@ -14,7 +14,7 @@ class Database:
 
     @staticmethod
     def GetConnection():
-        return MySQLdb.connect(
+        return pymysql.connect(
             host   = Database.host,
             port   = Database.port,
             db     = Database.db,
