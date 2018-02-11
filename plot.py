@@ -32,7 +32,7 @@ class Plot:
 
         self.logger.info("Parsing experiment data")
         self.dic, _ = ng.bruker.read(path)
-        _, self.pdata = ng.bruker.read_pdata(path+'/pdata/1/')
+        _, self.pdata = ng.bruker.read_pdata("{}/pdata/1/".format(path))
         self.logger.info("Experiment data parsed successfully")
 
         self.id = SpectrumDB.Add(hashlib.sha256(self.pdata.tostring()).hexdigest())

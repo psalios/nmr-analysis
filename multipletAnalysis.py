@@ -46,7 +46,7 @@ class MultipletAnalysis:
 
     def create(self):
 
-        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[], peak=[], top=[], bottom=[]))
+        self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[], peaks=[], top=[], bottom=[]))
         columns = [
             TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
             TableColumn(field="xStop",  title="stop",  formatter=NumberFormatter(format="0.00")),
@@ -144,7 +144,7 @@ class MultipletAnalysis:
             'classes':  [multiplet],
             'j': [self.calcJ(ppm)],
             'h': [hydrogen],
-            'peak': [np.median(ppm)],
+            'peaks': [ppm],
             'top': [dimensions['y1']],
             'bottom': [dimensions['y0']]
         }
@@ -203,10 +203,11 @@ class MultipletAnalysis:
         if label == "1H":
             data = self.sources['table'].data
             text = self.peakPicking.getMetadata() + " δ = " + ", ".join(
-                "{:0.2f} ({}, ".format(peak, classes) +
+                ("{:0.2f}".format(np.median(peaks)) if classes != 'm' else "{:0.2f}-{:0.2f}".format(peaks[-1], peaks[0])) +
+                " ({}, ".format(classes) +
                 ("J={}, ".format(j) if j != 0 else "") +
                 "{:d}H)".format(int(h))
-                for (peak, classes, j, h) in sorted(zip(data['peak'], data['classes'], data['j'], data['h']), reverse=True)
+                for (peaks, classes, j, h) in sorted(zip(data['peaks'], data['classes'], data['j'], data['h']), reverse=True)
             ) + "."
         elif label == "13C":
             text = self.peakPicking.getChemicalShiftReport()
@@ -227,7 +228,7 @@ class MultipletAnalysis:
         classes = list(self.sources['table'].data['classes'])
         j       = list(self.sources['table'].data['j'])
         h       = list(self.sources['table'].data['h'])
-        peak    = list(self.sources['table'].data['peak'])
+        peaks   = list(self.sources['table'].data['peaks'])
         top     = list(self.sources['table'].data['top'])
         bottom  = list(self.sources['table'].data['bottom'])
 
@@ -237,7 +238,7 @@ class MultipletAnalysis:
         classes.pop(self.selected)
         j.pop(self.selected)
         h.pop(self.selected)
-        peak.pop(self.selected)
+        peaks.pop(self.selected)
         top.pop(self.selected)
         bottom.pop(self.selected)
 
@@ -248,7 +249,7 @@ class MultipletAnalysis:
             'classes': classes,
             'j': j,
             'h': h,
-            'peak': peak,
+            'peaks': peaks,
             'top': top,
             'bottom': bottom
         }
