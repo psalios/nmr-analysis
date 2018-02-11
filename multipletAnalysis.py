@@ -30,9 +30,11 @@ class MultipletAnalysis:
         'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7}
     }
 
-    def __init__(self, logger, pdata, dataSource, peakPicking, integration, reference):
+    def __init__(self, logger, dic, udic, pdata, dataSource, peakPicking, integration, reference):
         self.logger = logger
 
+        self.dic = dic
+        self.udic = udic
         self.pdata = pdata
         self.dataSource = dataSource
 
@@ -154,7 +156,7 @@ class MultipletAnalysis:
         self.sources['table'].stream(data)
 
     def calcJ(self, ppm):
-        return round(abs(np.ediff1d(ppm).mean()) * self.peakPicking.getFrequency() if len(ppm) > 1 else 0, 1)
+        return round(abs(np.ediff1d(ppm).mean()) * getFrequency(self.udic) if len(ppm) > 1 else 0, 1)
 
     def predictMultiplet(self, peaks):
 
@@ -198,12 +200,12 @@ class MultipletAnalysis:
         return False
 
     def updateMultipletReport(self):
-        label = self.peakPicking.getLabel()
+        label = getLabel(self.udic)
 
         text = ""
         if label == "1H":
             data = self.sources['table'].data
-            text = self.peakPicking.getMetadata() + " δ = " + ", ".join(
+            text = getMetadata(self.dic, self.udic) + " δ = " + ", ".join(
                 ("{:0.2f}".format(np.median(peaks)) if classes != 'm' else "{:0.2f}-{:0.2f}".format(peaks[-1], peaks[0])) +
                 " ({}, ".format(classes) +
                 ("J={}, ".format(j) if j != 0 else "") +

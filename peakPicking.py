@@ -62,33 +62,18 @@ class PeakPicking(Observer):
         self.createDeselectButton()
         self.createDeleteButton()
 
-        self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>" if self.getLabel() == "13C" else "")
+        self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>" if getLabel(self.udic) == "13C" else "")
         self.chemicalShiftReport = Paragraph(text=self.getChemicalShiftReport(), width=500)
 
     def updateChemicalShiftReport(self):
         self.chemicalShiftReport.text = self.getChemicalShiftReport()
 
     def getChemicalShiftReport(self):
-        label = self.getLabel()
+        label = getLabel(self.udic)
         if label == "13C":
-            return self.getMetadata() + " δ " + ", ".join("{:0.2f}".format(x) for x in [round(x, 2) for x in self.sources['table'].data['x']]) + "."
+            return getMetadata(self.dic, self.udic) + " δ " + ", ".join("{:0.2f}".format(x) for x in [round(x, 2) for x in self.sources['table'].data['x']]) + "."
         else:
             return ""
-
-    def getMetadata(self):
-        return self.getLabel() + " NMR (" + self.getFrequencyStr() + ", " + self.getSolvent() + ")"
-
-    def getSolvent(self):
-        return self.dic['acqus']['SOLVENT']
-
-    def getLabel(self):
-        return self.udic[0]['label']
-
-    def getFrequencyStr(self):
-        return str(self.getFrequency()) + " MHz"
-
-    def getFrequency(self):
-        return int(round(self.udic[0]['obs'], 0))
 
     def createResetButton(self):
         self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)

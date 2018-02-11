@@ -127,7 +127,7 @@ class Plot:
         self.integration.create()
         self.integration.draw(self.plot)
 
-        self.multipletAnalysis = MultipletAnalysis(self.logger, self.pdata, self.dataSource, self.peakPicking, self.integration, self.reference)
+        self.multipletAnalysis = MultipletAnalysis(self.logger, self.dic, self.udic, self.pdata, self.dataSource, self.peakPicking, self.integration, self.reference)
         self.multipletAnalysis.create()
         self.multipletAnalysis.draw(self.plot)
 

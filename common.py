@@ -12,3 +12,18 @@ def referenceObserver(self, n):
         if 'peaks' in data:
             patch['peaks'] = [(pos, [point - n for point in peaks]) for pos, peaks in zip(xrange(len(data['peaks'])), data['peaks'])]
         source.patch(patch)
+
+def getLabel(dic):
+    return dic[0]['label']
+
+def getSolvent(dic):
+    return dic['acqus']['SOLVENT']
+
+def getFrequency(dic):
+    return int(round(dic[0]['obs'], 0))
+
+def getFrequencyStr(dic):
+    return str(getFrequency(dic)) + " MHz"
+
+def getMetadata(dic, udic):
+    return "{} NMR ({}, {})".format(getLabel(udic), getFrequencyStr(udic), getSolvent(dic))
