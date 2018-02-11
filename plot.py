@@ -35,7 +35,7 @@ class Plot:
         _, self.pdata = ng.bruker.read_pdata("{}/pdata/1/".format(path))
         self.logger.info("Experiment data parsed successfully")
 
-        self.id = SpectrumDB.Add(hashlib.sha256(self.pdata.tostring()).hexdigest())
+        self.id = SpectrumDB.Create(hashlib.sha256(self.pdata.tostring()).hexdigest())
 
     def draw(self):
         try:
@@ -119,7 +119,7 @@ class Plot:
         self.reference.create()
         self.reference.draw(self.plot)
 
-        self.peakPicking = PeakPicking(self.logger, self.dic, self.udic, self.pdata, self.dataSource, self.reference)
+        self.peakPicking = PeakPicking(self.logger, self.id, self.dic, self.udic, self.pdata, self.dataSource, self.reference)
         self.peakPicking.create()
         self.peakPicking.draw(self.plot)
 

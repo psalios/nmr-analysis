@@ -7,6 +7,8 @@ from collections import OrderedDict
 
 from common import *
 from observer import Observer
+from spectrumDB import SpectrumDB
+
 from customBoxSelect import CustomBoxSelect
 from customTapTool import CustomTapTool
 from tools.peakPickingSelectTool import PeakPickingSelectTool
@@ -21,9 +23,10 @@ from bokeh.models.markers import Circle
 
 class PeakPicking(Observer):
 
-    def __init__(self, logger, dic, udic, pdata, dataSource, reference):
+    def __init__(self, logger, spectrumId, dic, udic, pdata, dataSource, reference):
         Observer.__init__(self, logger)
         self.logger = logger
+        self.id = spectrumId
 
         self.dic = dic
         self.udic = udic
@@ -46,7 +49,7 @@ class PeakPicking(Observer):
             ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
-        self.sources['table'].on_change('data', lambda attr, old, new: self.updateChemicalShiftReport())
+        self.sources['table'].on_change('data', lambda attr, old, new: self.dataChanged(old, new))
 
         self.manual = CustomButton(label="Manual Peaks", button_type="success", width=500, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
@@ -64,6 +67,17 @@ class PeakPicking(Observer):
 
         self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>" if getLabel(self.udic) == "13C" else "")
         self.chemicalShiftReport = Paragraph(text=self.getChemicalShiftReport(), width=500)
+
+    def dataChanged(self, old, new):
+
+        added = list(set(new['x']) - set(old['x']))
+        removed = list(set(old['x']) - set(new['x']))
+
+        SpectrumDB.AddPeaks(self.id, added)
+        SpectrumDB.RemovePeaks(self.id, removed)
+
+        # Update Chemical Shift Report
+        self.updateChemicalShiftReport()
 
     def updateChemicalShiftReport(self):
         self.chemicalShiftReport.text = self.getChemicalShiftReport()
@@ -111,7 +125,7 @@ class PeakPicking(Observer):
         newY = list(self.sources['table'].data['y'])
 
         ids = self.sources['table'].selected['1d']['indices']
-        for i in ids:
+        for i in sorted(ids, reverse=True):
             try:
                 newX.pop(i)
                 newY.pop(i)
