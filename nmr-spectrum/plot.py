@@ -154,7 +154,7 @@ class Plot:
         # Remove Bokeh logo
         self.plot.toolbar.logo = None
 
-        horizontalBoxZoomTool = HorizontalBoxZoomTool(dimensions="width")
+        horizontalBoxZoomTool = HorizontalBoxZoomTool()
         self.plot.add_tools(horizontalBoxZoomTool)
         self.plot.toolbar.active_drag = horizontalBoxZoomTool
 

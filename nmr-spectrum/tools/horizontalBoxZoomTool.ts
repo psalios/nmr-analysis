@@ -91,14 +91,10 @@ export class HorizontalBoxZoomToolView extends GestureToolView {
   _pan(e: BkEv): void {
     const curpoint: [number, number] = [e.bokeh.sx, e.bokeh.sy]
     const frame = this.plot_model.frame
-    const dims = this.model.dimensions
 
     let sx: [number, number]
     let sy: [number, number]
-    if (this.model.match_aspect && dims == 'both')
-      [sx, sy] = this._match_aspect(this._base_point!, curpoint, frame)
-    else
-      [sx, sy] = this.model._get_dim_limits(this._base_point!, curpoint, frame, dims)
+    [sx, sy] = this.model._get_dim_limits(this._base_point!, curpoint, frame, "width")
 
     this.model.overlay.update({left: sx[0], right: sx[1], top: sy[0], bottom: sy[1]})
   }
@@ -106,14 +102,10 @@ export class HorizontalBoxZoomToolView extends GestureToolView {
   _pan_end(e: BkEv): void {
     const curpoint: [number, number] = [e.bokeh.sx, e.bokeh.sy]
     const frame = this.plot_model.frame
-    const dims = this.model.dimensions
 
     let sx: [number, number]
     let sy: [number, number]
-    if (this.model.match_aspect && dims == 'both')
-      [sx, sy] = this._match_aspect(this._base_point!, curpoint, frame)
-    else
-      [sx, sy] = this.model._get_dim_limits(this._base_point!, curpoint, frame, dims)
+    [sx, sy] = this.model._get_dim_limits(this._base_point!, curpoint, frame, "width")
 
     this._update(sx, sy)
 
@@ -189,7 +181,7 @@ export class HorizontalBoxZoomTool extends GestureTool {
   overlay: BoxAnnotation
   match_aspect: boolean
 
-  tool_name = "Box Zoom"
+  tool_name = "Zoom In"
   icon = "bk-tool-icon-zoom-in"
   event_type = "pan"
   default_order = 20
