@@ -63,6 +63,9 @@
                     case 'integration':
                         $('div[title="Integration (x-axis)"]').click();
                         break;
+                    case 'multipletAnalysis':
+                        $('div[title="Multiplet Analysis"]').click();
+                        break;
                     }
                 },
                 items: {
@@ -74,7 +77,8 @@
                             "peakByPeak": {name: "Peak By Peak", icon: ""}
                         }
                     },
-                    "integration": {name: "Manual Integration", icon: "integration"}
+                    "integration": {name: "Manual Integration", icon: "integration"},
+                    "multipletAnalysis": {name: "Multiplet Analysis", icon: "multiplet_analysis"}
                 }
             });
         });
