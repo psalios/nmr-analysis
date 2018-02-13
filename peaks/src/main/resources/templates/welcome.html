@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>NMR Spectrum Search Engine</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../../css/main.css" />
+
+</head>
+<body>
+
+<div class="container">
+    <div th:unless="${#lists.isEmpty(spectrums)}">
+        <div class="table-responsive">
+            <table class="table table-hover table-condensed table-striped">
+                <thead>
+                <tr>
+                    <th>Peaks</th>
+                    <th>Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="spectrum: ${spectrums}">
+                    <td th:text="${{spectrum.getPeaks()}}">Peaks</td>
+                    <td>Empty</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
