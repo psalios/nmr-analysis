@@ -9,6 +9,8 @@ from integration import Integration
 from multipletAnalysis import MultipletAnalysis
 from spectrumDB import SpectrumDB
 
+from layouts.customRow import CustomRow
+
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.fixedZoomOutTool import FixedZoomOutTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
@@ -49,7 +51,7 @@ class Plot:
             )
 
             peakPickingLayout = column(
-                row(self.peakPicking.manual),
+                CustomRow(self.peakPicking.manual, hide=True),
                 row(self.peakPicking.peakInput),
                 row(
                     column(self.peakPicking.peak),

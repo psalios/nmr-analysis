@@ -40,6 +40,8 @@ class CustomBoxSelect:
 
         // trigger update of data source
         source.change.emit();
+
+        $('button:contains("Manual Peaks")').click();
     """
 
     def __init__(self, logger, source, button, selectTool=BoxSelectTool, dimensions="both"):
