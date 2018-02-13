@@ -105,7 +105,7 @@ export class ReferenceTool extends SelectTool {
   }
 
   tool_name = "Reference"
-  icon = "bk-tool-icon-tap-select"
+  icon = "my_icon_reference"
   event_type = "tap"
   default_order = 10
 }
