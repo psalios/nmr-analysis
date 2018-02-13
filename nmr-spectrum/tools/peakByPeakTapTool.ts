@@ -105,7 +105,7 @@ export class PeakByPeakTapTool extends SelectTool {
   }
 
   tool_name = "Peak By Peak"
-  icon = "bk-tool-icon-tap-select"
+  icon = "my_icon_peak_by_peak"
   event_type = "tap"
   default_order = 10
 }
