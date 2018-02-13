@@ -54,14 +54,12 @@ class PeakPicking(Observer):
         self.manual = CustomButton(label="Manual Peaks", button_type="success", width=500, error="Please select area using the peak picking tool.")
         self.manual.on_click(self.manualPeakPicking)
 
-        self.peakInput = TextInput(title="Peak By Peak", width=550, disabled=True)
         self.peak = CustomButton(label="Peak By Peak", button_type="primary", width=250, error="Please select area using the peak by peak tool.")
-        self.peak.on_click(self.peakPeakPicking)
-        self.peakTool = CustomTapTool(self.logger, self.peakInput, self.peak, tapTool=PeakByPeakTapTool)
+        self.peak.on_click(self.peakByPeakPicking)
+        self.peakTool = CustomTapTool(self.logger, self.peak, tapTool=PeakByPeakTapTool, auto=True)
 
         self.manualTool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)
 
-        self.createResetButton()
         self.createDeselectButton()
         self.createDeleteButton()
 
@@ -88,22 +86,6 @@ class PeakPicking(Observer):
             return getMetadata(self.dic, self.udic) + " δ " + ", ".join("{:0.2f}".format(x) for x in [round(x, 2) for x in self.sources['table'].data['x']]) + "."
         else:
             return ""
-
-    def createResetButton(self):
-        self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
-        resetButtonCallback = CustomJS(args=dict(source=self.sources['select'], button=self.manual), code="""
-            // get data source from Callback args
-            var data = source.data;
-            data['x'] = [];
-            data['y'] = [];
-            data['width'] = [];
-            data['height'] = [];
-
-            button.data = {};
-
-            source.change.emit();
-        """)
-        self.resetButton.js_on_click(resetButtonCallback)
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all peaks", button_type="default", width=250)
@@ -172,13 +154,20 @@ class PeakPicking(Observer):
             self.updateDataValues()
             self.notifyObservers()
 
-    def peakPeakPicking(self, dimensions):
+    def peakByPeakPicking(self, dimensions):
 
         data = {
             'x': [dimensions['x']],
-            'y': [self.pdata[np.abs(self.dataSource.data['ppm'] - dimensions['x']).argmin()]]
+            'y': [dimensions['y']]
         }
         self.sources['table'].stream(data)
+
+        self.sources['table'].selected = {
+            '0d': {'glyph': None, 'indices': []},
+            '1d': {'indices': [len(self.sources['table'].data['x'])-1]},
+            '2d': {'indices': {}}
+        }
+
         self.notifyObservers()
 
     def updateDataValues(self):

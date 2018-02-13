@@ -5,13 +5,11 @@ export class CustomRowView extends BoxView {
   model: CustomRow
 
   css_classes(): string[] {
-    let css_classes = super.css_classes()
-    console.log(this.model.hide)
+    let css_classes = super.css_classes().concat("bk-grid-row")
     if(this.model.hide) {
       css_classes = css_classes.concat("custom-class-hide")
     }
     return css_classes
-    // return super.css_classes().concat("bk-grid-row")
   }
 }
 
@@ -27,8 +25,6 @@ export class CustomRow extends Box {
 
   constructor(attrs?: Partial<CustomRow.Attrs>, opts?: CustomRow.Opts) {
     super(attrs, opts)
-    console.log(attrs)
-    console.log(opts)
   }
 
   static initClass() {

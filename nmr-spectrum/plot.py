@@ -51,11 +51,10 @@ class Plot:
             )
 
             peakPickingLayout = column(
-                CustomRow(self.peakPicking.manual, hide=True),
-                row(self.peakPicking.peakInput),
-                row(
+                CustomRow(
+                    column(self.peakPicking.manual),
                     column(self.peakPicking.peak),
-                    column(self.peakPicking.resetButton)
+                    hide=True
                 ),
                 row(self.peakPicking.dataTable),
                 row(
@@ -67,9 +66,9 @@ class Plot:
             )
 
             integrationLayout = column(
-                row(
+                CustomRow(
                     column(self.integration.manual),
-                    column(self.integration.resetButton)
+                    hide=True
                 ),
                 row(self.integration.dataTable),
                 row(
@@ -79,9 +78,9 @@ class Plot:
             )
 
             multipletManagerLayout = column(
-                row(
+                CustomRow(
                     column(self.multipletAnalysis.manual),
-                    column(self.multipletAnalysis.resetButton)
+                    hide=True
                 ),
                 row(self.multipletAnalysis.dataTable),
                 row(self.multipletAnalysis.title),

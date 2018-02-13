@@ -10,19 +10,31 @@ class CustomTapTool:
         var geometry = cb_data['geometries'];
 
         var frame = this.plot_model.frame;
-        var xm = frame.xscales['default'];
 
+        var xm = frame.xscales['default'];
         var x = xm.invert(geometry.sx);
+
+        var ym = frame.yscales['default'];
+        var y = ym.invert(geometry.sy);
+        
         button.data = {
-            'x': x
+            'x': x,
+            'y': y
         };
-        text.value = x.toString();
+
+        if (text) {
+            text.value = x.toString();
+        }
     """
 
-    def __init__(self, logger, text, button, tapTool=TapTool):
+    AUTO = """
+        button.clicks++;
+    """
+
+    def __init__(self, logger, button, text=None, tapTool=TapTool, auto=False):
         self.logger = logger
 
-        callback = CustomJS(args=dict(text=text, button=button), code=self.CALLBACK)
+        callback = CustomJS(args=dict(text=text, button=button), code=self.CALLBACK + (self.AUTO if auto else ""))
         self.tapTool = tapTool(callback=callback)
 
     def addToPlot(self, plot):

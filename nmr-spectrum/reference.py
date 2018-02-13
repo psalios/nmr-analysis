@@ -29,7 +29,7 @@ class Reference(Observer):
 
         self.createButton()
 
-        self.tool = CustomTapTool(self.logger, self.old, self.button, ReferenceTool)
+        self.tool = CustomTapTool(self.logger, self.button, text=self.old, tapTool=ReferenceTool)
 
     def createButton(self):
         self.button = CustomButton(label="Set Reference", button_type="success", width=500, error="Please select point using the reference tool.")
