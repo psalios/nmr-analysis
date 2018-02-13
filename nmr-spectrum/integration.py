@@ -102,8 +102,8 @@ class Integration(Observer):
 
     def rowSelect(self, ids):
 
-        maxBottom = min(max(self.sources['table'].data['bottom']), 0)
-        minTop = max( min(self.sources['table'].data['top']), self.pdata.max())
+        maxBottom = min(max(self.sources['table'].data['bottom']) if self.sources['table'].data['bottom'] else 0, 0)
+        minTop = max( min(self.sources['table'].data['top']) if self.sources['table'].data['top'] else 0, self.pdata.max())
         tempHeight = minTop - maxBottom
 
         x, y, width, height = [], [], [], []
@@ -163,7 +163,7 @@ class Integration(Observer):
         newIntegral = list(self.sources['table'].data['integral'])
 
         ids = self.sources['table'].selected['1d']['indices']
-        for i in ids:
+        for i in sorted(ids, reverse=True):
             try:
                 newStart.pop(i)
                 newStop.pop(i)
