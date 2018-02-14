@@ -88,7 +88,7 @@ class PeakPicking(Observer):
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all peaks", button_type="default", width=250)
-        self.deselectButton.on_click(self.deselectRows)
+        self.deselectButton.on_click(lambda: deselectRows(self.sources['table']))
 
     def createDeleteButton(self):
         self.ids = []
@@ -113,16 +113,9 @@ class PeakPicking(Observer):
             'x': newX,
             'y': newY
         }
-        self.deselectRows()
+        self.deselectRows(self.sources['table'])
 
         self.notifyObservers()
-
-    def deselectRows(self):
-        self.sources['table'].selected = {
-            '0d': {'glyph': None, 'indices': []},
-            '1d': {'indices': []},
-            '2d': {'indices': {}}
-        }
 
     def manualPeakPicking(self, dimensions):
 

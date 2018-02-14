@@ -145,7 +145,7 @@ class Plot:
         #Constants
         xr = Range1d(start=int(max(self.ppmScale)+1),end=int(min(self.ppmScale)-1))
 
-        self.plot = figure(x_axis_label='ppm', y_axis_label='y', x_range=xr, tools="pan,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
+        self.plot = figure(x_axis_label='ppm', x_range=xr, tools="pan,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
 
         # Remove grid from plot
         self.plot.xgrid.grid_line_color = None

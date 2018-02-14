@@ -13,6 +13,13 @@ def referenceObserver(self, n):
             patch['peaks'] = [(pos, [point - n for point in peaks]) for pos, peaks in zip(xrange(len(data['peaks'])), data['peaks'])]
         source.patch(patch)
 
+def deselectRows(source):
+    source.selected = {
+        '0d': {'glyph': None, 'indices': []},
+        '1d': {'indices': []},
+        '2d': {'indices': {}}
+    }
+
 def getLabel(dic):
     return dic[0]['label']
 

@@ -69,8 +69,6 @@ class MultipletAnalysis:
 
         self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=MultipletAnalysisSelectTool)
 
-        self.createResetButton()
-
         self.title = Div(text="<strong>Edit Multiplet:</strong>", width=500)
         self.name = TextInput(title="Name:", value="", placeholder="Name", width=250, disabled=True)
         self.name.on_change('value', lambda attr, old, new: self.manualChange('name', new))
@@ -87,7 +85,6 @@ class MultipletAnalysis:
     def rowSelect(self, ids):
 
         if len(ids) == 1:
-
             multiplet = ids[0]
 
             self.selected = multiplet
@@ -256,37 +253,14 @@ class MultipletAnalysis:
             'top': top,
             'bottom': bottom
         }
-        self.deselectRows()
+        deselectRows(self.sources['table'])
 
         self.disableOptions()
-
-    def deselectRows(self):
-        self.sources['table'].selected = {
-            '0d': {'glyph': None, 'indices': []},
-            '1d': {'indices': []},
-            '2d': {'indices': {}}
-        }
 
     def disableOptions(self):
         self.name.disabled = True
         self.classes.disabled = True
         self.delete.disabled = True
-
-    def createResetButton(self):
-        self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
-        resetButtonCallback = CustomJS(args=dict(source=self.sources['select'], button=self.manual), code="""
-            // get data source from Callback args
-            var data = source.data;
-            data['x'] = [];
-            data['y'] = [];
-            data['width'] = [];
-            data['height'] = [];
-
-            button.data = {};
-
-            source.change.emit();
-        """)
-        self.resetButton.js_on_click(resetButtonCallback)
 
     def draw(self, plot):
 

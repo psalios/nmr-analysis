@@ -143,7 +143,7 @@ class Integration(Observer):
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all integrals", button_type="default", width=250)
-        self.deselectButton.on_click(self.deselectRows)
+        self.deselectButton.on_click(lambda: deselectRows(self.sources['table']))
 
     def createDeleteButton(self):
         self.deleteButton = Button(label="Delete selected integrals", button_type="danger", width=250)
@@ -174,15 +174,8 @@ class Integration(Observer):
             'bottom': newBottom,
             'integral': newIntegral
         }
-        self.deselectRows()
+        deselectRows(self.sources['table'])
         self.notifyObservers()
-
-    def deselectRows(self):
-        self.sources['table'].selected = {
-            '0d': {'glyph': None, 'indices': []},
-            '1d': {'indices': []},
-            '2d': {'indices': {}}
-        }
 
     def getIntegral(self, start, stop):
         return self.sources['table'].data['integral'][
