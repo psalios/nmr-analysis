@@ -11,10 +11,12 @@ On Unix or MacOS, run:
 ```
 source venv/bin/activate
 ```
-3. Install all the necessary packages with `install -r`
+3. Install all the necessary packages with `install -r`.
 ```
 pip install -r requirements.txt
 ```
+If hashlib fails, use `easy_install` to install it and then rerun the installation command above.
+
 4. Run the bokeh server
 ```
 bokeh serve --show .
