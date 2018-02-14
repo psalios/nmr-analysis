@@ -66,6 +66,9 @@
                     case 'multipletAnalysis':
                         $('div[title="Multiplet Analysis"]').click();
                         break;
+                    case 'deselect':
+                        $('button:contains("Deselect")').click()
+                        break;
                     }
                 },
                 items: {
@@ -78,7 +81,8 @@
                         }
                     },
                     "integration": {name: "Manual Integration", icon: "integration"},
-                    "multipletAnalysis": {name: "Multiplet Analysis", icon: "multiplet_analysis"}
+                    "multipletAnalysis": {name: "Multiplet Analysis", icon: "multiplet_analysis"},
+                    "deselect": {name: "Deselect Data", icon: ""}
                 }
             });
         });
