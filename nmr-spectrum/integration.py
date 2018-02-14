@@ -143,19 +143,13 @@ class Integration(Observer):
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all integrals", button_type="default", width=250)
-        self.deselectButton.on_click(self.deselectData)
-
-    def deselectData(self):
-        self.sources['integration'].data = dict(x=[], y=[], width=[], height=[])
-        self.deselectRows()
+        self.deselectButton.on_click(self.deselectRows)
 
     def createDeleteButton(self):
         self.deleteButton = Button(label="Delete selected integrals", button_type="danger", width=250)
         self.deleteButton.on_click(self.deleteIntegrals)
 
     def deleteIntegrals(self):
-        self.sources['integration'].data = dict(x=[], y=[], width=[], height=[])
-
         newStart = list(self.sources['table'].data['xStart'])
         newStop = list(self.sources['table'].data['xStop'])
         newTop = list(self.sources['table'].data['top'])

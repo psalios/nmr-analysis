@@ -13,7 +13,6 @@ from customBoxSelect import CustomBoxSelect
 from customTapTool import CustomTapTool
 from tools.peakPickingSelectTool import PeakPickingSelectTool
 from tools.peakByPeakTapTool import PeakByPeakTapTool
-
 from widgets.customButton import CustomButton
 
 from bokeh.models.sources import ColumnDataSource
