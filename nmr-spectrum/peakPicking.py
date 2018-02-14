@@ -89,11 +89,7 @@ class PeakPicking(Observer):
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all peaks", button_type="default", width=250)
-        self.deselectButton.on_click(self.deselectData)
-
-    def deselectData(self):
-        self.sources['peaks'].data = dict(x=[], y=[])
-        self.deselectRows()
+        self.deselectButton.on_click(self.deselectRows)
 
     def createDeleteButton(self):
         self.ids = []
@@ -191,9 +187,10 @@ class PeakPicking(Observer):
         }
 
     def rowSelectFromPeaks(self, ids):
-        self.sources['peaks'].data = {
-            'x': [self.dataSource.data['ppm'][i] for i in ids],
-            'y': [self.pdata[i] for i in ids]
+        self.sources['table'].selected = {
+            '0d': {'glyph': None, 'indices': []},
+            '1d': {'indices': [self.sources['table'].data['y'].index(self.pdata[i]) for i in ids]},
+            '2d': {'indices': {}}
         }
 
     def getPeaksInSpace(self, start, stop):
