@@ -7,10 +7,6 @@ virtualenv venv
 ```
 2. Once you’ve created a virtual environment, you may activate it.
 
-On Windows, run:
-```
-venv\Scripts\activate.bat
-```
 On Unix or MacOS, run:
 ```
 source venv/bin/activate
