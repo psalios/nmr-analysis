@@ -9,13 +9,13 @@ from common import *
 from observer import Observer
 from spectrumDB import SpectrumDB
 
-from customBoxSelect import CustomBoxSelect
 from customTapTool import CustomTapTool
-from tools.peakPickingSelectTool import PeakPickingSelectTool
+from tools.bothDimensionsSelectTool import BothDimensionsSelectTool
 from tools.peakByPeakTapTool import PeakByPeakTapTool
 from widgets.customButton import CustomButton
 
 from bokeh.models.sources import ColumnDataSource
+from bokeh.models.annotations import BoxAnnotation
 from bokeh.models.widgets import Button, DataTable, TableColumn, Div, Paragraph, NumberFormatter, TextInput
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.markers import Circle
@@ -36,7 +36,6 @@ class PeakPicking(Observer):
         reference.addObserver(lambda n: referenceObserver(self, n))
 
         self.sources = dict()
-        self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
         self.sources['peaks'] = ColumnDataSource(data=dict(x=[], y=[]))
 
     def create(self):
@@ -57,13 +56,41 @@ class PeakPicking(Observer):
         self.peak.on_click(self.peakByPeakPicking)
         self.peakTool = CustomTapTool(self.logger, self.peak, tapTool=PeakByPeakTapTool, auto=True)
 
-        self.manualTool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=PeakPickingSelectTool)
+        self.createManualTool()
 
         self.createDeselectButton()
         self.createDeleteButton()
 
         self.chemicalShiftReportTitle = Div(text="<strong>Chemical Shift Report</strong>" if getLabel(self.udic) == "13C" else "")
         self.chemicalShiftReport = Paragraph(text=self.getChemicalShiftReport(), width=500)
+
+    def createManualTool(self):
+        callback = CustomJS(args=dict(button=self.manual), code="""
+            /// get BoxSelectTool dimensions from cb_data parameter of Callback
+            var geometry = cb_data['geometry'];
+
+            button.data = {
+                x0: geometry['x0'],
+                x1: geometry['x1'],
+                y:  geometry['y']
+            };
+
+            // Callback to the backend
+            button.clicks++;
+        """)
+        self.manualTool = BothDimensionsSelectTool(
+            tool_name = "Peak Picking By Threshold",
+            icon = "my_icon_peak_picking",
+            overlay = BoxAnnotation(
+                fill_color="#ff3333",
+                line_color="red"
+            ),
+            overlayDown = BoxAnnotation(
+                fill_color="#ff3333",
+                line_color="red"
+            ),
+            callback=callback
+        )
 
     def dataChanged(self, old, new):
 
@@ -113,34 +140,36 @@ class PeakPicking(Observer):
             'x': newX,
             'y': newY
         }
-        self.deselectRows(self.sources['table'])
+        deselectRows(self.sources['table'])
 
         self.notifyObservers()
 
     def manualPeakPicking(self, dimensions):
 
-        # Clear selected area
-        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
+        # Positive Peaks
+        self.peaksIndices = list(self.manualPeakPickingOnData(self.pdata, dimensions))
 
-        data = self.pdata
-        if abs(dimensions['y0']) > abs(dimensions['y1']):
-            data = self.mpdata
-
-            # Swap and invert y-dimensions
-            dimensions['y0'], dimensions['y1'] = -dimensions['y1'], -dimensions['y0']
-        peaks = ng.peakpick.pick(data, dimensions['y0'], algorithm="downward")
-        self.peaksIndices = [int(peak[0]) for peak in peaks]
-
-        # Filter top
-        self.peaksIndices = [i for i in self.peaksIndices if self.pdata[i] <= dimensions['y1']]
-        # Filter left
-        self.peaksIndices = [i for i in self.peaksIndices if self.dataSource.data['ppm'][i] <= dimensions['x0']]
-        # Filter right
-        self.peaksIndices = [i for i in self.peaksIndices if self.dataSource.data['ppm'][i] >= dimensions['x1']]
+        # Negative Peaks
+        self.peaksIndices.extend(self.manualPeakPickingOnData(self.mpdata, dimensions))
 
         if len(self.peaksIndices) > 0:
             self.updateDataValues()
             self.notifyObservers()
+
+    def manualPeakPickingOnData(self, data, dimensions):
+
+        threshold = abs(dimensions['y'])
+        if data.max() < threshold:
+            return []
+
+        peaks = ng.peakpick.pick(data, abs(dimensions['y']), algorithm="downward")
+
+        peaksIndices = [int(peak[0]) for peak in peaks]
+        # Filter left
+        peaksIndices = [i for i in peaksIndices if self.dataSource.data['ppm'][i] <= dimensions['x0']]
+        # Filter right
+        peaksIndices = [i for i in peaksIndices if self.dataSource.data['ppm'][i] >= dimensions['x1']]
+        return peaksIndices
 
     def peakByPeakPicking(self, dimensions):
 
@@ -203,6 +232,5 @@ class PeakPicking(Observer):
         plot.add_glyph(self.sources['peaks'], circle, selection_glyph=circle, nonselection_glyph=circle)
 
         self.manualTool.addToPlot(plot)
-        self.manualTool.addGlyph(plot, "#009933")
 
         self.peakTool.addToPlot(plot)

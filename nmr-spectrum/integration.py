@@ -5,8 +5,7 @@ import numpy as np
 
 from common import *
 from observer import Observer
-from customBoxSelect import CustomBoxSelect
-from tools.integrationSelectTool import IntegrationSelectTool
+from tools.customBoxSelectTool import CustomBoxSelectTool
 
 from widgets.customButton import CustomButton
 
@@ -27,7 +26,6 @@ class Integration(Observer):
         reference.addObserver(lambda n: referenceObserver(self, n))
 
         self.sources = dict()
-        self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
         self.sources['integration'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
 
         self.initIntegral = None
@@ -47,11 +45,29 @@ class Integration(Observer):
         self.manual = CustomButton(label="Manual Integration", button_type="primary", width=250, error="Please select area using the integration tool.")
         self.manual.on_click(self.manualIntegration)
 
-        self.createResetButton()
         self.createDeselectButton()
         self.createDeleteButton()
 
-        self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=IntegrationSelectTool, dimensions="width")
+        callback = CustomJS(args=dict(button=self.manual), code="""
+            /// get BoxSelectTool dimensions from cb_data parameter of Callback
+            var geometry = cb_data['geometry'];
+
+            button.data = {
+                x0: geometry['x0'],
+                x1: geometry['x1'],
+                y0: geometry['y0'],
+                y1: geometry['y1']
+            };
+
+            // Callback to the backend
+            button.clicks++;
+        """)
+        self.tool = CustomBoxSelectTool(
+            tool_name = "Integration",
+            icon = "my_icon_integration",
+            dimensions = "width",
+            callback = callback
+        )
 
     def changeData(self, old, new):
         diff = 1
@@ -70,9 +86,6 @@ class Integration(Observer):
             self.notifyObservers()
 
     def manualIntegration(self, dimensions):
-
-        # Clear selected area
-        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
         points = [point for (point, pos) in zip(self.dataSource.data['data'], self.dataSource.data['ppm']) if pos <= dimensions['x0'] and pos >= dimensions['x1']]
         integral = np.trapz(points, axis = 0)
@@ -124,22 +137,6 @@ class Integration(Observer):
             'width': width,
             'height': height
         }
-
-    def createResetButton(self):
-        self.resetButton = Button(label="Clear Selected Area", button_type="default", width=250)
-        resetButtonCallback = CustomJS(args=dict(source=self.sources['select'], button=self.manual), code="""
-            // get data source from Callback args
-            var data = source.data;
-            data['x'] = [];
-            data['y'] = [];
-            data['width'] = [];
-            data['height'] = [];
-
-            button.data = {};
-
-            source.change.emit();
-        """)
-        self.resetButton.js_on_click(resetButtonCallback)
 
     def createDeselectButton(self):
         self.deselectButton = Button(label="Deselect all integrals", button_type="default", width=250)
@@ -193,5 +190,4 @@ class Integration(Observer):
         )
         plot.add_glyph(self.sources['integration'], rect, selection_glyph=rect, nonselection_glyph=rect)
 
-        self.tool.addToPlot(plot)
-        self.tool.addGlyph(plot, "#b3ffff")
+        plot.add_tools(self.tool)

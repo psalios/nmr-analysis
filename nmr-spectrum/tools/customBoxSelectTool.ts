@@ -15,9 +15,8 @@ export interface BkEv {
   }
 }
 
-export class PeakPickingSelectToolView extends SelectToolView {
-
-  model: PeakPickingSelectTool
+export class CustomBoxSelectToolView extends SelectToolView {
+  model: CustomBoxSelectTool
 
   protected _base_point: [number, number] | null
 
@@ -104,28 +103,44 @@ const DEFAULT_BOX_OVERLAY = () => {
   })
 }
 
-export class PeakPickingSelectTool extends SelectTool {
+export namespace CustomBoxSelectTool {
+  export interface Attrs extends SelectTool.Attrs {
+    tool_name: string
+    icon: string
+    dimensions: Dimensions
+    select_every_mousemove: boolean
+    callback: any // XXX
+    overlay: BoxAnnotation
+  }
+
+  export interface Opts extends SelectTool.Opts {}
+}
+
+export interface CustomBoxSelectTool extends CustomBoxSelectTool.Attrs {}
+
+export class CustomBoxSelectTool extends SelectTool {
+
+  constructor(attrs?: Partial<CustomBoxSelectTool.Attrs>, opts?: CustomBoxSelectTool.Opts) {
+    super(attrs, opts)
+    this.tool_name = attrs.tool_name
+    this.icon = attrs.icon
+  }
 
   static initClass() {
-    this.prototype.type = "PeakPickingSelectTool"
+    this.prototype.type = "CustomBoxSelectTool"
 
-    this.prototype.default_view = PeakPickingSelectToolView
+    this.prototype.default_view = CustomBoxSelectToolView
 
     this.define({
-      dimensions:             [ p.Dimensions, "both"            ],
-      select_every_mousemove: [ p. Bool,    false               ],
-      callback:               [ p.Instance                      ],
-      overlay:                [ p.Instance, DEFAULT_BOX_OVERLAY ],
+      tool_name:              [ p.String, "Box Select"              ],
+      icon:                   [ p.String, "bk-tool-icon-box-select" ],
+      dimensions:             [ p.Dimensions, "both"                ],
+      select_every_mousemove: [ p. Bool,    false                   ],
+      callback:               [ p.Instance                          ],
+      overlay:                [ p.Instance, DEFAULT_BOX_OVERLAY     ],
     })
   }
 
-  dimensions: Dimensions
-  select_every_mousemove: boolean
-  callback: any // XXX
-  overlay: BoxAnnotation
-
-  tool_name = "Peak Picking"
-  icon = "my_icon_peak_picking"
   event_type = "pan"
   default_order = 30
 
@@ -134,4 +149,4 @@ export class PeakPickingSelectTool extends SelectTool {
   }
 }
 
-PeakPickingSelectTool.initClass()
+CustomBoxSelectTool.initClass()

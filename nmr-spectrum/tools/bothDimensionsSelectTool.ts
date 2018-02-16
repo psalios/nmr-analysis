@@ -15,9 +15,8 @@ export interface BkEv {
   }
 }
 
-export class MultipletAnalysisSelectToolView extends SelectToolView {
-
-  model: MultipletAnalysisSelectTool
+export class BothDimensionsSelectToolView extends SelectToolView {
+  model: BothDimensionsSelectTool
 
   protected _base_point: [number, number] | null
 
@@ -31,42 +30,59 @@ export class MultipletAnalysisSelectToolView extends SelectToolView {
     const curpoint: [number, number] = [sx, sy]
 
     const frame = this.plot_model.frame
-    const dims = this.model.dimensions
 
-    const [sxlim, sylim] = this.model._get_dim_limits(this._base_point!, curpoint, frame, dims)
-    this.model.overlay.update({left: sxlim[0], right: sxlim[1], top: sylim[0], bottom: sylim[1]})
+    const ym = frame.yscales['default']
+    const zeroPoint = ym.compute(0)
+    const dist = Math.abs(zeroPoint - sy)
+
+    const [sxlim, sylim] = this.model._get_dim_limits(this._base_point!, curpoint, frame, "width")
+    this.model.overlay.update({left: sxlim[0], right: sxlim[1], top: sylim[0], bottom: zeroPoint - dist})
+    if(zeroPoint + dist < sylim[1]) {
+      this.model.overlayDown.update({left: sxlim[0], right: sxlim[1], top: zeroPoint + dist, bottom: sylim[1]})
+    } else {
+      this.model.overlayDown.update({left: null, right: null, top: null, bottom: null})
+    }
 
     if (this.model.select_every_mousemove) {
       const append = e.srcEvent.shiftKey || false
-      this._do_select(sxlim, sylim, false, append)
+      this._do_select(sxlim, sylim, false, append, e)
     }
   }
 
   _pan_end(e: BkEv): void {
+
     const {sx, sy} = e.bokeh
     const curpoint: [number, number] = [sx, sy]
 
     const frame = this.plot_model.frame
-    const dims = this.model.dimensions
 
-    const [sxlim, sylim] = this.model._get_dim_limits(this._base_point!, curpoint, frame, dims)
+    const [sxlim, sylim] = this.model._get_dim_limits(this._base_point!, curpoint, frame, "width")
     const append = e.srcEvent.shiftKey || false
-    this._do_select(sxlim, sylim, true, append)
+    this._do_select(sxlim, sylim, true, append, e)
 
     this.model.overlay.update({left: null, right: null, top: null, bottom: null})
+    this.model.overlayDown.update({left: null, right: null, top: null, bottom: null})
 
     this._base_point = null
 
     this.plot_view.push_state('box_select', {selection: this.plot_view.get_selection()})
   }
 
-  _do_select([sx0, sx1]: [number, number], [sy0, sy1]: [number, number], final: boolean, append: boolean = false): void {
+  _do_select([sx0, sx1]: [number, number], [sy0, sy1]: [number, number], final: boolean, append: boolean = false, e: BkEv): void {
+
+    const {sx, sy} = e.bokeh
+    const frame = this.plot_model.frame
+    const xm = frame.xscales['default']
+    const ym = frame.yscales['default']
+
     const geometry: RectGeometry = {
       type: 'rect',
       sx0: sx0,
       sx1: sx1,
       sy0: sy0,
       sy1: sy1,
+      x: xm.invert(sx),
+      y: ym.invert(sy),
     }
     this._select(geometry, final, append)
   }
@@ -104,28 +120,49 @@ const DEFAULT_BOX_OVERLAY = () => {
   })
 }
 
-export class MultipletAnalysisSelectTool extends SelectTool {
+export namespace BothDimensionsSelectTool {
+  export interface Attrs extends SelectTool.Attrs {
+    tool_name: string
+    icon: string
+
+    dimensions: Dimensions
+    select_every_mousemove: boolean
+    callback: any // XXX
+    overlay: BoxAnnotation,
+    overlayDown: BoxAnnotation
+  }
+
+  export interface Opts extends SelectTool.Opts {}
+}
+
+export interface BothDimensionsSelectTool extends BothDimensionsSelectTool.Attrs {}
+
+export class BothDimensionsSelectTool extends SelectTool {
+
+  constructor(attrs?: Partial<BothDimensionsSelectTool.Attrs>, opts?: BothDimensionsSelectTool.Opts) {
+    super(attrs, opts)
+    this.tool_name = attrs.tool_name
+    this.icon = attrs.icon
+  }
 
   static initClass() {
-    this.prototype.type = "MultipletAnalysisSelectTool"
+    this.prototype.type = "BothDimensionsSelectTool"
 
-    this.prototype.default_view = MultipletAnalysisSelectToolView
+    this.prototype.default_view = BothDimensionsSelectToolView
 
     this.define({
+      tool_name:              [ p.String ],
+      icon:                   [ p.String ],
       dimensions:             [ p.Dimensions, "both"            ],
       select_every_mousemove: [ p. Bool,    false               ],
       callback:               [ p.Instance                      ],
       overlay:                [ p.Instance, DEFAULT_BOX_OVERLAY ],
+      overlayDown:            [ p.Instance, DEFAULT_BOX_OVERLAY ],
     })
   }
 
-  dimensions: Dimensions
-  select_every_mousemove: boolean
-  callback: any // XXX
-  overlay: BoxAnnotation
-
-  tool_name = "Multiplet Analysis"
-  icon = "my_icon_multiplet_analysis"
+  tool_name = "Box Select"
+  icon = "bk-tool-icon-box-select"
   event_type = "pan"
   default_order = 30
 
@@ -134,4 +171,4 @@ export class MultipletAnalysisSelectTool extends SelectTool {
   }
 }
 
-MultipletAnalysisSelectTool.initClass()
+BothDimensionsSelectTool.initClass()

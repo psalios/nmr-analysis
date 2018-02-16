@@ -4,9 +4,13 @@ from bokeh.models.renderers import Renderer
 from bokeh.models.callbacks import Callback
 from bokeh.core.enums import Dimensions
 
-class MultipletAnalysisSelectTool(Drag):
+class CustomBoxSelectTool(Drag):
 
-    __implementation__ = "multipletAnalysisSelectTool.ts"
+    __implementation__ = "customBoxSelectTool.ts"
+
+    tool_name = String("Box Select")
+
+    icon = String("bk-tool-icon-box-select")
 
     names = List(String)
 

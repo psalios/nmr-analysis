@@ -5,12 +5,12 @@ from math import ceil
 import numpy as np
 
 from common import *
-from customBoxSelect import CustomBoxSelect
-from tools.multipletAnalysisSelectTool import MultipletAnalysisSelectTool
+from tools.bothDimensionsSelectTool import BothDimensionsSelectTool
 
 from widgets.customButton import CustomButton
 
 from bokeh.models.sources import ColumnDataSource
+from bokeh.models.annotations import BoxAnnotation
 from bokeh.models.widgets import Button, DataTable, TableColumn, Div, NumberFormatter, Select, TextInput, Paragraph
 from bokeh.models.callbacks import CustomJS
 
@@ -47,7 +47,6 @@ class MultipletAnalysis:
         reference.addObserver(lambda n: referenceObserver(self, n))
 
         self.sources = dict()
-        self.sources['select'] = ColumnDataSource(data=dict(x=[], y=[], width=[], height=[]))
 
     def create(self):
 
@@ -67,7 +66,7 @@ class MultipletAnalysis:
         self.manual = CustomButton(label="Multiplet Analysis", button_type="primary", width=250, error="Please select area using the multiplet analysis tool.")
         self.manual.on_click(self.manualMultipletAnalysis)
 
-        self.tool = CustomBoxSelect(self.logger, self.sources['select'], self.manual, selectTool=MultipletAnalysisSelectTool)
+        self.createTool()
 
         self.title = Div(text="<strong>Edit Multiplet:</strong>", width=500)
         self.name = TextInput(title="Name:", value="", placeholder="Name", width=250, disabled=True)
@@ -81,6 +80,36 @@ class MultipletAnalysis:
 
         self.reportTitle = Div(text="<strong>Multiplet Report:</strong>")
         self.report = Paragraph(width=500)
+
+    def createTool(self):
+        callback = CustomJS(args=dict(button=self.manual), code="""
+            /// get BoxSelectTool dimensions from cb_data parameter of Callback
+            var geometry = cb_data['geometry'];
+
+            button.data = {
+                x0: geometry['x0'],
+                x1: geometry['x1'],
+                y:  geometry['y'],
+                y0: geometry['y0'],
+                y1: geometry['y1']
+            };
+
+            // Callback to the backend
+            button.clicks++;
+        """)
+        self.tool = BothDimensionsSelectTool(
+            tool_name = "Multiplet Analysis",
+            icon = "my_icon_multiplet_analysis",
+            overlay = BoxAnnotation(
+                fill_color="#ff3333",
+                line_color="red"
+            ),
+            overlayDown = BoxAnnotation(
+                fill_color="#ff3333",
+                line_color="red"
+            ),
+            callback=callback
+        )
 
     def rowSelect(self, ids):
 
@@ -121,8 +150,6 @@ class MultipletAnalysis:
         self.sources['table'].patch(patch)
 
     def manualMultipletAnalysis(self, dimensions):
-        # Clear selected area
-        self.sources['select'].data = dict(x=[], y=[], width=[], height=[])
 
         self.peakPicking.manualPeakPicking(dimensions)
         # Check if empty
@@ -181,18 +208,20 @@ class MultipletAnalysis:
 
         for peak in peaks:
             if one is None:
-                newPeaks = list(peaks)
-                newPeaks.remove(peak)
-                if self.checkMultiplicity(list(multiplet)[1:], newPeaks, peak):
+                index = peaks.index(peak)
+                peaks.remove(peak)
+                if self.checkMultiplicity(list(multiplet)[1:], peaks, peak):
                     return True
+                peaks.insert(index, peak)
             else:
                 low = one * multiplet[0] - self.MULTIPLET_ERROR
                 high = one * multiplet[0] + self.MULTIPLET_ERROR
                 if peak >= low and peak <= high:
-                    newPeaks = list(peaks)
-                    newPeaks.remove(peak)
-                    if self.checkMultiplicity(list(multiplet)[1:], newPeaks, one):
+                    index = peaks.index(peak)
+                    peaks.remove(peak)
+                    if self.checkMultiplicity(list(multiplet)[1:], peaks, one):
                         return True
+                    peaks.insert(index, peak)
 
         return False
 
@@ -263,6 +292,4 @@ class MultipletAnalysis:
         self.delete.disabled = True
 
     def draw(self, plot):
-
         self.tool.addToPlot(plot)
-        self.tool.addGlyph(plot, "#ffc700")
