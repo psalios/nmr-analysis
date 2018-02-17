@@ -1,16 +1,21 @@
 #!/usr/bin/python
 
-import gc
 import os
-
 from logger import *
 from plot import Plot
+from bokeh.io import curdoc
 
 logger = get_logger()
 logger.info("Spectrum Viewer started")
 
-path = "data/2/"
+args = curdoc().session_context.request.arguments
+try:
+    spectrum = int(args.get('spectrum')[0])
+except:
+    spectrum = 2
 
-plot = Plot(logger, path)
-plot.create()
-plot.draw()
+path = "data/{}/".format(spectrum)
+if os.path.isdir(path):
+    plot = Plot(logger, path)
+    plot.create()
+    plot.draw()
