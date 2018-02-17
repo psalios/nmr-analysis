@@ -153,7 +153,10 @@ class PeakPicking(Observer):
         self.peaksIndices.extend(self.manualPeakPickingOnData(self.mpdata, dimensions))
 
         if len(self.peaksIndices) > 0:
-            self.updateDataValues()
+            self.updateDataValues({
+                'x': [self.dataSource.data['ppm'][i] for i in self.peaksIndices],
+                'y': [self.pdata[i] for i in self.peaksIndices]
+            })
             self.notifyObservers()
 
     def manualPeakPickingOnData(self, data, dimensions):
@@ -173,26 +176,18 @@ class PeakPicking(Observer):
 
     def peakByPeakPicking(self, dimensions):
 
-        data = {
+        self.updateDataValues({
             'x': [dimensions['x']],
             'y': [dimensions['y']]
-        }
-        self.sources['table'].stream(data)
-
-        self.sources['table'].selected = {
-            '0d': {'glyph': None, 'indices': []},
-            '1d': {'indices': [len(self.sources['table'].data['x'])-1]},
-            '2d': {'indices': {}}
-        }
-
+        })
         self.notifyObservers()
 
-    def updateDataValues(self):
+    def updateDataValues(self, data):
         # Update DataTable Values
         newData = list(OrderedDict.fromkeys(
             zip(
-                self.sources['table'].data['x'] + [self.dataSource.data['ppm'][i] for i in self.peaksIndices],
-                self.sources['table'].data['y'] + [self.pdata[i] for i in self.peaksIndices]
+                self.sources['table'].data['x'] + data['x'],
+                self.sources['table'].data['y'] + data['y']
             )
         ))
         newX, newY = zip(*sorted(newData, reverse=True))
