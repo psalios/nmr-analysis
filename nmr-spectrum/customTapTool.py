@@ -16,7 +16,7 @@ class CustomTapTool:
 
         var ym = frame.yscales['default'];
         var y = ym.invert(geometry.sy);
-        
+
         button.data = {
             'x': x,
             'y': y
@@ -31,11 +31,7 @@ class CustomTapTool:
         button.clicks++;
     """
 
-    def __init__(self, logger, button, text=None, tapTool=TapTool, auto=False):
-        self.logger = logger
-
-        callback = CustomJS(args=dict(text=text, button=button), code=self.CALLBACK + (self.AUTO if auto else ""))
-        self.tapTool = tapTool(callback=callback)
-
-    def addToPlot(self, plot):
-        plot.add_tools(self.tapTool)
+    @staticmethod
+    def Create(button, id, text=None, tapTool=TapTool, auto=False):
+        callback = CustomJS(args=dict(text=text, button=button), code=CustomTapTool.CALLBACK + (CustomTapTool.AUTO if auto else ""))
+        return tapTool(id=id, callback=callback)

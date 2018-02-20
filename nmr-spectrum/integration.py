@@ -66,7 +66,8 @@ class Integration(Observer):
             tool_name = "Integration",
             icon = "my_icon_integration",
             dimensions = "width",
-            callback = callback
+            callback = callback,
+            id = "integrationTool"
         )
 
     def changeData(self, old, new):

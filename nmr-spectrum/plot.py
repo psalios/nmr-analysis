@@ -97,8 +97,33 @@ class Plot:
             referenceTab = Panel(child=referenceLayout, title="Reference")
             peakPickingTab = Panel(child=peakPickingLayout, title="Peak Picking")
             integrationTab = Panel(child=integrationLayout, title="Integration")
-            multipletManagerTab = Panel(child=multipletManagerLayout, title="Multiplet Analysis")
-            tabs = Tabs(tabs=[referenceTab, peakPickingTab, integrationTab, multipletManagerTab], width=500)
+            multipletAnalysisTab = Panel(child=multipletManagerLayout, title="Multiplet Analysis")
+
+            callback = CustomJS(args=dict(
+                referenceTool=self.reference.tool,
+                peakPickingManualTool=self.peakPicking.manualTool,
+                peakPickingByPeakTool=self.peakPicking.peakTool,
+                integrationTool=self.integration.tool,
+                multipletAnalysisTool=self.multipletAnalysis.tool
+                ), code="""
+                switch(this.active) {
+                case 0:
+                    referenceTool.active = true;
+                    break;
+                case 1:
+                    if (!peakPickingByPeakTool.active) {
+                        peakPickingManualTool.active = true;
+                    }
+                    break;
+                case 2:
+                    integrationTool.active = true;
+                    break;
+                case 3:
+                    multipletAnalysisTool.active = true;
+                    break;
+                }
+            """)
+            tabs = Tabs(tabs=[referenceTab, peakPickingTab, integrationTab, multipletAnalysisTab], width=500, callback=callback, id="tabs")
 
             curdoc().add_root(
                 row(

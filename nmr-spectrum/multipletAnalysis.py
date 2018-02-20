@@ -101,7 +101,8 @@ class MultipletAnalysis:
         self.tool = BothDimensionsSelectTool(
             tool_name = "Multiplet Analysis",
             icon = "my_icon_multiplet_analysis",
-            callback=callback
+            callback = callback,
+            id = "multipletAnalysisTool"
         )
 
     def rowSelect(self, ids):

@@ -54,7 +54,7 @@ class PeakPicking(Observer):
 
         self.peak = CustomButton(label="Peak By Peak", button_type="primary", width=250, error="Please select area using the peak by peak tool.")
         self.peak.on_click(self.peakByPeakPicking)
-        self.peakTool = CustomTapTool(self.logger, self.peak, tapTool=PeakByPeakTapTool, auto=True)
+        self.peakTool = CustomTapTool.Create(self.peak, tapTool=PeakByPeakTapTool, auto=True, id="peakPickingByPeakTool")
 
         self.createManualTool()
 
@@ -81,7 +81,8 @@ class PeakPicking(Observer):
         self.manualTool = BothDimensionsSelectTool(
             tool_name = "Peak Picking By Threshold",
             icon = "my_icon_peak_picking",
-            callback=callback
+            callback = callback,
+            id = "peakPickingByThresholdTool"
         )
 
     def dataChanged(self, old, new):
@@ -220,4 +221,4 @@ class PeakPicking(Observer):
 
         self.manualTool.addToPlot(plot)
 
-        self.peakTool.addToPlot(plot)
+        plot.add_tools(self.peakTool)

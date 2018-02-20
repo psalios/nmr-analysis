@@ -27,20 +27,20 @@
             if(message.localeCompare && message.localeCompare('Bokeh items were rendered successfully') == 0){
                 console.log = oldLog;
 
-                $('div[title="Multiplet Analysis"]').click(function() {
-                    $('span:contains("Multiplet Analysis")').click();
+                $('div[title="Reference"]').click(function() {
+                    Bokeh.documents[0].get_model_by_id('tabs').active = 0;
                 });
                 $('div[title="Peak Picking By Threshold"]').click(function() {
-                    $('span:contains("Peak Picking")').click();
+                    Bokeh.documents[0].get_model_by_id('tabs').active = 1;
                 });
                 $('div[title="Peak By Peak"]').click(function() {
-                    $('span:contains("Peak Picking")').click();
-                });
-                $('div[title="Reference"]').click(function() {
-                    $('span:contains("Reference")').click();
+                    Bokeh.documents[0].get_model_by_id('tabs').active = 1;
                 });
                 $('div[title="Integration (x-axis)"]').click(function() {
-                    $('span:contains("Integration")').click();
+                    Bokeh.documents[0].get_model_by_id('tabs').active = 2;
+                });
+                $('div[title="Multiplet Analysis"]').click(function() {
+                    Bokeh.documents[0].get_model_by_id('tabs').active = 3;
                 });
 
                 $(function() {

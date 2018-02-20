@@ -29,7 +29,7 @@ class Reference(Observer):
 
         self.createButton()
 
-        self.tool = CustomTapTool(self.logger, self.button, text=self.old, tapTool=ReferenceTool)
+        self.tool = CustomTapTool.Create(self.button, text=self.old, tapTool=ReferenceTool, id="referenceTool")
 
     def createButton(self):
         self.button = CustomButton(label="Set Reference", button_type="success", width=500, error="Please select point using the reference tool.")
@@ -67,5 +67,5 @@ class Reference(Observer):
             self.old.value = self.new.value = ""
 
     def draw(self, plot):
-        self.tool.addToPlot(plot)
+        plot.add_tools(self.tool)
         plot.toolbar.active_tap = None
