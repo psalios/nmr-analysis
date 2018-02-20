@@ -19,27 +19,34 @@ export class BothDimensionsSelectToolView extends SelectToolView {
   model: BothDimensionsSelectTool
 
   protected _base_point: [number, number] | null
+  protected _zeroPoint: number
 
   _pan_start(e: BkEv): void {
     const {sx, sy} = e.bokeh
     this._base_point = [sx, sy]
+
+    const frame = this.plot_model.frame
+    const ym = frame.yscales['default']
+    this._zeroPoint = ym.compute(0)
   }
 
   _pan(e: BkEv): void {
     const {sx, sy} = e.bokeh
     const curpoint: [number, number] = [sx, sy]
 
+    const dist = Math.abs(this._zeroPoint - sy)
+
     const frame = this.plot_model.frame
-
-    const ym = frame.yscales['default']
-    const zeroPoint = ym.compute(0)
-    const dist = Math.abs(zeroPoint - sy)
-
     const [sxlim, sylim] = this.model._get_dim_limits(this._base_point!, curpoint, frame, "width")
-    this.model.overlay.update({left: sxlim[0], right: sxlim[1], top: sylim[0], bottom: zeroPoint - dist})
-    if(zeroPoint + dist < sylim[1]) {
-      this.model.overlayDown.update({left: sxlim[0], right: sxlim[1], top: zeroPoint + dist, bottom: sylim[1]})
-    } else {
+
+    if(this._zeroPoint - dist > sylim[0]) {
+        this.model.overlay.update({left: sxlim[0], right: sxlim[1], top: sylim[0], bottom: this._zeroPoint - dist})
+    } else if (this.model.overlay.left !== null) {
+        this.model.overlay.update({left: null, right: null, top: null, bottom: null})
+    }
+    if(this._zeroPoint + dist < sylim[1]) {
+      this.model.overlayDown.update({left: sxlim[0], right: sxlim[1], top: this._zeroPoint + dist, bottom: sylim[1]})
+    } else if (this.model.overlayDown.left !== null) {
       this.model.overlayDown.update({left: null, right: null, top: null, bottom: null})
     }
 
@@ -111,9 +118,9 @@ const DEFAULT_BOX_OVERLAY = () => {
     left_units: "screen",
     bottom_units: "screen",
     right_units: "screen",
-    fill_color: {value: "lightgrey"},
+    fill_color: {value: "#ff3333"},
     fill_alpha: {value: 0.5},
-    line_color: {value: "black"},
+    line_color: {value: "red"},
     line_alpha: {value: 1.0},
     line_width: {value: 2},
     line_dash: {value: [4, 4]},

@@ -1,8 +1,23 @@
-from bokeh.models import Drag, BoxAnnotation, DEFAULT_BOX_OVERLAY
+from bokeh.models import Drag, BoxAnnotation
 from bokeh.core.properties import Instance, Enum, Bool, List, String
 from bokeh.models.renderers import Renderer
 from bokeh.models.callbacks import Callback
 from bokeh.core.enums import Dimensions
+
+_DEFAULT_BOX_ANNOTATION = lambda: BoxAnnotation(
+    level="overlay",
+    render_mode="css",
+    top_units="screen",
+    left_units="screen",
+    bottom_units="screen",
+    right_units="screen",
+    fill_color="#ff3333",
+    fill_alpha=0.5,
+    line_color="red",
+    line_alpha=1.0,
+    line_width=2,
+    line_dash=[4, 4]
+)
 
 class BothDimensionsSelectTool(Drag):
 
@@ -20,8 +35,8 @@ class BothDimensionsSelectTool(Drag):
 
     callback = Instance(Callback)
 
-    overlay = Instance(BoxAnnotation, default=DEFAULT_BOX_OVERLAY)
-    overlayDown = Instance(BoxAnnotation, default=DEFAULT_BOX_OVERLAY)
+    overlay = Instance(BoxAnnotation, default=_DEFAULT_BOX_ANNOTATION)
+    overlayDown = Instance(BoxAnnotation, default=_DEFAULT_BOX_ANNOTATION)
 
     def addToPlot(self, plot):
         plot.add_layout(self.overlayDown)

@@ -100,14 +100,6 @@ class MultipletAnalysis:
         self.tool = BothDimensionsSelectTool(
             tool_name = "Multiplet Analysis",
             icon = "my_icon_multiplet_analysis",
-            overlay = BoxAnnotation(
-                fill_color="#ff3333",
-                line_color="red"
-            ),
-            overlayDown = BoxAnnotation(
-                fill_color="#ff3333",
-                line_color="red"
-            ),
             callback=callback
         )
 

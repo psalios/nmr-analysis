@@ -81,14 +81,6 @@ class PeakPicking(Observer):
         self.manualTool = BothDimensionsSelectTool(
             tool_name = "Peak Picking By Threshold",
             icon = "my_icon_peak_picking",
-            overlay = BoxAnnotation(
-                fill_color="#ff3333",
-                line_color="red"
-            ),
-            overlayDown = BoxAnnotation(
-                fill_color="#ff3333",
-                line_color="red"
-            ),
             callback=callback
         )
 
