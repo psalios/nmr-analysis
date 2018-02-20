@@ -27,7 +27,8 @@ class MultipletAnalysis:
         'hept': {'table': [1, 6, 15, 20, 15, 6, 1], 'sum': 7},
         'dd': {'table': [[1, 1], [1, 1]], 'sum': 4},
         'td': {'table': [[1, 2, 1], [1, 1]], 'sum': 5},
-        'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7}
+        'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7},
+        'ddd': {'table': [[1, 1], [1, 1], [1, 1], [1,1]], 'sum': 8}
     }
 
     def __init__(self, logger, dic, udic, pdata, dataSource, peakPicking, integration, reference):
