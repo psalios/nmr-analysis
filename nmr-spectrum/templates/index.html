@@ -16,10 +16,10 @@
     <script type="text/javascript" src="nmr-spectrum/static/js/jquery.contextMenu.min.js"></script>
   </head>
   <body>
-    <div class="content select_pick_peaking">
+    <div class="content">
       {{ plot_div|indent(8) }}
     </div>
-    {{ plot_script|indent(8) }}
+      {{ plot_script|indent(8) }}
 
     <script type="text/javascript">
         oldLog = console.log;
@@ -42,50 +42,50 @@
                 $('div[title="Integration (x-axis)"]').click(function() {
                     $('span:contains("Integration")').click();
                 });
+
+                $(function() {
+                    $.contextMenu({
+                        selector: '.bk-plot-wrapper',
+                        callback: function(key, options) {
+                            switch(key){
+                            case 'reference':
+                                $('div[title="Reference"]').click();
+                                break;
+                            case 'peakPicking':
+                                $('div[title="Peak Picking By Threshold"]').click();
+                                break;
+                            case 'peakByPeak':
+                                $('div[title="Peak By Peak"]').click();
+                                break;
+                            case 'integration':
+                                $('div[title="Integration (x-axis)"]').click();
+                                break;
+                            case 'multipletAnalysis':
+                                $('div[title="Multiplet Analysis"]').click();
+                                break;
+                            case 'deselect':
+                                $('button:contains("Deselect")').click()
+                                break;
+                            }
+                        },
+                        items: {
+                            "reference": {name: "Set Reference", icon: "reference"},
+                            "peakPickingGroup": {
+                                name: "Peak Picking",
+                                items: {
+                                    "peakPicking": {name: "Peak Picking By Threshold", icon: "peak_picking"},
+                                    "peakByPeak": {name: "Peak By Peak", icon: "peak_by_peak"}
+                                }
+                            },
+                            "integration": {name: "Manual Integration", icon: "integration"},
+                            "multipletAnalysis": {name: "Multiplet Analysis", icon: "multiplet_analysis"},
+                            "deselect": {name: "Deselect Data", icon: ""}
+                        }
+                    });
+                });
             }
             oldLog.apply(console, arguments);
         };
-
-        $(function() {
-            $.contextMenu({
-                selector: '.select_pick_peaking',
-                callback: function(key, options) {
-                    switch(key){
-                    case 'reference':
-                        $('div[title="Reference"]').click();
-                        break;
-                    case 'peakPicking':
-                        $('div[title="Peak Picking By Threshold"]').click();
-                        break;
-                    case 'peakByPeak':
-                        $('div[title="Peak By Peak"]').click();
-                        break;
-                    case 'integration':
-                        $('div[title="Integration (x-axis)"]').click();
-                        break;
-                    case 'multipletAnalysis':
-                        $('div[title="Multiplet Analysis"]').click();
-                        break;
-                    case 'deselect':
-                        $('button:contains("Deselect")').click()
-                        break;
-                    }
-                },
-                items: {
-                    "reference": {name: "Set Reference", icon: "reference"},
-                    "peakPickingGroup": {
-                        name: "Peak Picking",
-                        items: {
-                            "peakPicking": {name: "Peak Picking By Threshold", icon: "peak_picking"},
-                            "peakByPeak": {name: "Peak By Peak", icon: "peak_by_peak"}
-                        }
-                    },
-                    "integration": {name: "Manual Integration", icon: "integration"},
-                    "multipletAnalysis": {name: "Multiplet Analysis", icon: "multiplet_analysis"},
-                    "deselect": {name: "Deselect Data", icon: ""}
-                }
-            });
-        });
     </script>
   </body>
 </html>
