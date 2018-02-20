@@ -11,6 +11,7 @@ from spectrumDB import SpectrumDB
 
 from layouts.customRow import CustomRow
 
+from tools.customToolbar import CustomToolbar
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.fixedZoomOutTool import FixedZoomOutTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
@@ -145,14 +146,11 @@ class Plot:
         #Constants
         xr = Range1d(start=int(max(self.ppmScale)+1),end=int(min(self.ppmScale)-1))
 
-        self.plot = figure(x_axis_label='ppm', x_range=xr, tools="pan,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
+        self.plot = figure(x_axis_label='ppm', x_range=xr, toolbar=CustomToolbar(), tools="pan,save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
 
         # Remove grid from plot
         self.plot.xgrid.grid_line_color = None
         self.plot.ygrid.grid_line_color = None
-
-        # Remove Bokeh logo
-        self.plot.toolbar.logo = None
 
         horizontalBoxZoomTool = HorizontalBoxZoomTool()
         self.plot.add_tools(horizontalBoxZoomTool)

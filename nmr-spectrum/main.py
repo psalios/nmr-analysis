@@ -8,8 +8,8 @@ from bokeh.io import curdoc
 logger = get_logger()
 logger.info("Spectrum Viewer started")
 
-args = curdoc().session_context.request.arguments
 try:
+    args = curdoc().session_context.request.arguments
     spectrum = int(args.get('spectrum')[0])
 except:
     spectrum = 2
