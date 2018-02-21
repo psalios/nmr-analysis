@@ -4,6 +4,7 @@ import nmrglue as ng
 import numpy as np
 
 from common import *
+from observer import Observer
 from tools.customBoxSelectTool import CustomBoxSelectTool
 
 from widgets.customButton import CustomButton
@@ -13,9 +14,10 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.models.widgets import Button, DataTable, TableColumn, NumberFormatter, NumberEditor
 from bokeh.models.glyphs import Rect
 
-class Integration:
+class Integration(Observer):
 
     def __init__(self, logger, pdata, dataSource, reference):
+        Observer.__init__(self, logger)
         self.logger = logger
 
         self.pdata = pdata
@@ -84,6 +86,7 @@ class Integration:
 
         if diff != 1:
             self.updateIntervals(diff, old)
+            self.notifyObservers(diff)
 
     def updateIntervals(self, ratio, old):
 
@@ -192,11 +195,6 @@ class Integration:
             'integral': integral
         }
         deselectRows(self.sources['table'])
-
-    def getIntegral(self, start, stop):
-        return self.sources['table'].data['integral'][
-            zip(self.sources['table'].data['xStart'], self.sources['table'].data['xStop']).index((start, stop))
-        ]
 
     def draw(self, plot):
         rect = Rect(

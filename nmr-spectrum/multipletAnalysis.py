@@ -43,6 +43,7 @@ class MultipletAnalysis:
         peakPicking.addObserver(self.recalculateAllMultipletsForPeaks)
 
         self.integration = integration
+        self.integration.addObserver(lambda ratio: self.updateIntervals(ratio, self.sources['table'].data['integral']))
 
         reference.addObserver(lambda n: referenceObserver(self, n))
 
@@ -141,14 +142,6 @@ class MultipletAnalysis:
 
             patch['classes'].append((pos, multiplet))
             patch['j'].append((pos, self.calcJ(ppm)))
-        self.sources['table'].patch(patch)
-
-    def recalculateAllMultipletsForIntegrals(self):
-        data = self.sources['table'].data
-
-        patch = dict(h=[])
-        for pos, start, stop in zip(xrange(len(data['xStart'])), data['xStart'], data['xStop']):
-            patch['h'].append((pos, ceil(self.integration.getIntegral(start, stop))))
         self.sources['table'].patch(patch)
 
     def manualMultipletAnalysis(self, dimensions):
@@ -261,14 +254,17 @@ class MultipletAnalysis:
             old = data[self.selected]
             ratio = new / old
 
-            integral = []
-            for pos, val in zip(xrange(len(data)), data):
-                integral.append((pos, val * ratio))
-            self.sources['table'].patch(dict(integral=integral))
+            self.updateIntervals(ratio, data)
 
             self.integration.updateIntervals(ratio, self.integration.sources['table'].data)
         except:
             pass
+
+    def updateIntervals(self, ratio, data):
+        integral = []
+        for pos, val in zip(xrange(len(data)), data):
+            integral.append((pos, val * ratio))
+        self.sources['table'].patch(dict(integral=integral))
 
     def deleteMultiplet(self):
 
