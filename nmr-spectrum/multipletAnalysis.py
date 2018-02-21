@@ -261,10 +261,12 @@ class MultipletAnalysis:
             pass
 
     def updateIntervals(self, ratio, data):
-        integral = []
+        h, integral = [], []
         for pos, val in zip(xrange(len(data)), data):
-            integral.append((pos, val * ratio))
-        self.sources['table'].patch(dict(integral=integral))
+            newIntegral = val * ratio
+            h.append((pos, ceil(newIntegral)))
+            integral.append((pos, newIntegral))
+        self.sources['table'].patch(dict(h=h, integral=integral))
 
     def deleteMultiplet(self):
 
