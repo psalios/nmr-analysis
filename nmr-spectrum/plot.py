@@ -15,12 +15,14 @@ from tools.customToolbar import CustomToolbar
 from tools.fixedWheelZoomTool import FixedWheelZoomTool
 from tools.fixedZoomOutTool import FixedZoomOutTool
 from tools.horizontalBoxZoomTool import HorizontalBoxZoomTool
+from tools.measureJTool import MeasureJTool
 
 from bokeh.layouts import row, column
 from bokeh.plotting import figure
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.ranges import Range1d
 from bokeh.models.sources import ColumnDataSource
+from bokeh.models.glyphs import Text
 from bokeh.models.tools import HoverTool
 from bokeh.models.widgets.panels import Tabs, Panel
 from bokeh.io import curdoc
@@ -158,6 +160,8 @@ class Plot:
         self.multipletAnalysis.create()
         self.multipletAnalysis.draw(self.plot)
 
+        self.createMeasureJTool()
+
         self.plot.line('ppm', 'data', source=self.dataSource, line_width=2)
 
     # make ppm scale
@@ -190,3 +194,11 @@ class Plot:
 
         hoverTool = HoverTool(tooltips="($x, $y)")
         self.plot.add_tools(hoverTool)
+
+    def createMeasureJTool(self):
+        source = ColumnDataSource(data=dict(x=[], y=[]))
+        text = Text(x="x", y="y", text=[""], text_color="#000000")
+        self.plot.add_glyph(source, text)
+        
+        measureJTool = MeasureJTool(text=text, textSource=source)
+        self.plot.add_tools(measureJTool)
