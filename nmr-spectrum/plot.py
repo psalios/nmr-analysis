@@ -91,7 +91,8 @@ class Plot:
                 row(self.multipletAnalysis.title),
                 row(
                     column(self.multipletAnalysis.name),
-                    column(self.multipletAnalysis.classes)
+                    column(self.multipletAnalysis.classes),
+                    column(self.multipletAnalysis.integral)
                 ),
                 row(self.multipletAnalysis.delete),
                 row(self.multipletAnalysis.reportTitle),
@@ -132,8 +133,8 @@ class Plot:
             curdoc().add_root(
                 row(
                     column(
-                        row(Div(text=self.compound, id="compoundContainer")),
-                        row(self.plot)
+                        row(self.plot),
+                        row(Div(text=self.compound, id="compoundContainer"))
                     ),
                     column(
                         row(tabs)

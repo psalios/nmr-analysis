@@ -4,7 +4,6 @@ import nmrglue as ng
 import numpy as np
 
 from common import *
-from observer import Observer
 from tools.customBoxSelectTool import CustomBoxSelectTool
 
 from widgets.customButton import CustomButton
@@ -14,10 +13,9 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.models.widgets import Button, DataTable, TableColumn, NumberFormatter, NumberEditor
 from bokeh.models.glyphs import Rect
 
-class Integration(Observer):
+class Integration:
 
     def __init__(self, logger, pdata, dataSource, reference):
-        Observer.__init__(self, logger)
         self.logger = logger
 
         self.pdata = pdata
@@ -71,12 +69,12 @@ class Integration(Observer):
         )
 
     def changeData(self, old, new):
-        self.checkRatio(old, new)
+        self.checkIntegral(old, new)
 
         self.checkRange(old, new, 'xStart')
         self.checkRange(old, new, 'xStop')
 
-    def checkRatio(self, old, new):
+    def checkIntegral(self, old, new):
         diff = 1
         if len(old['integral']) == len(new['integral']):
             for o, n in zip(old['integral'], new['integral']):
@@ -85,12 +83,15 @@ class Integration(Observer):
                     break
 
         if diff != 1:
-            self.initIntegral /= diff
-            patch = {
-                'integral': [(i, old['integral'][i] * diff) for i in xrange(len(old['integral']))]
-            }
-            self.sources['table'].patch(patch)
-            self.notifyObservers()
+            self.updateIntervals(diff, old)
+
+    def updateIntervals(self, ratio, old):
+
+        self.initIntegral /= ratio
+        patch = {
+            'integral': [(i, old['integral'][i] * ratio) for i in xrange(len(old['integral']))]
+        }
+        self.sources['table'].patch(patch)
 
     def checkRange(self, old, new, key):
         if len(old[key]) == len(new[key]):
@@ -104,12 +105,23 @@ class Integration(Observer):
                         'integral': [(pos, ratio)]
                     }
                     self.sources['table'].patch(patch)
-                    self.notifyObservers()
                     self.rowSelect([pos])
-
 
     def manualIntegration(self, dimensions):
 
+        integral = self.calcIntegral(dimensions)
+
+        # Update DataTable Values
+        data = {
+            'xStart': [dimensions['x0']],
+            'xStop': [dimensions['x1']],
+            'top': [dimensions['y1']],
+            'bottom': [dimensions['y0']],
+            'integral': [integral]
+        }
+        self.sources['table'].stream(data)
+
+    def calcIntegral(self, dimensions):
         points = [point for (point, pos) in zip(self.dataSource.data['data'], self.dataSource.data['ppm']) if pos <= dimensions['x0'] and pos >= dimensions['x1']]
         integral = np.trapz(points, axis = 0)
 
@@ -118,17 +130,6 @@ class Integration(Observer):
             self.initIntegral = integral
         else:
             ratio = integral / self.initIntegral
-
-        # Update DataTable Values
-        data = {
-            'xStart': [dimensions['x0']],
-            'xStop': [dimensions['x1']],
-            'top': [dimensions['y1']],
-            'bottom': [dimensions['y0']],
-            'integral': [ratio]
-        }
-        self.sources['table'].stream(data)
-        self.notifyObservers()
 
         return ratio
 
@@ -166,32 +167,31 @@ class Integration(Observer):
         self.deleteButton.on_click(self.deleteIntegrals)
 
     def deleteIntegrals(self):
-        newStart = list(self.sources['table'].data['xStart'])
-        newStop = list(self.sources['table'].data['xStop'])
-        newTop = list(self.sources['table'].data['top'])
-        newBottom = list(self.sources['table'].data['bottom'])
-        newIntegral = list(self.sources['table'].data['integral'])
+        xStart = list(self.sources['table'].data['xStart'])
+        xStop = list(self.sources['table'].data['xStop'])
+        top = list(self.sources['table'].data['top'])
+        bottom = list(self.sources['table'].data['bottom'])
+        integral = list(self.sources['table'].data['integral'])
 
         ids = self.sources['table'].selected['1d']['indices']
         for i in sorted(ids, reverse=True):
             try:
-                newStart.pop(i)
-                newStop.pop(i)
-                newTop.pop(i)
-                newBottom.pop(i)
-                newIntegral.pop(i)
+                xStart.pop(i)
+                xStop.pop(i)
+                top.pop(i)
+                bottom.pop(i)
+                integral.pop(i)
             except IndexError:
                 pass
 
         self.sources['table'].data = {
-            'xStart': newStart,
-            'xStop': newStop,
-            'top': newTop,
-            'bottom': newBottom,
-            'integral': newIntegral
+            'xStart': xStart,
+            'xStop': xStop,
+            'top': top,
+            'bottom': bottom,
+            'integral': integral
         }
         deselectRows(self.sources['table'])
-        self.notifyObservers()
 
     def getIntegral(self, start, stop):
         return self.sources['table'].data['integral'][
