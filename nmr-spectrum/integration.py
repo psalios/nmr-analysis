@@ -71,6 +71,12 @@ class Integration(Observer):
         )
 
     def changeData(self, old, new):
+        self.checkRatio(old, new)
+
+        self.checkRange(old, new, 'xStart')
+        self.checkRange(old, new, 'xStop')
+
+    def checkRatio(self, old, new):
         diff = 1
         if len(old['integral']) == len(new['integral']):
             for o, n in zip(old['integral'], new['integral']):
@@ -86,6 +92,22 @@ class Integration(Observer):
             self.sources['table'].patch(patch)
             self.notifyObservers()
 
+    def checkRange(self, old, new, key):
+        if len(old[key]) == len(new[key]):
+            for pos, o, n in zip(xrange(len(old[key])), old[key], new[key]):
+                if o != n:
+                    points = [point for (point, i) in zip(self.dataSource.data['data'], self.dataSource.data['ppm']) if i <= new['xStart'][pos] and i >= new['xStop'][pos]]
+                    integral = np.trapz(points, axis = 0)
+                    ratio = integral / self.initIntegral
+
+                    patch = {
+                        'integral': [(pos, ratio)]
+                    }
+                    self.sources['table'].patch(patch)
+                    self.notifyObservers()
+                    self.rowSelect([pos])
+
+
     def manualIntegration(self, dimensions):
 
         points = [point for (point, pos) in zip(self.dataSource.data['data'], self.dataSource.data['ppm']) if pos <= dimensions['x0'] and pos >= dimensions['x1']]
@@ -98,18 +120,14 @@ class Integration(Observer):
             ratio = integral / self.initIntegral
 
         # Update DataTable Values
-        newStart = self.sources['table'].data['xStart'] + [dimensions['x0']]
-        newStop = self.sources['table'].data['xStop'] + [dimensions['x1']]
-        newTop = self.sources['table'].data['top'] + [dimensions['y1']]
-        newBottom = self.sources['table'].data['bottom'] + [dimensions['y0']]
-        newIntegral = self.sources['table'].data['integral'] + [ratio]
-        self.sources['table'].data = {
-            'xStart': newStart,
-            'xStop': newStop,
-            'top': newTop,
-            'bottom': newBottom,
-            'integral': newIntegral
+        data = {
+            'xStart': [dimensions['x0']],
+            'xStop': [dimensions['x1']],
+            'top': [dimensions['y1']],
+            'bottom': [dimensions['y0']],
+            'integral': [ratio]
         }
+        self.sources['table'].stream(data)
         self.notifyObservers()
 
         return ratio

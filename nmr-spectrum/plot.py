@@ -199,6 +199,6 @@ class Plot:
         source = ColumnDataSource(data=dict(x=[], y=[]))
         text = Text(x="x", y="y", text=[""], text_color="#000000")
         self.plot.add_glyph(source, text)
-        
+
         measureJTool = MeasureJTool(text=text, textSource=source)
         self.plot.add_tools(measureJTool)
