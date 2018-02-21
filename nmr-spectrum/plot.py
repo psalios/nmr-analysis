@@ -25,6 +25,7 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.models.glyphs import Text
 from bokeh.models.tools import HoverTool
 from bokeh.models.widgets.panels import Tabs, Panel
+from bokeh.models.widgets.markups import Div
 from bokeh.io import curdoc
 
 class Plot:
@@ -32,7 +33,7 @@ class Plot:
     WIDTH = 800
     HEIGHT = 600
 
-    def __init__(self, logger, path):
+    def __init__(self, logger, path, compound):
         self.logger = logger
 
         self.logger.info("Parsing experiment data")
@@ -40,6 +41,7 @@ class Plot:
         _, self.pdata = ng.bruker.read_pdata("{}/pdata/1/".format(path))
         self.logger.info("Experiment data parsed successfully")
 
+        self.compound = compound
         self.id = SpectrumDB.Create(hashlib.sha256(self.pdata.tostring()).hexdigest())
 
     def draw(self):
@@ -129,8 +131,13 @@ class Plot:
 
             curdoc().add_root(
                 row(
-                    column(self.plot),
-                    column(tabs)
+                    column(
+                        row(Div(text=self.compound, id="compoundContainer")),
+                        row(self.plot)
+                    ),
+                    column(
+                        row(tabs)
+                    )
                 )
             )
         except NameError:
