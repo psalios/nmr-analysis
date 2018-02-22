@@ -3,6 +3,7 @@
 import nmrglue as ng
 import hashlib
 
+from common import *
 from reference import Reference
 from peakPicking import PeakPicking
 from integration import Integration
@@ -208,5 +209,5 @@ class Plot:
         text = Text(x="x", y="y", text=[""], text_color="#000000")
         self.plot.add_glyph(source, text)
 
-        measureJTool = MeasureJTool(text=text, textSource=source)
+        measureJTool = MeasureJTool(text=text, textSource=source, frequency=getFrequency(self.udic))
         self.plot.add_tools(measureJTool)
