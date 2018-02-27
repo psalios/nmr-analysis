@@ -1,5 +1,7 @@
 # NMR Spectrum Search Engine
 
+This component is currently under development.
+
 ## Installation
 
 ### Dependencies

@@ -5,33 +5,160 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
-
-    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap-select/1.12.4/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" type="text/css" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../static/css/main.css" />
 
 </head>
 <body>
 
 <div class="container">
+    <h2 class="page-header"><strong>Chemical Shifts</strong></h2>
+    <form th:action="@{/}" target="_self" method="get">
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+                <table class="table table-striped table-condensed">
+                    <thead>
+                    <tr>
+                        <th class="col-md-1 text-center"><strong>Line number</strong></th>
+                        <th class="col-md-3 text-center"><strong>Chemical Shift (ppm)</strong></th>
+                        <th class="col-md-4 text-center"><strong>Multiplicity</strong></th>
+                        <th class="col-md-3 text-center"><strong>Deviation (ppm)</strong></th>
+                        <th class="col-md-1 text-center"><strong>Remove</strong></th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr th:each="shift,iter: ${shifts}">
+                            <td class="text-center"><p class="text-center form-control-static" th:text="${iter.index + 1}"></p></td>
+                            <td class="text-center"><input class="form-control" type="number" name="shift[]" step="0.01" th:value="${shift}"/></td>
+                            <td class="text-center">
+                                <select class="selectpicker" name="multiplicity[]">
+                                    <option value="m">m</option>
+                                    <option value="s">s</option>
+                                    <option value="d">d</option>
+                                    <option value="t">t</option>
+                                    <option value="q">q</option>
+                                    <option value="p">p</option>
+                                    <option value="h">h</option>
+                                    <option value="hept">hept</option>
+                                    <option value="dd">dd</option>
+                                    <option value="td">td</option>
+                                    <option value="ddt">ddt</option>
+                                    <option value="ddd">ddd</option>
+                                </select>
+                            </td>
+                            <td class="text-center"><input class="form-control" type="number" name="deviation[]" step="0.01" th:value="${deviations[iter.index]}"/></td>
+                            <td class="text-center"><button type="button" class="btn btn-danger btn-sm" onclick="remove(this)"><span class="fa fa-times"></span></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-offset-4 col-md-4">
+                <button type="button" class="btn btn-success btn-block" onclick="add()">Add Chemical Shift</button>
+            </div>
+        </div>
+        <div class="help-block"></div>
+        <div class="row">
+            <div class="text-center col-md-offset-1 col-md-10">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </div>
+    </form>
+
     <div th:unless="${#lists.isEmpty(spectrums)}">
+        <br/>
         <div class="table-responsive">
             <table class="table table-hover table-condensed table-striped">
                 <thead>
                 <tr>
-                    <th>Peaks</th>
-                    <th>Options</th>
+                    <th class="col-md-9 text-center">Peaks</th>
+                    <th class="col-md-2 text-center">Last Updated</th>
+                    <th class="col-md-1 text-center">Options</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="spectrum: ${spectrums}">
-                    <td th:text="${{spectrum.getPeaks()}}">Peaks</td>
-                    <td>Empty</td>
-                </tr>
+                <th:block th:each="spectrumList: ${spectrums}">
+                    <tr th:each="spectrum: ${spectrumList}">
+                        <td th:text="${{spectrum.getPeaks()}}">Peaks</td>
+                        <td class="text-center" th:text="${#dates.format(spectrum.getDate(), 'dd-MM-yyyy hh:mm:ss')}">Date</td>
+                        <td class="text-center"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+                </th:block>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
+<script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var lineNumber = /*[[${#lists.size(shifts) + 1}]]*/ 1;
+    /*]]>*/
+</script>
+
+<script type="text/javascript">
+    function add() {
+        $('#tableBody').append(
+            '<tr>' +
+            '<td class="text-center"><p class="text-center form-control-static">'+lineNumber+'</p></td>' +
+            '<td class="text-center"><input class="form-control" type="number" name="shift[]" step="0.01"/></td>' +
+            '<td class="text-center">' +
+                '<select class="selectpicker" name="multiplicity[]">' +
+                    '<option value="m">m</option>' +
+                    '<option value="s">s</option>' +
+                    '<option value="d">d</option>' +
+                    '<option value="t">t</option>' +
+                    '<option value="q">q</option>' +
+                    '<option value="p">p</option>' +
+                    '<option value="h">h</option>' +
+                    '<option value="hept">hept</option>' +
+                    '<option value="dd">dd</option>' +
+                    '<option value="td">td</option>' +
+                    '<option value="ddt">ddt</option>' +
+                    '<option value="ddd">ddd</option>' +
+                '</select>' +
+            '</td>' +
+            '<td class="text-center"><input class="form-control" type="number" name="deviation[]" step="0.01"/></td>' +
+            '<td class="text-center"><button type="button" class="btn btn-danger btn-sm" onclick="remove(this)"><span class="fa fa-times"></span></button></td>' +
+            '</tr>'
+        );
+        lineNumber++;
+        $('.selectpicker').selectpicker();
+    }
+
+    function remove(el) {
+        var row = $(el).parent().parent();
+
+        recalculateLineNumbers(row.next());
+        row.remove();
+        lineNumber--;
+    }
+
+    function recalculateLineNumbers(el) {
+        while(el[0]) {
+            var child = el.children(":first").children(":first");
+            child.html(parseInt(child.html()) - 1);
+
+            el = el.next();
+        }
+    }
+
+
+    $(function () {
+        $('.selectpicker').selectpicker();
+        if(lineNumber === 1) {
+            add();
+        } else {
+            $('.selectpicker').selectpicker();
+        }
+    });
+</script>
 </body>
 </html>

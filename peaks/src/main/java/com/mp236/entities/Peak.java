@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "peaks")
-public class Peaks {
+public class Peak {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,4 +44,5 @@ public class Peaks {
     public String toString() {
         return Double.toString(peak);
     }
+
 }

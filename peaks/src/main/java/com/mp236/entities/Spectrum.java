@@ -3,8 +3,9 @@ package com.mp236.entities;
 import com.google.common.base.Joiner;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "spectrum")
@@ -16,7 +17,10 @@ public class Spectrum {
 
     @OneToMany
     @JoinColumn(name = "spectrum_id")
-    private Set<Peaks> peaks = new HashSet<>();
+    private List<Peak> peaks = new ArrayList<>();
+
+    @Column(name = "date")
+    private Date date;
 
     public Integer getId() {
         return id;
@@ -30,7 +34,15 @@ public class Spectrum {
         return Joiner.on(" ").skipNulls().join(peaks);
     }
 
-    public void setPeaks(Set<Peaks> peaks) {
+    public void setPeaks(ArrayList<Peak> peaks) {
         this.peaks = peaks;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
