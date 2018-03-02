@@ -38,7 +38,7 @@ class Integration(Observer):
                 TableColumn(field="xStop", title="stop", editor=NumberEditor(step=0.01), formatter=NumberFormatter(format="0.00")),
                 TableColumn(field="integral", title="integral", editor=NumberEditor(step=0.01), formatter=NumberFormatter(format="0.00"))
             ]
-        self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500, editable=True)
+        self.dataTable = DataTable(source=self.sources['table'], columns=columns, reorderable=False, width=500, editable=True)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
         self.sources['table'].on_change('data', lambda attr, old, new: self.changeData(old, new))
 

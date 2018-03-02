@@ -61,7 +61,7 @@ class MultipletAnalysis:
             TableColumn(field="h", title="H", formatter=NumberFormatter(format="0")),
             TableColumn(field="integral", title="Integral", formatter=NumberFormatter(format="0.00"))
         ]
-        self.dataTable = DataTable(source=self.sources['table'], columns=columns, width=500)
+        self.dataTable = DataTable(source=self.sources['table'], columns=columns, reorderable=False, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
         self.sources['table'].on_change('data', lambda attr, old, new: self.updateMultipletReport())
 
