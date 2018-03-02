@@ -20,10 +20,10 @@ from tools.measureJTool import MeasureJTool
 
 from bokeh.layouts import row, column
 from bokeh.plotting import figure
+from bokeh.models.annotations import Label
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.ranges import Range1d
 from bokeh.models.sources import ColumnDataSource
-from bokeh.models.glyphs import Text
 from bokeh.models.tools import HoverTool
 from bokeh.models.widgets.panels import Tabs, Panel
 from bokeh.models.widgets.markups import Div
@@ -206,8 +206,14 @@ class Plot:
 
     def createMeasureJTool(self):
         source = ColumnDataSource(data=dict(x=[], y=[]))
-        text = Text(x="x", y="y", text=[""], text_color="#000000")
-        self.plot.add_glyph(source, text)
+        label = Label(
+            x=0,
+            y=0,
+            text="",
+            text_color="#000000",
+            render_mode="css"
+        )
+        self.plot.add_layout(label)
 
-        measureJTool = MeasureJTool(text=text, textSource=source, frequency=getFrequency(self.udic))
+        measureJTool = MeasureJTool(label=label, frequency=getFrequency(self.udic))
         self.plot.add_tools(measureJTool)

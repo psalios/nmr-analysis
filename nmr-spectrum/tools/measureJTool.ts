@@ -23,6 +23,15 @@ export class MeasureJToolView extends SelectToolView {
   _pan_start(e: BkEv): void {
     const {sx, sy} = e.bokeh
     this._base_point = [sx, sy]
+
+    const frame = this.plot_model.frame
+    const ym = frame.yscales['default']
+
+    const [_, sylim] = this.model._get_dim_limits(this._base_point!, this._base_point!, frame, "width")
+    const y0 = ym.invert(sylim[0])
+    const y1 = ym.invert(sylim[1])
+    const ymid = (y0 + y1) / 2
+    this.model.label.y = ymid
   }
 
   _pan(e: BkEv): void {
@@ -31,23 +40,16 @@ export class MeasureJToolView extends SelectToolView {
 
     const frame = this.plot_model.frame
     const xm = frame.xscales['default'];
-    const ym = frame.yscales['default'];
 
     const [sxlim, sylim] = this.model._get_dim_limits(this._base_point!, curpoint, frame, "width")
 
     const x0 = xm.invert(sxlim[0])
     const x1 = xm.invert(sxlim[1])
     const val = (x0 - x1) * this.model.frequency
-    this.model.text.text = val.toFixed(1).toString() + " Hz";
+    const text = val.toFixed(1).toString() + " Hz"
 
-    const y0 = ym.invert(sylim[0])
-    const y1 = ym.invert(sylim[1])
-    const ymid = (y0 + y1) / 2;
-
-    const data = this.model.textSource.data;
-    data['x'] = [x1];
-    data['y'] = [ymid];
-    this.model.textSource.change.emit();
+    this.model.label.x = x1
+    this.model.label.text = text
 
     this.model.overlay.update({left: sxlim[0], right: sxlim[1], top: sylim[0], bottom: sylim[1]})
 
@@ -68,9 +70,7 @@ export class MeasureJToolView extends SelectToolView {
     this._do_select(sxlim, sylim, true, append)
 
     this.model.overlay.update({left: null, right: null, top: null, bottom: null})
-    this.model.text.text = ""
-    this.model.textSource.data = {'x':[], 'y':[]};
-    this.model.textSource.change.emit();
+    this.model.label.text = "";
 
     this._base_point = null
 
@@ -128,8 +128,7 @@ export namespace MeasureJTool {
     callback: any // XXX
     overlay: BoxAnnotation
     frequency: number
-    text: any
-    textSource: any
+    label: any
   }
 
   export interface Opts extends SelectTool.Opts {}
@@ -154,8 +153,7 @@ export class MeasureJTool extends SelectTool {
       callback:               [ p.Instance                      ],
       overlay:                [ p.Instance, DEFAULT_BOX_OVERLAY ],
       frequency:              [ p.Int, 500                      ],
-      text:                   [ p.Instance                      ],
-      textSource:             [ p.Instance                      ],
+      label:                  [ p.Instance                      ],
     })
   }
 

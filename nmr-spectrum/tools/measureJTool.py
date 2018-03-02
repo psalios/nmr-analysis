@@ -1,7 +1,6 @@
 from bokeh.core.properties import Bool, List, Instance, String, Enum, Int
+from bokeh.models.annotations import Label
 from bokeh.models.tools import Drag, BoxAnnotation
-from bokeh.models.sources import ColumnDataSource
-from bokeh.models.glyphs import Text
 from bokeh.models.renderers import Renderer
 from bokeh.models.callbacks import Callback
 from bokeh.core.enums import Dimensions
@@ -38,5 +37,4 @@ class MeasureJTool(Drag):
     overlay = Instance(BoxAnnotation, default=_DEFAULT_BOX_ANNOTATION)
 
     frequency = Int(500)
-    text = Instance(Text)
-    textSource = Instance(ColumnDataSource)
+    label = Instance(Label)
