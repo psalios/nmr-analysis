@@ -69,16 +69,16 @@ export class CustomToolbarView extends DOMView {
     if(buttons.length !== 0) {
         const ordered = []
         ordered.push(buttons[0])
+        ordered.push(buttons[1])
+        ordered.push(buttons[6])
+        ordered.push(buttons[11])
+        ordered.push(buttons[10])
         ordered.push(buttons[7])
         ordered.push(buttons[2])
         ordered.push(buttons[8])
         ordered.push(buttons[3])
         ordered.push(buttons[4])
         ordered.push(buttons[5])
-        ordered.push(buttons[1])
-        ordered.push(buttons[6])
-        ordered.push(buttons[11])
-        ordered.push(buttons[10])
         ordered.push(buttons[12])
         ordered.push(buttons[9])
 

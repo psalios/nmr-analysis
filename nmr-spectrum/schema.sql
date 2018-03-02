@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS `peaks`;
 CREATE TABLE `peaks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `peak` double(15,5) DEFAULT NULL,
+  `class` varchar(4) DEFAULT 'm' NOT NULL,
   `spectrum_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_peak_spectrum` (`peak`,`spectrum_id`),
