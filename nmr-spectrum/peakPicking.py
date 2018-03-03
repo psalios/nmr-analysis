@@ -54,7 +54,7 @@ class PeakPicking(Observer):
 
         self.peak = CustomButton(label="Peak By Peak", button_type="primary", width=250, error="Please select area using the peak by peak tool.")
         self.peak.on_click(self.peakByPeakPicking)
-        self.peakTool = CustomTapTool.Create(self.peak, tapTool=PeakByPeakTapTool, auto=True, id="peakPickingByPeakTool")
+        self.peakTool = CustomTapTool.Create(self.peak, tapTool=PeakByPeakTapTool, auto=True, id="peakByPeakTool")
 
         self.createManualTool()
 

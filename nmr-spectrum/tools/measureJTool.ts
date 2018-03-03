@@ -158,7 +158,7 @@ export class MeasureJTool extends SelectTool {
   }
 
   tool_name = "Measure J"
-  icon = "bk-tool-icon-box-select"
+  icon = "my_icon_measure_j"
   event_type = "pan"
   default_order = 30
 

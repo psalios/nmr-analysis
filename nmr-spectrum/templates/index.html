@@ -51,19 +51,27 @@
                         callback: function(key, options) {
                             switch(key){
                             case 'reference':
-                                $('div[title="Reference"]').click();
+                                Bokeh.documents[0].get_model_by_id('referenceTool').active = true;
+                                Bokeh.documents[0].get_model_by_id('tabs').active = 0;
                                 break;
                             case 'peakPicking':
-                                $('div[title="Peak Picking By Threshold"]').click();
+                                Bokeh.documents[0].get_model_by_id('peakPickingByThresholdTool').active = true;
+                                Bokeh.documents[0].get_model_by_id('tabs').active = 1;
                                 break;
                             case 'peakByPeak':
-                                $('div[title="Peak By Peak"]').click();
+                                Bokeh.documents[0].get_model_by_id('peakByPeakTool').active = true;
+                                Bokeh.documents[0].get_model_by_id('tabs').active = 1;
                                 break;
                             case 'integration':
-                                $('div[title="Integration (x-axis)"]').click();
+                                Bokeh.documents[0].get_model_by_id('integrationTool').active = true;
+                                Bokeh.documents[0].get_model_by_id('tabs').active = 2;
                                 break;
                             case 'multipletAnalysis':
-                                $('div[title="Multiplet Analysis"]').click();
+                                Bokeh.documents[0].get_model_by_id('multipletAnalysisTool').active = true;
+                                Bokeh.documents[0].get_model_by_id('tabs').active = 3;
+                                break;
+                            case 'measureJ':
+                                Bokeh.documents[0].get_model_by_id('measureJTool').active = true;
                                 break;
                             case 'deselect':
                                 $('button:contains("Deselect")').click()
@@ -81,6 +89,7 @@
                             },
                             "integration": {name: "Manual Integration", icon: "integration"},
                             "multipletAnalysis": {name: "Multiplet Analysis", icon: "multiplet_analysis"},
+                            "measureJ": {name: "Measure J", icon: "measureJ"},
                             "deselect": {name: "Deselect Data", icon: ""}
                         }
                     });

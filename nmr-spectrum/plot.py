@@ -108,7 +108,7 @@ class Plot:
             callback = CustomJS(args=dict(
                 referenceTool=self.reference.tool,
                 peakPickingManualTool=self.peakPicking.manualTool,
-                peakPickingByPeakTool=self.peakPicking.peakTool,
+                peakByPeakTool=self.peakPicking.peakTool,
                 integrationTool=self.integration.tool,
                 multipletAnalysisTool=self.multipletAnalysis.tool
                 ), code="""
@@ -117,7 +117,7 @@ class Plot:
                     referenceTool.active = true;
                     break;
                 case 1:
-                    if (!peakPickingByPeakTool.active) {
+                    if (!peakByPeakTool.active) {
                         peakPickingManualTool.active = true;
                     }
                     break;
@@ -215,5 +215,5 @@ class Plot:
         )
         self.plot.add_layout(label)
 
-        measureJTool = MeasureJTool(label=label, frequency=getFrequency(self.udic))
+        measureJTool = MeasureJTool(label=label, frequency=getFrequency(self.udic), id="measureJTool")
         self.plot.add_tools(measureJTool)
