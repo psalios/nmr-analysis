@@ -195,13 +195,6 @@ class PeakPicking(Observer):
             'y': [self.sources['table'].data['y'][i] for i in ids]
         }
 
-    def rowSelectFromPeaks(self, ids):
-        self.sources['table'].selected = {
-            '0d': {'glyph': None, 'indices': []},
-            '1d': {'indices': [self.sources['table'].data['y'].index(self.pdata[i]) for i in ids]},
-            '2d': {'indices': {}}
-        }
-
     def getPeaksInSpace(self, start, stop):
         return [y for x, y in zip(self.sources['table'].data['x'], self.sources['table'].data['y']) if x <= start and x >= stop]
 
@@ -209,7 +202,18 @@ class PeakPicking(Observer):
         return [x for x in self.sources['table'].data['x'] if x <= start and x >= stop]
 
     def draw(self, plot):
-        circle = Circle(
+
+        peak = Circle(
+            x="x",
+            y="y",
+            size=10,
+            line_color="#C0C0C0",
+            fill_color="#C0C0C0",
+            line_width=1
+        )
+        plot.add_glyph(self.sources['table'], peak, selection_glyph=peak, nonselection_glyph=peak)
+
+        selected = Circle(
             x="x",
             y="y",
             size=10,
@@ -217,7 +221,7 @@ class PeakPicking(Observer):
             fill_color="#ff0000",
             line_width=1
         )
-        plot.add_glyph(self.sources['peaks'], circle, selection_glyph=circle, nonselection_glyph=circle)
+        plot.add_glyph(self.sources['peaks'], selected, selection_glyph=selected, nonselection_glyph=selected)
 
         self.manualTool.addToPlot(plot)
 

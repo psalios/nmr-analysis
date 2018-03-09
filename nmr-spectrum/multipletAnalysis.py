@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from math import ceil
 import numpy as np
 
 from common import *
@@ -26,9 +25,9 @@ class MultipletAnalysis:
         'h': {'table': [1, 5, 10, 10, 5, 1], 'sum': 6},
         'hept': {'table': [1, 6, 15, 20, 15, 6, 1], 'sum': 7},
         'dd': {'table': [[1, 1], [1, 1]], 'sum': 4},
+        'ddd': {'table': [[1, 1], [1, 1], [1, 1], [1,1]], 'sum': 8},
         'td': {'table': [[1, 2, 1], [1, 1]], 'sum': 5},
-        'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7},
-        'ddd': {'table': [[1, 1], [1, 1], [1, 1], [1,1]], 'sum': 8}
+        'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7}
     }
 
     def __init__(self, logger, dic, udic, pdata, dataSource, peakPicking, integration, reference):
@@ -74,7 +73,7 @@ class MultipletAnalysis:
         self.name = TextInput(title="Name:", value="", placeholder="Name", width=150, disabled=True)
         self.name.on_change('value', lambda attr, old, new: self.manualChange('name', new))
 
-        self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","td","ddt"], width=150, disabled=True)
+        self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","ddd","td","ddt"], width=150, disabled=True)
         self.classes.on_change('value', lambda attr, old, new: self.manualChange('classes', new))
 
         self.integral = TextInput(title="Integral:", value="", placeholder="Integral", width=150, disabled=True)
@@ -151,8 +150,6 @@ class MultipletAnalysis:
         if not self.peakPicking.peaksIndices:
             return
 
-        self.peakPicking.rowSelectFromPeaks(self.peakPicking.peaksIndices)
-
         integral = self.integration.calcIntegral(dimensions)
 
         peaks = [self.pdata[i] for i in self.peakPicking.peaksIndices]
@@ -165,7 +162,7 @@ class MultipletAnalysis:
             'name':   ['A' if not self.sources['table'].data['name'] else chr(ord(self.sources['table'].data['name'][-1])+1)],
             'classes':  [multiplet],
             'j': [self.calcJ(ppm)],
-            'h': [ceil(integral)],
+            'h': [round(integral)],
             'integral': [integral],
             'peaks': [ppm],
             'top': [dimensions['y1']],
@@ -232,7 +229,7 @@ class MultipletAnalysis:
                 " ({}, ".format(classes) +
                 ("J={}, ".format(j) if j != 0 else "") +
                 "{:d}H)".format(int(h))
-                for (peaks, classes, j, h) in sorted(zip(data['peaks'], data['classes'], data['j'], data['h']), reverse=True)
+                for (peaks, classes, j, h) in sorted(zip(data['peaks'], data['classes'], data['j'], data['h']), reverse=True) if h > 0
             ) + "."
         elif label == "13C":
             text = self.peakPicking.getChemicalShiftReport()
@@ -264,7 +261,7 @@ class MultipletAnalysis:
         h, integral = [], []
         for pos, val in zip(xrange(len(data)), data):
             newIntegral = val * ratio
-            h.append((pos, ceil(newIntegral)))
+            h.append((pos, round(newIntegral)))
             integral.append((pos, newIntegral))
         self.sources['table'].patch(dict(h=h, integral=integral))
 
