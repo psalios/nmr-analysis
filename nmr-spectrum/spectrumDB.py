@@ -8,11 +8,11 @@ class SpectrumDB:
 
         try:
             with conn.cursor() as cursor:
-                cursor.execute("REPLACE INTO spectrum SET hash=%s", (h,))
+                cursor.execute("REPLACE INTO spectrum SET spectrum=%s", (h,))
             conn.commit()
 
             with conn.cursor() as cursor:
-                cursor.execute("SELECT id FROM spectrum WHERE hash=%s", (h,))
+                cursor.execute("SELECT id FROM spectrum WHERE spectrum=%s", (h,))
                 return int(cursor.fetchone()[0])
         finally:
             conn.close()

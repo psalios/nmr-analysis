@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import nmrglue as ng
-import hashlib
 
 from common import *
 from reference import Reference
@@ -34,7 +33,7 @@ class Plot:
     WIDTH = 800
     HEIGHT = 600
 
-    def __init__(self, logger, path, compound):
+    def __init__(self, logger, id, path, compound):
         self.logger = logger
 
         self.logger.info("Parsing experiment data")
@@ -43,7 +42,7 @@ class Plot:
         self.logger.info("Experiment data parsed successfully")
 
         self.compound = compound
-        self.id = SpectrumDB.Create(hashlib.sha256(self.pdata.tostring()).hexdigest())
+        self.id = SpectrumDB.Create(id) # SpectrumDB.Create(hashlib.sha256(self.pdata.tostring()).hexdigest())
 
     def draw(self):
         try:

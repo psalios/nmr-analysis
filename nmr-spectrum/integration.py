@@ -10,6 +10,7 @@ from tools.customBoxSelectTool import CustomBoxSelectTool
 from widgets.customButton import CustomButton
 
 from bokeh.models.callbacks import CustomJS
+from bokeh.models.ranges import Range1d
 from bokeh.models.sources import ColumnDataSource
 from bokeh.models.widgets import Button, DataTable, TableColumn, NumberFormatter, NumberEditor
 from bokeh.models.glyphs import Rect
@@ -187,6 +188,7 @@ class Integration(Observer):
             except IndexError:
                 pass
 
+        # Update DataTable Values
         self.sources['table'].data = {
             'xStart': xStart,
             'xStop': xStop,
