@@ -44,91 +44,107 @@ class Plot:
         self.compound = compound
         self.id = SpectrumDB.Create(id) # SpectrumDB.Create(hashlib.sha256(self.pdata.tostring()).hexdigest())
 
+
+    def createReferenceLayout(self):
+        return column(
+            row(
+                column(self.reference.old),
+                column(self.reference.new)
+            ),
+            row(self.reference.button)
+        )
+
+    def createPeakPickingLayout(self):
+        return column(
+            CustomRow(
+                column(self.peakPicking.manual),
+                column(self.peakPicking.peak),
+                hide=True
+            ),
+            row(self.peakPicking.dataTable),
+            row(
+                column(self.peakPicking.deselectButton),
+                column(self.peakPicking.deleteButton)
+            ),
+            row(self.peakPicking.chemicalShiftReportTitle),
+            row(self.peakPicking.chemicalShiftReport)
+        )
+
+    def createIntegrationLayout(self):
+        return column(
+            CustomRow(
+                column(self.integration.manual),
+                hide=True
+            ),
+            row(self.integration.dataTable),
+            row(
+                column(self.integration.deselectButton),
+                column(self.integration.deleteButton)
+            )
+        )
+
+    def createMultipletManagerLayout(self):
+        return column(
+            CustomRow(
+                column(self.multipletAnalysis.manual),
+                hide=True
+            ),
+            row(self.multipletAnalysis.dataTable),
+            row(self.multipletAnalysis.title),
+            row(
+                column(self.multipletAnalysis.name),
+                column(self.multipletAnalysis.classes),
+                column(self.multipletAnalysis.integral)
+            ),
+            row(self.multipletAnalysis.delete),
+            row(self.multipletAnalysis.reportTitle),
+            row(self.multipletAnalysis.report)
+        )
+
+    def createTabs(self, tabs):
+        callback = CustomJS(args=dict(
+            referenceTool=self.reference.tool,
+            peakPickingManualTool=self.peakPicking.manualTool,
+            peakByPeakTool=self.peakPicking.peakTool,
+            integrationTool=self.integration.tool,
+            multipletAnalysisTool=self.multipletAnalysis.tool
+            ), code="""
+            switch(this.active) {
+            case 0:
+                referenceTool.active = true;
+                break;
+            case 1:
+                if (!peakByPeakTool.active) {
+                    peakPickingManualTool.active = true;
+                }
+                break;
+            case 2:
+                integrationTool.active = true;
+                break;
+            case 3:
+                multipletAnalysisTool.active = true;
+                break;
+            }
+        """)
+        return Tabs(tabs=tabs, width=500, callback=callback, id="tabs")
+
     def draw(self):
         try:
 
-            referenceLayout = column(
-                row(
-                    column(self.reference.old),
-                    column(self.reference.new)
-                ),
-                row(self.reference.button)
-            )
+            referenceLayout = self.createReferenceLayout()
 
-            peakPickingLayout = column(
-                CustomRow(
-                    column(self.peakPicking.manual),
-                    column(self.peakPicking.peak),
-                    hide=True
-                ),
-                row(self.peakPicking.dataTable),
-                row(
-                    column(self.peakPicking.deselectButton),
-                    column(self.peakPicking.deleteButton)
-                ),
-                row(self.peakPicking.chemicalShiftReportTitle),
-                row(self.peakPicking.chemicalShiftReport)
-            )
+            peakPickingLayout = self.createPeakPickingLayout()
 
-            integrationLayout = column(
-                CustomRow(
-                    column(self.integration.manual),
-                    hide=True
-                ),
-                row(self.integration.dataTable),
-                row(
-                    column(self.integration.deselectButton),
-                    column(self.integration.deleteButton)
-                )
-            )
+            integrationLayout = self.createIntegrationLayout()
 
-            multipletManagerLayout = column(
-                CustomRow(
-                    column(self.multipletAnalysis.manual),
-                    hide=True
-                ),
-                row(self.multipletAnalysis.dataTable),
-                row(self.multipletAnalysis.title),
-                row(
-                    column(self.multipletAnalysis.name),
-                    column(self.multipletAnalysis.classes),
-                    column(self.multipletAnalysis.integral)
-                ),
-                row(self.multipletAnalysis.delete),
-                row(self.multipletAnalysis.reportTitle),
-                row(self.multipletAnalysis.report)
-            )
+            multipletManagerLayout = self.createMultipletManagerLayout()
 
             referenceTab = Panel(child=referenceLayout, title="Reference")
             peakPickingTab = Panel(child=peakPickingLayout, title="Peak Picking")
             integrationTab = Panel(child=integrationLayout, title="Integration")
             multipletAnalysisTab = Panel(child=multipletManagerLayout, title="Multiplet Analysis")
 
-            callback = CustomJS(args=dict(
-                referenceTool=self.reference.tool,
-                peakPickingManualTool=self.peakPicking.manualTool,
-                peakByPeakTool=self.peakPicking.peakTool,
-                integrationTool=self.integration.tool,
-                multipletAnalysisTool=self.multipletAnalysis.tool
-                ), code="""
-                switch(this.active) {
-                case 0:
-                    referenceTool.active = true;
-                    break;
-                case 1:
-                    if (!peakByPeakTool.active) {
-                        peakPickingManualTool.active = true;
-                    }
-                    break;
-                case 2:
-                    integrationTool.active = true;
-                    break;
-                case 3:
-                    multipletAnalysisTool.active = true;
-                    break;
-                }
-            """)
-            tabs = Tabs(tabs=[referenceTab, peakPickingTab, integrationTab, multipletAnalysisTab], width=500, callback=callback, id="tabs")
+            tabs = self.createTabs([referenceTab, peakPickingTab, integrationTab, multipletAnalysisTab])
 
             curdoc().add_root(
                 row(

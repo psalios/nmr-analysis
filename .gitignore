@@ -3,5 +3,6 @@
 .idea
 venv
 *.pyc
+nmr-spectrum/data
 
 target
