@@ -41,6 +41,7 @@ class PeakPicking(Observer):
     def create(self):
 
         self.sources['table'] = ColumnDataSource(dict(x=[], y=[]))
+        self.sources['background'] = ColumnDataSource(dict(x=[], y=[]))
         columns = [
                 TableColumn(field="x", title="ppm", formatter=NumberFormatter(format="0.00")),
                 TableColumn(field="y", title="y", formatter=NumberFormatter(format="0.00"))
@@ -129,10 +130,12 @@ class PeakPicking(Observer):
             except IndexError:
                 pass
 
-        self.sources['table'].data = {
+        newData = {
             'x': newX,
             'y': newY
         }
+        self.sources['table'].data = newData
+        self.sources['background'].data = dict(newData)
         deselectRows(self.sources['table'])
 
         self.notifyObservers()
@@ -185,8 +188,13 @@ class PeakPicking(Observer):
         ))
         newX, newY = zip(*sorted(newData, reverse=True))
         self.sources['table'].data = {
-            'x': newX,
-            'y': newY
+            'x': list(newX),
+            'y': list(newY)
+        }
+
+        self.sources['background'].data = {
+            'x': list(newX),
+            'y': list(newY)
         }
 
     def rowSelect(self, ids):
@@ -211,7 +219,7 @@ class PeakPicking(Observer):
             fill_color="#C0C0C0",
             line_width=1
         )
-        plot.add_glyph(self.sources['table'], peak, selection_glyph=peak, nonselection_glyph=peak)
+        plot.add_glyph(self.sources['background'], peak, selection_glyph=peak, nonselection_glyph=peak)
 
         selected = Circle(
             x="x",
