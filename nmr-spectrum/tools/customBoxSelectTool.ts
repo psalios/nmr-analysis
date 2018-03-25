@@ -1,3 +1,9 @@
+/************************************************
+ * Title: Bokeh                                 *
+ * Code version: 12.14                          *
+ * Availability: https://github.com/bokeh/bokeh *
+ ************************************************/
+
 import {SelectTool, SelectToolView} from "models/tools/gestures/select_tool"
 import {BoxAnnotation} from "models/annotations/box_annotation"
 import * as p from "core/properties"

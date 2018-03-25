@@ -1,3 +1,9 @@
+#################################################
+# Title: Bokeh                                  #
+# Code version: 12.14                           #
+# Availability: https://github.com/bokeh/bokeh  #
+#################################################
+
 from bokeh.core.properties import Int, Dict, String, Float, Instance
 from bokeh.models.widgets import Button, AbstractButton
 

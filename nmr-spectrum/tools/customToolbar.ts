@@ -1,3 +1,9 @@
+/************************************************
+ * Title: Bokeh                                 *
+ * Code version: 12.14                          *
+ * Availability: https://github.com/bokeh/bokeh *
+ ************************************************/
+
 import * as p from "core/properties"
 import {empty, div} from "core/dom";
 import {DOMView} from "core/dom_view";

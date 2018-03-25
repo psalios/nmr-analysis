@@ -1,3 +1,9 @@
+/************************************************
+ * Title: Bokeh                                 *
+ * Code version: 12.14                          *
+ * Availability: https://github.com/bokeh/bokeh *
+ ************************************************/
+
 import {GestureTool, GestureToolView} from "models/tools/gestures/gesture_tool"
 import {BoxAnnotation} from "models/annotations/box_annotation"
 import {CartesianFrame} from "models/canvas/cartesian_frame"

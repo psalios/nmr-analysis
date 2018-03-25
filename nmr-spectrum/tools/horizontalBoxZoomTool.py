@@ -1,3 +1,9 @@
+#################################################
+# Title: Bokeh                                  #
+# Code version: 12.14                           #
+# Availability: https://github.com/bokeh/bokeh  #
+#################################################
+
 from bokeh.models import Drag, BoxAnnotation, DEFAULT_BOX_OVERLAY
 from bokeh.core.properties import Instance, Enum, Bool
 from bokeh.core.enums import Dimensions

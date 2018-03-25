@@ -1,3 +1,9 @@
+#################################################
+# Title: Bokeh                                  #
+# Code version: 12.14                           #
+# Availability: https://github.com/bokeh/bokeh  #
+#################################################
+
 from bokeh.core.properties import List, String, Instance, Enum
 from bokeh.models.tools import Tap
 from bokeh.models.renderers import Renderer

@@ -1,3 +1,9 @@
+/************************************************
+ * Title: Bokeh                                 *
+ * Code version: 12.14                          *
+ * Availability: https://github.com/bokeh/bokeh *
+ ************************************************/
+
 import {GestureTool, GestureToolView} from "models/tools/gestures/gesture_tool"
 import {scale_range} from "core/util/zoom"
 import * as p from "core/properties"

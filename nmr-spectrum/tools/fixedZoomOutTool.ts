@@ -1,3 +1,9 @@
+/************************************************
+ * Title: Bokeh                                 *
+ * Code version: 12.14                          *
+ * Availability: https://github.com/bokeh/bokeh *
+ ************************************************/
+
 import {ActionTool, ActionToolView} from "models/tools/actions/action_tool"
 import {Dimensions} from "core/enums"
 import {scale_range} from "core/util/zoom"

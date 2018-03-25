@@ -1,3 +1,9 @@
+#################################################
+# Title: Bokeh                                  #
+# Code version: 12.14                           #
+# Availability: https://github.com/bokeh/bokeh  #
+#################################################
+
 from bokeh.core.properties import Bool, List, Instance, String, Enum, Int
 from bokeh.models.annotations import Label
 from bokeh.models.tools import Drag, BoxAnnotation
