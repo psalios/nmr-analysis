@@ -65,32 +65,39 @@
         </div>
     </form>
 
-    <div th:unless="${#lists.isEmpty(spectrums)}">
+    <div th:unless="${#lists.isEmpty(compounds)}">
         <br/>
-        <div class="table-responsive">
-            <table class="table table-hover table-condensed table-striped">
-                <thead>
-                <tr>
-                    <th class="col-md-9 text-center">Peaks</th>
-                    <th class="col-md-2 text-center">Last Updated</th>
-                    <th class="col-md-1 text-center">Options</th>
-                </tr>
-                </thead>
-                <tbody>
-                <th:block th:each="spectrumList: ${spectrums}">
-                    <tr th:each="spectrum: ${spectrumList}">
-                        <td th:text="${{spectrum.getPeaks()}}">Peaks</td>
-                        <td class="text-center" th:text="${#dates.format(spectrum.getDate(), 'dd-MM-yyyy hh:mm:ss')}">Date</td>
-                        <td class="text-center"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"></td>
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
-        </div>
+        <th:block th:each="compound, iter: ${compounds}">
+            <div th:if="${iter.index % 4 == 0}" class="row">
+                <div th:if="${#lists.size(compounds) &gt; iter.index}" class="col-md-3" th:utext="${compounds[iter.index]}"></div>
+                <div th:if="${#lists.size(compounds) &gt; (iter.index + 1)}" class="col-md-3" th:utext="${compounds[iter.index+1]}"></div>
+                <div th:if="${#lists.size(compounds) &gt; (iter.index + 2)}" class="col-md-3" th:utext="${compounds[iter.index+2]}"></div>
+                <div th:if="${#lists.size(compounds) &gt; (iter.index + 3)}" class="col-md-3" th:utext="${compounds[iter.index+3]}"></div>
+            </div>
+        </th:block>
     </div>
+
+    <!--<div th:unless="${#lists.isEmpty(spectrums)}">-->
+        <!--<br/>-->
+        <!--<div class="table-responsive">-->
+            <!--<table class="table table-hover table-condensed table-striped">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th class="col-md-9 text-center">Peaks</th>-->
+                    <!--<th class="col-md-2 text-center">Last Updated</th>-->
+                    <!--<th class="col-md-1 text-center">Options</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr th:each="spectrum: ${spectrums}">-->
+                    <!--<td th:text="${{spectrum.getPeaks()}}">Peaks</td>-->
+                    <!--<td class="text-center" th:text="${#dates.format(spectrum.getDate(), 'dd-MM-yyyy hh:mm:ss')}">Date</td>-->
+                    <!--<td class="text-center"></td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 
 <script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>

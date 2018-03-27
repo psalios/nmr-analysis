@@ -19,6 +19,9 @@ public class Spectrum {
     @JoinColumn(name = "spectrum_id")
     private List<Peak> peaks = new ArrayList<>();
 
+    @Column(name = "spectrum")
+    private Integer spectrum;
+
     @Column(name = "date")
     private Date date;
 
@@ -44,5 +47,13 @@ public class Spectrum {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getSpectrum() {
+        return spectrum;
+    }
+
+    public void setSpectrum(Integer spectrum) {
+        this.spectrum = spectrum;
     }
 }
