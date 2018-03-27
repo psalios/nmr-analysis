@@ -17,9 +17,10 @@ from bokeh.models.glyphs import Rect
 
 class Integration(Observer):
 
-    def __init__(self, logger, pdata, dataSource, reference):
+    def __init__(self, logger, spectrumId, pdata, dataSource, reference):
         Observer.__init__(self, logger)
         self.logger = logger
+        self.id = spectrumId
 
         self.pdata = pdata
         self.dataSource = dataSource

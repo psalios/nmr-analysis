@@ -88,11 +88,13 @@ class PeakPicking(Observer):
 
     def dataChanged(self, old, new):
 
-        added = list(set(new['x']) - set(old['x']))
-        removed = list(set(old['x']) - set(new['x']))
+        label = getLabel(self.udic)
+        if label == "13C":
+            added = [(peak, 'm') for peak in (set(new['x']) - set(old['x']))]
+            removed = [(peak, 'm') for peak in (set(old['x']) - set(new['x']))]
 
-        SpectrumDB.AddPeaks(self.id, added)
-        SpectrumDB.RemovePeaks(self.id, removed)
+            SpectrumDB.RemovePeaks(self.id, removed)
+            SpectrumDB.AddPeaks(self.id, added)
 
         # Update Chemical Shift Report
         self.updateChemicalShiftReport()
@@ -140,7 +142,7 @@ class PeakPicking(Observer):
 
         self.notifyObservers()
 
-    def manualPeakPicking(self, dimensions):
+    def manualPeakPicking(self, dimensions, notify=True):
 
         # Positive Peaks
         self.peaksIndices = list(self.manualPeakPickingOnData(self.pdata, dimensions))
@@ -153,7 +155,8 @@ class PeakPicking(Observer):
                 'x': [self.dataSource.data['ppm'][i] for i in self.peaksIndices],
                 'y': [self.pdata[i] for i in self.peaksIndices]
             })
-            self.notifyObservers()
+            if notify:
+                self.notifyObservers()
 
     def manualPeakPickingOnData(self, data, dimensions):
 
@@ -195,6 +198,13 @@ class PeakPicking(Observer):
         self.sources['background'].data = {
             'x': list(newX),
             'y': list(newY)
+        }
+
+    def selectByPPM(self, peaks):
+        self.sources['table'].selected = {
+            '0d': {'glyph': None, 'indices': []},
+            '1d': {'indices': [self.sources['table'].data['x'].index(peak) for peak in peaks]},
+            '2d': {'indices': {}}
         }
 
     def rowSelect(self, ids):

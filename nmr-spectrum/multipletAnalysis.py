@@ -4,9 +4,10 @@
 import numpy as np
 
 from common import *
-from tools.bothDimensionsSelectTool import BothDimensionsSelectTool
+from spectrumDB import SpectrumDB
 
 from widgets.customButton import CustomButton
+from tools.bothDimensionsSelectTool import BothDimensionsSelectTool
 
 from bokeh.models.sources import ColumnDataSource
 from bokeh.models.annotations import BoxAnnotation
@@ -30,8 +31,9 @@ class MultipletAnalysis:
         'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7}
     }
 
-    def __init__(self, logger, dic, udic, pdata, dataSource, peakPicking, integration, reference):
+    def __init__(self, logger, spectrumId, dic, udic, pdata, dataSource, peakPicking, integration, reference):
         self.logger = logger
+        self.id = spectrumId
 
         self.dic = dic
         self.udic = udic
@@ -50,6 +52,7 @@ class MultipletAnalysis:
 
     def create(self):
 
+        self.oldData = dict(peaks=[], classes=[])
         self.sources['table'] = ColumnDataSource(dict(xStart=[], xStop=[], name=[], classes=[], j=[], h=[], integral=[], peaks=[], top=[], bottom=[]))
         columns = [
             TableColumn(field="xStart", title="start", formatter=NumberFormatter(format="0.00")),
@@ -62,7 +65,7 @@ class MultipletAnalysis:
         ]
         self.dataTable = DataTable(source=self.sources['table'], columns=columns, reorderable=False, width=500)
         self.sources['table'].on_change('selected', lambda attr, old, new: self.rowSelect(new['1d']['indices']))
-        self.sources['table'].on_change('data', lambda attr, old, new: self.updateMultipletReport())
+        self.sources['table'].on_change('data', lambda attr, old, new: self.dataChanged(new))
 
         self.manual = CustomButton(label="Multiplet Analysis", button_type="primary", width=250, error="Please select area using the multiplet analysis tool.")
         self.manual.on_click(self.manualMultipletAnalysis)
@@ -111,21 +114,21 @@ class MultipletAnalysis:
     def rowSelect(self, ids):
 
         if len(ids) == 1:
-            multiplet = ids[0]
-
-            self.selected = multiplet
+            self.selected = ids[0]
 
             # Enable options
             self.name.disabled = False
-            self.name.value = self.sources['table'].data['name'][multiplet]
+            self.name.value = self.sources['table'].data['name'][self.selected]
 
             self.classes.disabled = False
-            self.classes.value = self.sources['table'].data['classes'][multiplet]
+            self.classes.value = self.sources['table'].data['classes'][self.selected]
 
             self.integral.disabled = False
-            self.integral.value = str(self.sources['table'].data['integral'][multiplet])
+            self.integral.value = str(self.sources['table'].data['integral'][self.selected])
 
             self.delete.disabled = False
+
+            self.peakPicking.selectByPPM(self.sources['table'].data['peaks'][self.selected])
         else:
             deselectRows(self.sources['table'])
 
@@ -145,7 +148,7 @@ class MultipletAnalysis:
 
     def manualMultipletAnalysis(self, dimensions):
 
-        self.peakPicking.manualPeakPicking(dimensions)
+        self.peakPicking.manualPeakPicking(dimensions, notify=False)
         # Check if empty
         if not self.peakPicking.peaksIndices:
             return
@@ -171,6 +174,13 @@ class MultipletAnalysis:
 
         # Add to DataTable
         self.sources['table'].stream(data)
+
+        # Select the multiplet in the table
+        self.sources['table'].selected = {
+            '0d': {'glyph': None, 'indices': []},
+            '1d': {'indices': [len(self.sources['table'].data['xStart']) - 1]},
+            '2d': {'indices': {}}
+        }
 
     def calcJ(self, ppm):
         return round(abs(np.ediff1d(ppm).mean()) * getFrequency(self.udic) if len(ppm) > 1 else 0, 1)
@@ -218,6 +228,26 @@ class MultipletAnalysis:
 
         return False
 
+    def dataChanged(self, data):
+
+        self.updateMultipletReport()
+
+        label = getLabel(self.udic)
+        if label == "1H":
+            newData = [(np.median(peaks), c) for (peaks, c) in zip(data['peaks'], data['classes'])]
+            oldData = [(np.median(peaks), c) for (peaks, c) in zip(self.oldData['peaks'], self.oldData['classes'])]
+
+            added = list(set(newData) - set(oldData))
+            removed = list(set(oldData) - set(newData))
+
+            SpectrumDB.RemovePeaks(self.id, removed)
+            SpectrumDB.AddPeaks(self.id, added)
+
+            self.oldData = {
+                'peaks': [i[0] for i in newData],
+                'classes': [i[1] for i in newData]
+            }
+
     def updateMultipletReport(self):
         label = getLabel(self.udic)
 
@@ -231,16 +261,15 @@ class MultipletAnalysis:
                 "{:d}H)".format(int(h))
                 for (peaks, classes, j, h) in sorted(zip(data['peaks'], data['classes'], data['j'], data['h']), reverse=True) if h > 0
             ) + "."
-        elif label == "13C":
-            text = self.peakPicking.getChemicalShiftReport()
 
         self.report.text = text
 
     def manualChange(self, key, new):
-        patch = {
-            key: [(self.selected, new)]
-        }
-        self.sources['table'].patch(patch)
+        if self.sources['table'].data[key][self.selected] != new:
+            patch = {
+                key: [(self.selected, new)]
+            }
+            self.sources['table'].patch(patch)
 
     def changeIntegral(self, new):
         try:

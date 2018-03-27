@@ -132,11 +132,8 @@ class Plot:
         try:
 
             referenceLayout = self.createReferenceLayout()
-
             peakPickingLayout = self.createPeakPickingLayout()
-
             integrationLayout = self.createIntegrationLayout()
-
             multipletManagerLayout = self.createMultipletManagerLayout()
 
             referenceTab = Panel(child=referenceLayout, title="Reference")
@@ -176,11 +173,11 @@ class Plot:
         self.peakPicking.create()
         self.peakPicking.draw(self.plot)
 
-        self.integration = Integration(self.logger, self.pdata, self.dataSource, self.reference)
+        self.integration = Integration(self.logger, self.id, self.pdata, self.dataSource, self.reference)
         self.integration.create()
         self.integration.draw(self.plot)
 
-        self.multipletAnalysis = MultipletAnalysis(self.logger, self.dic, self.udic, self.pdata, self.dataSource, self.peakPicking, self.integration, self.reference)
+        self.multipletAnalysis = MultipletAnalysis(self.logger, self.id, self.dic, self.udic, self.pdata, self.dataSource, self.peakPicking, self.integration, self.reference)
         self.multipletAnalysis.create()
         self.multipletAnalysis.draw(self.plot)
 

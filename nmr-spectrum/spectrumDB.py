@@ -23,7 +23,7 @@ class SpectrumDB:
 
         try:
             with conn.cursor() as cursor:
-                cursor.executemany("INSERT IGNORE INTO peaks SET peak=%s, spectrum_id=%s", [(round(peak, 5), spectrumId) for peak in peaks])
+                cursor.executemany("INSERT IGNORE INTO peaks SET peak=%s, class=%s, spectrum_id=%s", [(round(peak, 5), c, spectrumId) for (peak, c) in peaks])
             conn.commit()
         finally:
             conn.close()
@@ -34,7 +34,7 @@ class SpectrumDB:
 
         try:
             with conn.cursor() as cursor:
-                cursor.executemany("DELETE FROM peaks WHERE peak=%s AND spectrum_id=%s", [(round(peak, 5), spectrumId) for peak in peaks])
+                cursor.executemany("DELETE FROM peaks WHERE peak=%s AND class=%s AND spectrum_id=%s", [(round(peak, 5), c, spectrumId) for (peak, c) in peaks])
             conn.commit()
         finally:
             conn.close()
