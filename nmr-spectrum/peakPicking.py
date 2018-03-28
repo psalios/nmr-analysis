@@ -132,14 +132,15 @@ class PeakPicking(Observer):
             except IndexError:
                 pass
 
-        newData = {
-            'x': newX,
-            'y': newY
+        self.sources['table'].data = {
+            'x': list(newX),
+            'y': list(newY)
         }
-        self.sources['table'].data = newData
-        self.sources['background'].data = dict(newData)
+        self.sources['background'].data = {
+            'x': list(newX),
+            'y': list(newY)
+        }
         deselectRows(self.sources['table'])
-
         self.notifyObservers()
 
     def manualPeakPicking(self, dimensions, notify=True):
