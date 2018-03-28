@@ -11,14 +11,13 @@ def readCompound(spectrum):
 
 logger = get_logger()
 logger.info("Spectrum Viewer started")
-
-compound = readCompound(1)
 try:
     args = curdoc().session_context.request.arguments
     spectrum = int(args.get('spectrum')[0])
 except:
-    spectrum = 2
+    spectrum = 1
 
+compound = readCompound(spectrum)
 path = "data/{}/".format(spectrum)
 if os.path.isdir(path):
     plot = Plot(logger, spectrum, path, compound)
