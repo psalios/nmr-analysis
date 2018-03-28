@@ -1,0 +1,27 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ Z:/data/tl/nmr/10082015-12-tl-tl12-A/10/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2015-10-08 17:48:13.071 +0100>,<nmr>,<Alec>,<go>,<TOPSPIN 3.2>,
+      <created by zg
+	started at 2015-10-08 17:47:36.759 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       59 B7 E4 9F DC 73 9C BD 6F 6D 31 F5 34 6A 06 9F
+       data hash MD5: 64K
+       82 E1 9D 7B B7 69 93 C8 FA 52 BB 20 2F B4 55 ED>)
+(   2,<2015-10-08 17:48:13.818 +0100>,<nmr>,<Alec>,<audit>,<TOPSPIN 3.2>,
+      <user comment:
+       ICON-NMR User ID: tl
+       data hash MD5: 64K
+       82 E1 9D 7B B7 69 93 C8 FA 52 BB 20 2F B4 55 ED>)
+(   3,<2015-10-08 17:48:18.479 +0100>,<nmr>,<Alec>,<dirdata>,<TOPSPIN 3.2>,
+      <wrpa from 1 10 "10082015-12-tl-tl12-A" "C:/Data-Icon/data/tl/nmr"
+       data hash MD5: 64K
+       82 E1 9D 7B B7 69 93 C8 FA 52 BB 20 2F B4 55 ED>)
+##END=
+
+$$ hash MD5
+$$ ED 1B 85 DB B2 F5 37 18 29 73 55 B2 F3 9B 9C 41

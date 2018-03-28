@@ -1,0 +1,40 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ Z:/data/tl/nmr/10102014-10-tl-tl12-A/10/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2014-10-11 05:04:49.364 +0100>,<nmr>,<Alec>,<go>,<TOPSPIN 3.2>,
+      <created by zg
+	started at 2014-10-11 05:03:50.186 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       A5 9A C6 AA D2 BA 0E 0E 0F 3B 96 A4 32 2E B1 F9
+       data hash MD5: 64K
+       CA E7 3D 52 4D 80 18 71 49 AB 54 14 A8 2A E8 40>)
+(   2,<2014-10-11 05:04:49.923 +0100>,<nmr>,<Alec>,<audit>,<TOPSPIN 3.2>,
+      <user comment:
+       ICON-NMR User ID: tl
+       data hash MD5: 64K
+       CA E7 3D 52 4D 80 18 71 49 AB 54 14 A8 2A E8 40>)
+(   3,<2014-10-11 05:04:50.458 +0100>,<nmr>,<Alec>,<proc1d>,<TOPSPIN 3.2>,
+      <Start of raw data processing
+       ef LB = 0.3 FT_mod = 6 PKNL = 1 SI = 64K 
+       data hash MD5: 64K
+       2B 11 29 03 FA EE 49 69 08 05 E8 34 9B 58 3D 7D>)
+(   4,<2014-10-11 05:04:52.928 +0100>,<nmr>,<Alec>,<proc1d>,<TOPSPIN 3.2>,
+      <apk0 
+       data hash MD5: 64K
+       89 EA 25 FC A3 02 F8 4E 05 AB 05 26 AE 52 E2 BA>)
+(   5,<2014-10-11 05:04:52.993 +0100>,<nmr>,<Alec>,<proc1d>,<TOPSPIN 3.2>,
+      <abs ABSG = 5 
+       data hash MD5: 64K
+       86 06 7E CF 4A C4 32 BE 0E E0 75 F3 2F 44 20 4D>)
+(   6,<2014-10-11 05:04:54.647 +0100>,<nmr>,<Alec>,<dirdata>,<TOPSPIN 3.2>,
+      <wrpa from 1 10 "10102014-10-tl-tl12-A" "C:/Data-Icon/data/tl/nmr"
+       data hash MD5: 64K
+       86 06 7E CF 4A C4 32 BE 0E E0 75 F3 2F 44 20 4D>)
+##END=
+
+$$ hash MD5
+$$ DE A0 6D 34 AB 85 F3 AB 8C 24 31 7A EC F3 0C C2

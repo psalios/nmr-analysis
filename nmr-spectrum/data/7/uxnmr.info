@@ -1,0 +1,130 @@
+CONFIGURATION INFORMATION
+=========================
+
+Path         : C:/Bruker/TopSpin3.2/conf/instr/spect/uxnmr.info
+Date         : Wed Aug 05 10:45:50 2015
+Release      : TOPSPIN Version 3.2-pl5
+Installed in : C:/Bruker/TopSpin3.2
+Host         : ALEC
+OS           : Windows 7 (Vs 6.1) Service Pack 1
+CPU          : Intel(R) Xeon(R) CPU W3505 @ 2.53GHz (2 cores at 2533 MHz)
+User         : nmr
+Description  : Avance III 500
+Location     : School of Chemistry, University of St Andrews 
+System       : Avance III NMR spectrometer
+1H-frequency : 500.13 MHz
+Order Number : GH001711
+Configured in: C:/Bruker/TopSpin3.2/conf/instr/spect
+
+IPSO: connected to spectrometer subnet
+- TCP/IP address = 149.236.99.253
+- Tctrl : 1
+- Fctrls: 2
+- Gctrl1: without digital preemphasis
+- Rctrl : none
+- FREDs : none
+- DPP : none
+
+DRU: AQS DRU-E Z102520/02620 ECL 06.02
+- TCP/IP address = 149.236.99.89
+- Firmware Version = 130419
+- DRU controls AQS-Rack and HPPR/2
+
+AQS: connected to 149.236.99.89:/dev/tty10
+  _Slot_ SBSB _____________________Board_____________________
+  Number Addr Type HW-VS FW-VS ID  ECL Name   Description
+  -----------------------------------------------------------
+     2   0x10 0x42   0x4    AW  R  5.1 REC-1  AQS RXAD600 Z102117/1245 ECL 05.01
+     3   0x34 0xc0   0x1        X  2.3 REF-1  REF-600 Reference Board for AQS Receiver
+     4   0x24 0x19   0x8    AE  S  2.8 SGU-1  AQS SGU/2 600 Z103081/02835 ECL 02.08 FPGA-Vs=AF
+     5   0x25 0x19   0x8    AE  S  2.8 SGU-2  AQS SGU/2 600 Z103081/02836 ECL 02.08 FPGA-Vs=AF
+    21   0x21 0xcf     0        P  1.0 PSD-1  PSD/3 Power Supply Distribution Board
+    --   0x20 0xd1     0        B  3.2 MASTER AQS/3 Chassis
+     1   0x20  0x7     0        B      MASTER AQS Rack Master
+  Logical Receiver/SGU configuration:
+
+
+Router: none installed
+
+
+Transmitters at the spectrometer subnet:
+----------------------------------------
+BLA_W1345096_0804 W1345096/0804 ECL 30:
+- TCP/IP address = 149.236.99.254
+- Firmware VS    = 20120627
+- Amplifier      = BLAXH2H300/100/150 E 200-600MHZ INR: W1345096/0804 ECL 30
+- Router         = BLMMR32 RF AMPLIFIER MODULE: W1345204/1320 ECL 2
+- Controller     = BLA CONTROL BOARD 6 2CH: W1522050/6054 ECL 50
+- QNP-Accessory  : 1 X-input and 1 H-input
+LTRX Z109889/00298 ECL 02.01:
+- TCP/IP address = 149.236.99.21
+- Amplifier      = BSMS/2 LOCK TRANSCEIVER 500: Z109889/00298 ECL 02.01
+
+BSMS: BSMS/2 connected to ethernet
+- TCP/IP address = 149.236.99.21
+- ELCB firmware version = 20140110
+- GAB current limits = 0.0/X, 0.0/Y, 10.0/Z (in A)
+- SCB channels = 40
+- Shim System = BOSS3-SB
+- L-TRX = BSMS/2 LOCK TRANSCEIVER 500: Z109889/00298 ECL 02.01
+- Lock: on L-TRX board
+- VTU_SPB = BSMS/2 SPB SENSOR & PNEUMATIC BD: Z115191/00640 ECL 03.00
+- VTU_VPSB1 = BSMS/2 VARIABLE POWER SUPPLY BD: Z115193/00736 ECL 01.02
+
+VTU: in BSMS/2 connected to ethernet
+- TCP/IP address = 149.236.99.21
+
+Bruker Automatic Changer: device connected to 149.236.99.253:/dev/tty01
+- Capacity: 60 holders
+- Firmware: 20120928
+- use BACS air  = yes
+- BACS sx delay = 10 s
+- Sample Rail fast changer mode = no
+
+Sample Changers at the spectrometer subnet:
+-------------------------------------------
+ - BACS2_H15000-01_0242: at TCP/IP address 149.236.99.124
+
+
+Prodigy Control Unit: LNP PRODIGY UNIT Z127349/323
+- TCP/IP address   = 149.236.99.249
+
+Preamplifiers :
+HPPR: - HPPR/2 preamplifier connected to 149.236.99.89:/dev/tty10
+    Type      : HPPR/2
+    Controller: Application firmware = AQ
+                15 LEDs for tuning, 15 LEDs for matching
+    Module  1 : HPLNA 19F1H (virtual 50 Ohm reference: 99.8%/0.2deg, reflection meter)
+                 PN=Z103204, SN=00612 from 20141107
+    Module  2 : XBB19F 2HS
+                 PN=Z003505, SN=01089 from 20110922
+    Module  3 : 2H
+                 PN=Z003472, SN=00996 from 20110930
+
+
+Frequency generation:
+- F1: for SGU
+- F2: for SGU
+
+
+
+RF cable connections (detected by 'confamp')
+--------------------------------------------------------------------
+SGU1 NORM output -> input 1 of transmitter 1 (BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254)
+SGU1 AUX  output -> input 4 of transmitter 1 (BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254)
+SGU2 NORM output -> input 2 of transmitter 1 (BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254)
+SGU2 AUX  output -> TUNE signal input of HPPR
+
+Blanking cable connections (detected by 'confamp')
+--------------------------------------------------------------------
+transmitter 1 (BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254) amplifier 1H-100W uses blanking 2
+transmitter 1 (BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254) amplifier X-300W uses blanking 1
+transmitter 1 (BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254) amplifier 2H-150W uses blanking 4
+transmitter 2 (BSMS/2 LOCK TRANSCEIVER 500 Z109889/00298 at TCP/IP 149.236.99.21) amplifier 2H-5W needs no blanking
+
+Switchbox (3 outputs: X / F / H) routing
+--------------------------------------------------------------------
+BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254 amplifier X-300W at blanking 1 can be routed to switchbox output 1 = X and output 2 = F
+BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254 amplifier 1H-100W at blanking 2 can be routed to switchbox output 1 = X, output 2 = F and output 3 = H
+BLAXH2H300/100/150 E 200-600MHZ W1345096/0804 at TCP/IP 149.236.99.254 amplifier 2H-150W at blanking 4 can be routed to switchbox output 5 (unknown)
+

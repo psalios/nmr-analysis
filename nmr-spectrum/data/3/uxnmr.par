@@ -1,10 +1,10 @@
 ##TITLE= Parameter file, TOPSPIN		Version 3.2
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 96	$$ modification sequence number
+##NPOINTS= 93	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmrsu
-$$ 2017-01-16 13:11:08.720 +0000  nmr@Alec
+$$ 2015-10-29 14:26:34.474 +0000  nmr@Alec
 $$ C:/Bruker/TopSpin3.2/conf/instr/spect/uxnmr.par
 $$ process C:\Bruker\TopSpin3.2\prog\mod\hconfserver.exe
 ##$ACB= 0

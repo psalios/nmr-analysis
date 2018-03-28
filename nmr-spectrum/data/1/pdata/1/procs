@@ -4,11 +4,11 @@
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ 2017-02-21 16:04:03.399 +0000  nmr@hector
-$$ Z:/data/tl/nmr/02212017-24-tl-jm220-H/10/pdata/1/procs
+$$ 2016-10-11 15:06:13.129 +0100  nmr@Alec
+$$ Z:/data/tl/nmr/10112016-45-tl-fs68-A/10/pdata/1/procs
 $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
-##$ABSF1= 13.0015
-##$ABSF2= -1.001501
+##$ABSF1= 13.00098
+##$ABSF2= -1.000981
 ##$ABSG= 5
 ##$ABSL= 3
 ##$ALPHA= 0
@@ -73,16 +73,16 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$Mdd_CsZF= 0
 ##$Mdd_mod= 0
 ##$NCOEF= 0
-##$NC_proc= -9
+##$NC_proc= -5
 ##$NLEV= 6
 ##$NOISF1= 0
 ##$NOISF2= 0
 ##$NSP= 0
 ##$NTH_PI= 0
 ##$NZP= 0
-##$OFFSET= 13.0015
+##$OFFSET= 13.00098
 ##$PC= 1
-##$PHC0= 4.12
+##$PHC0= 135.54
 ##$PHC1= 0
 ##$PH_mod= 1
 ##$PKNL= yes
@@ -95,18 +95,18 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$PSIGN= 0
 ##$PYNMP= <proc.py>
 ##$REVERSE= no
-##$SF= 700.13
+##$SF= 500.13
 ##$SI= 65536
 ##$SIGF1= 0
 ##$SIGF2= 0
 ##$SINO= 0
 ##$SIOLD= 65536
 ##$SPECTYP= <>
-##$SREGLST= <1H.DMSO>
+##$SREGLST= <1H.CDCl3>
 ##$SSB= 0
 ##$STSI= 65536
 ##$STSR= 0
-##$SW_p= 9803.92156862747
+##$SW_p= 7002.80112044817
 ##$SYMM= 0
 ##$S_DEV= 0
 ##$TDeff= 65536
@@ -123,6 +123,6 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$USERP5= <>
 ##$WDW= 1
 ##$XDIM= 0
-##$YMAX_p= 529596427
-##$YMIN_p= -759508
+##$YMAX_p= 375952625
+##$YMIN_p= -109847
 ##END=

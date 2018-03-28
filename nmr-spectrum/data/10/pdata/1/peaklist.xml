@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PeakList>
+  <PeakList1D>
+    <PeakList1DHeader creator="nmr" date="2015-10-07T22:06:04.387+01:00" expNo="15" name="10072015-3-tl-tl12-A" owner="" procNo="1" source="C:/Data-Icon/data/tl/nmr">
+      <PeakPickDetails>F1=228.334ppm, F2=-8.326ppm, MI=1.00cm, MAXI=10000.00cm, PC=1.400
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="172.9379" intensity="2.417811e+000" type="0"/>
+    <Peak1D F1="149.9522" intensity="3.321804e+000" type="0"/>
+    <Peak1D F1="135.2105" intensity="3.171654e+000" type="0"/>
+    <Peak1D F1="133.0179" intensity="-1.450881e+001" type="0"/>
+    <Peak1D F1="131.1697" intensity="-1.362990e+001" type="0"/>
+    <Peak1D F1="130.2021" intensity="-1.365589e+001" type="0"/>
+    <Peak1D F1="122.1588" intensity="3.222312e+000" type="0"/>
+    <Peak1D F1="114.0961" intensity="-1.500000e+001" type="0"/>
+    <Peak1D F1="108.5960" intensity="3.117738e+000" type="0"/>
+    <Peak1D F1="91.5774" intensity="3.598059e+000" type="0"/>
+    <Peak1D F1="86.8562" intensity="3.561543e+000" type="0"/>
+    <Peak1D F1="40.8878" intensity="9.249900e+000" type="0"/>
+    <Peak1D F1="40.4724" intensity="4.648719e+000" type="0"/>
+    <Peak1D F1="40.3053" intensity="1.451945e+001" type="0"/>
+    <Peak1D F1="40.1383" intensity="2.953147e+001" type="0"/>
+    <Peak1D F1="39.9715" intensity="3.509617e+001" type="0"/>
+    <Peak1D F1="39.8045" intensity="3.008994e+001" type="0"/>
+    <Peak1D F1="39.6374" intensity="1.507829e+001" type="0"/>
+    <Peak1D F1="39.4701" intensity="4.939067e+000" type="0"/>
+  </PeakList1D>
+</PeakList>

@@ -1,0 +1,40 @@
+
+Current Data Parameters
+NAME     10102014-10-tl-tl12-A              
+EXPNO                10              
+PROCNO                1              
+
+F2 - Acquisition Parameters
+Date_          20141011              
+Time               5.04              
+INSTRUM           spect              
+PROBHD   5 mm PABBO BB/              
+PULPROG            zg30              
+TD                65536              
+SOLVENT           CDCl3              
+NS                    8              
+DS                    2              
+SWH            7002.801 Hz           
+FIDRES         0.106854 Hz           
+AQ            4.6792703 sec          
+RG                 80.6              
+DW               71.400 usec         
+DE                11.40 usec         
+TE                295.0 K            
+D1           1.00000000 sec          
+TD0                   1              
+
+======== CHANNEL f1 ========
+SFO1        500.1330008 MHz          
+NUC1                 1H              
+P1                10.35 usec         
+PLW1        24.00000000 W            
+
+F2 - Processing parameters
+SI                65536              
+SF          500.1300000 MHz          
+WDW                  EM              
+SSB      0              
+LB                 0.30 Hz           
+GB       0              
+PC                 1.00              

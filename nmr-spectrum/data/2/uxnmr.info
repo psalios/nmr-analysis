@@ -2,7 +2,7 @@ CONFIGURATION INFORMATION
 =========================
 
 Path         : C:/Bruker/TopSpin3.2/conf/instr/spect/uxnmr.info
-Date         : Mon Jan 16 13:10:44 2017
+Date         : Thu Oct 29 14:26:08 2015
 Release      : TOPSPIN Version 3.2-pl7
 Installed in : C:/Bruker/TopSpin3.2
 Host         : ALEC
@@ -62,7 +62,7 @@ LTRX Z109889/00298 ECL 02.01:
 
 BSMS: BSMS/2 connected to ethernet
 - TCP/IP address = 149.236.99.21
-- ELCB firmware version = 20150423
+- ELCB firmware version = 20140110
 - GAB current limits = 0.0/X, 0.0/Y, 10.0/Z (in A)
 - SCB channels = 40
 - Shim System = BOSS3-SB

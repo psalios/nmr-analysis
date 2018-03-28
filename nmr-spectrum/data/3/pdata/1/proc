@@ -4,11 +4,11 @@
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ 2017-10-18 13:49:26.214 +0100  nmr@Alec
-$$ Z:/data/tl/nmr/10182017-15-tl-jm220-A/11/pdata/1/proc
+$$ 2016-10-11 12:23:34.035 +0100  nmr@Alec
+$$ Z:/data/tl/nmr/10112016-21-tl-fs68-A/10/pdata/1/proc
 $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
-##$ABSF1= 240
-##$ABSF2= -10
+##$ABSF1= 10
+##$ABSF2= 0
 ##$ABSG= 5
 ##$ABSL= 3
 ##$ALPHA= 0
@@ -17,43 +17,43 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$ASSFACI= 0
 ##$ASSFACX= 0
 ##$ASSWID= 0
-##$AUNMP= <proc_1d-apk.and>
+##$AUNMP= <proc_1d.and>
 ##$AXLEFT= 0
-##$AXNAME= <F2>
+##$AXNAME= <>
 ##$AXNUC= <off>
 ##$AXRIGHT= 0
 ##$AXTYPE= 0
 ##$AXUNIT= <>
 ##$AZFE= 0.1
-##$AZFW= 0.5
+##$AZFW= 0.1
 ##$BCFW= 1
 ##$BC_mod= 2
 ##$BYTORDP= 0
 ##$COROFFS= 0
 ##$CY= 15
 ##$DATMOD= 1
-##$DC= 1
+##$DC= 2
 ##$DFILT= <>
 ##$DTYPP= 0
 ##$ERETIC= no
-##$F1P= 228.330307006836
-##$F2P= -8.33022112875969
+##$F1P= 13.0009803771973
+##$F2P= -1.00098135364905
 ##$FCOR= 0.5
-##$FTSIZE= 2048
-##$FT_mod= 0
+##$FTSIZE= 65536
+##$FT_mod= 4
 ##$GAMMA= 1
 ##$GB= 0
 ##$INTBC= 1
 ##$INTSCL= 1
-##$ISEN= 30
-##$LB= 2
+##$ISEN= 128
+##$LB= 0.3
 ##$LEV0= 0
 ##$LPBIN= 0
 ##$MAXI= 10000
 ##$MC2= 0
 ##$MEAN= 0
 ##$ME_mod= 0
-##$MI= 1
+##$MI= 0.1
 ##$MddCEXP= no
 ##$MddCT_SP= no
 ##$MddF180= no
@@ -75,15 +75,15 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$NCOEF= 0
 ##$NC_proc= 0
 ##$NLEV= 6
-##$NOISF1= 212.9025
-##$NOISF2= 177.3421
+##$NOISF1= 0
+##$NOISF2= 0
 ##$NSP= 1
 ##$NTH_PI= 0
-##$NZP= 1
-##$OFFSET= 11.00805
-##$PC= 1.4
-##$PHC0= 59.61781
-##$PHC1= -70.83015
+##$NZP= 0
+##$OFFSET= 13.00098
+##$PC= 1
+##$PHC0= 139.02
+##$PHC1= 0
 ##$PH_mod= 0
 ##$PKNL= yes
 ##$PPARMOD= 0
@@ -92,27 +92,27 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$PPMPNUM= 2147483647
 ##$PPRESOL= 1
 ##$PSCAL= 4
-##$PSIGN= 2
+##$PSIGN= 0
 ##$PYNMP= <proc.py>
 ##$REVERSE= no
-##$SF= 125.757788526
-##$SI= 32768
-##$SIGF1= 166.7169
-##$SIGF2= 147.0211
+##$SF= 500.13
+##$SI= 65536
+##$SIGF1= 0
+##$SIGF2= 0
 ##$SINO= 0
-##$SIOLD= 32768
+##$SIOLD= 65536
 ##$SPECTYP= <>
-##$SREGLST= <13C.CDCl3>
+##$SREGLST= <1H.CDCl3>
 ##$SSB= 0
 ##$STSI= 0
 ##$STSR= 0
-##$SW_p= 6009.6153846154
+##$SW_p= 7002.80112044817
 ##$SYMM= 0
 ##$S_DEV= 0
 ##$TDeff= 0
 ##$TDoff= 0
-##$TI= <13C Observe with multiplicity editing - DEPTQ
-Compound 9
+##$TI= <1H Observe
+1H Sample A for student test
 
 >
 ##$TILT= no

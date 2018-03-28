@@ -4,8 +4,8 @@
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ 2017-02-21 16:00:28.235 +0000  nmr@hector
-$$ C:/Data-icon/data/tl/nmr/02212017-24-tl-jm220-H/10/scon2
+$$ 2016-10-11 15:05:29.939 +0100  nmr@Alec
+$$ C:/Data-Icon/data/tl/nmr/10112016-45-tl-fs68-A/10/scon2
 $$ process C:\Bruker\TopSpin3.2\prog\mod\go.exe
 ##$BLKTR= (0..19)
 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
@@ -13,7 +13,7 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\go.exe
 ##$DEADC= 0.5
 ##$DEPA= 4.5
 ##$DERX= 1.5
-##$FILCOR= 0.75
+##$FILCOR= 0
 ##$GRADCHAN= 0
 ##$GRADPRE= (0..1)
 10 10

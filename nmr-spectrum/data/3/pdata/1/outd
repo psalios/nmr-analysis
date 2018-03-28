@@ -4,13 +4,13 @@
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ 2017-10-18 13:49:26.163 +0100  nmr@Alec
-$$ Z:/data/tl/nmr/10182017-15-tl-jm220-A/11/pdata/1/outd
+$$ 2016-10-11 12:23:34.016 +0100  nmr@Alec
+$$ Z:/data/tl/nmr/10112016-21-tl-fs68-A/10/pdata/1/outd
 $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$CURPLOT= <chpr-nmr-col(PS)>
 ##$CURPRIN= <$PRF102 (HP LaserJet P4015)>
 ##$DFORMAT= <normdp>
-##$LAYOUT= <+/1D_X_A3_StA.xwp>
+##$LAYOUT= <+/1d_h_a3_sta.xwp>
 ##$LFORMAT= <normlp>
 ##$PFORMAT= <normpl>
 ##END=

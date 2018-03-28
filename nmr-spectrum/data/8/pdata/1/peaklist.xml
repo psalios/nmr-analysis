@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PeakList>
+  <PeakList1D>
+    <PeakList1DHeader creator="nmr" date="2015-10-08T18:07:04.730+01:00" expNo="11" name="10082015-12-tl-tl12-A" owner="" procNo="1" source="C:/Data-Icon/data/tl/nmr">
+      <PeakPickDetails>F1=228.334ppm, F2=-8.326ppm, MI=1.00cm, MAXI=10000.00cm, PC=1.400
+      </PeakPickDetails>
+    </PeakList1DHeader>
+    <Peak1D F1="146.7391" intensity="-1.679408e+000" type="0"/>
+    <Peak1D F1="129.8072" intensity="1.500000e+001" type="0"/>
+    <Peak1D F1="124.0924" intensity="1.476647e+001" type="0"/>
+    <Peak1D F1="77.3221" intensity="-2.364417e+000" type="0"/>
+    <Peak1D F1="77.0678" intensity="-2.513991e+000" type="0"/>
+    <Peak1D F1="76.8138" intensity="-2.531563e+000" type="0"/>
+    <Peak1D F1="41.3743" intensity="-6.964071e+000" type="0"/>
+  </PeakList1D>
+</PeakList>

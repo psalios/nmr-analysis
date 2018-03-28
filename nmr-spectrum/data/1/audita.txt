@@ -2,26 +2,26 @@
 ##JCAMPDX= 5.01
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ Z:/data/tl/nmr/02212017-24-tl-jm220-H/10/audita.txt
+$$ Z:/data/tl/nmr/10112016-45-tl-fs68-A/10/audita.txt
 ##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
-(   1,<2017-02-21 16:03:53.829 +0000>,<nmr>,<hector>,<go>,<TOPSPIN 3.2>,
+(   1,<2016-10-11 15:06:06.795 +0100>,<nmr>,<Alec>,<go>,<TOPSPIN 3.2>,
       <created by zg
-	started at 2017-02-21 16:00:30.113 +0000,
+	started at 2016-10-11 15:05:30.388 +0100,
 	POWCHK enabled, PULCHK disabled,
        configuration hash MD5:
-       C6 70 7A 7E 92 B9 5A ED D0 65 03 CC 88 A4 CC 56
+       28 55 6F 7E 96 79 98 7D 39 B3 4C 60 2F 88 84 42
        data hash MD5: 64K
-       9F 8B BB 18 2B 54 BF DA C9 8C A6 BE 59 73 DF 07>)
-(   2,<2017-02-21 16:03:55.500 +0000>,<nmr>,<hector>,<audit>,<TOPSPIN 3.2>,
+       C9 D2 E3 A7 29 5B 67 14 46 EB 78 C2 6A E8 42 12>)
+(   2,<2016-10-11 15:06:08.347 +0100>,<nmr>,<Alec>,<audit>,<TOPSPIN 3.2>,
       <user comment:
        ICON-NMR User ID: tl
        data hash MD5: 64K
-       9F 8B BB 18 2B 54 BF DA C9 8C A6 BE 59 73 DF 07>)
-(   3,<2017-02-21 16:04:03.025 +0000>,<nmr>,<hector>,<dirdata>,<TOPSPIN 3.2>,
-      <wrpa from 1 10 "02212017-24-tl-jm220-H" "C:/Data-icon/data/tl/nmr"
+       C9 D2 E3 A7 29 5B 67 14 46 EB 78 C2 6A E8 42 12>)
+(   3,<2016-10-11 15:06:13.000 +0100>,<nmr>,<Alec>,<dirdata>,<TOPSPIN 3.2>,
+      <wrpa from 1 10 "10112016-45-tl-fs68-A" "C:/Data-Icon/data/tl/nmr"
        data hash MD5: 64K
-       9F 8B BB 18 2B 54 BF DA C9 8C A6 BE 59 73 DF 07>)
+       C9 D2 E3 A7 29 5B 67 14 46 EB 78 C2 6A E8 42 12>)
 ##END=
 
 $$ hash MD5
-$$ 09 FB A6 00 FB 02 16 6D 5D 02 57 2A 5A 42 CE F1
+$$ 06 E4 8A 54 A5 2E CE 59 1E 18 08 DC 2D 31 B8 75

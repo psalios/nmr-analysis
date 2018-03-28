@@ -1,16 +1,16 @@
 ##TITLE= Parameter file, TOPSPIN		Version 3.2
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 5420	$$ modification sequence number
+##NPOINTS= 5357	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmrsu
-$$ 2017-08-21 07:09:48.808 +0100  nmr@Alec
+$$ 2016-09-23 09:58:32.947 +0100  nmr@Alec
 $$ C:/Bruker/TopSpin3.2/conf/instr/spect/specpar
 $$ process C:\Bruker\TopSpin3.2\prog\mod\cprserver.exe
 ##$HPPRECH= (0..15)
 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-##$NUC1= 10
-##$NUC2= 0
+##$NUC1= 44
+##$NUC2= 1
 ##$NUC3= 0
 ##$NUC4= 0
 ##$NUC5= 0
@@ -41,7 +41,7 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\cprserver.exe
 ##$OFFSF= (0..7)
 -42353.1000000139 0 0 0 0 0 0 0
 ##$OFFSH= (0..7)
-3088.49999998984 1665.60000002391 0 0 0 0 0 0
+2350.59999999976 1665.60000002391 0 0 0 0 0 0
 ##$OFFSX= (0..7)
 0 5838.19999999946 0 0 0 0 0 0
 ##$PRECHAN= (0..15)
@@ -54,12 +54,12 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\cprserver.exe
 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$SELREC= (0..9)
 0 0 0 0 0 0 0 0 0 0
-##$SFO1= 125.757789
-##$SFO2= 500.13
-##$SFO3= 500.133088
-##$SFO4= 500.133088
-##$SFO5= 500.133088
-##$SFO6= 500.133088
-##$SFO7= 500.133088
-##$SFO8= 500.133088
+##$SFO1= 95.382358
+##$SFO2= 500.132351
+##$SFO3= 500.13
+##$SFO4= 500.13
+##$SFO5= 500.13
+##$SFO6= 500.13
+##$SFO7= 500.13
+##$SFO8= 500.13
 ##END=

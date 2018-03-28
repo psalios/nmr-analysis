@@ -2,39 +2,39 @@
 ##JCAMPDX= 5.01
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ Z:/data/tl/nmr/02212017-24-tl-jm220-H/10/pdata/1/auditp.txt
+$$ Z:/data/tl/nmr/10112016-45-tl-fs68-A/10/pdata/1/auditp.txt
 ##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
-(   1,<2017-02-21 16:03:53.829 +0000>,<nmr>,<hector>,<go>,<TOPSPIN 3.2>,
+(   1,<2016-10-11 15:06:06.795 +0100>,<nmr>,<Alec>,<go>,<TOPSPIN 3.2>,
       <created by zg
-	started at 2017-02-21 16:00:30.113 +0000,
+	started at 2016-10-11 15:05:30.388 +0100,
 	POWCHK enabled, PULCHK disabled,
        configuration hash MD5:
-       C6 70 7A 7E 92 B9 5A ED D0 65 03 CC 88 A4 CC 56
+       28 55 6F 7E 96 79 98 7D 39 B3 4C 60 2F 88 84 42
        data hash MD5: 64K
-       9F 8B BB 18 2B 54 BF DA C9 8C A6 BE 59 73 DF 07>)
-(   2,<2017-02-21 16:03:55.500 +0000>,<nmr>,<hector>,<audit>,<TOPSPIN 3.2>,
+       C9 D2 E3 A7 29 5B 67 14 46 EB 78 C2 6A E8 42 12>)
+(   2,<2016-10-11 15:06:08.347 +0100>,<nmr>,<Alec>,<audit>,<TOPSPIN 3.2>,
       <user comment:
        ICON-NMR User ID: tl
        data hash MD5: 64K
-       9F 8B BB 18 2B 54 BF DA C9 8C A6 BE 59 73 DF 07>)
-(   3,<2017-02-21 16:03:57.120 +0000>,<nmr>,<hector>,<proc1d>,<TOPSPIN 3.2>,
+       C9 D2 E3 A7 29 5B 67 14 46 EB 78 C2 6A E8 42 12>)
+(   3,<2016-10-11 15:06:08.902 +0100>,<nmr>,<Alec>,<proc1d>,<TOPSPIN 3.2>,
       <Start of raw data processing
        ef LB = 0.3 FT_mod = 6 PKNL = 1 SI = 64K 
        data hash MD5: 64K
-       45 8E 20 39 3B FA 4C 12 CE F7 49 BF 6D D8 69 CF>)
-(   4,<2017-02-21 16:04:00.240 +0000>,<nmr>,<hector>,<proc1d>,<TOPSPIN 3.2>,
+       B6 01 84 C3 6A 0F 6A E4 3B C5 68 74 EB 6C A6 24>)
+(   4,<2016-10-11 15:06:11.391 +0100>,<nmr>,<Alec>,<proc1d>,<TOPSPIN 3.2>,
       <apk0 
        data hash MD5: 64K
-       31 CC 25 7A 3C 5C B8 6C 7B F0 06 E0 0D 42 8D D9>)
-(   5,<2017-02-21 16:04:00.334 +0000>,<nmr>,<hector>,<proc1d>,<TOPSPIN 3.2>,
+       D4 94 1F 21 90 5B CF 2C D5 C3 40 45 FB 3F 52 49>)
+(   5,<2016-10-11 15:06:11.938 +0100>,<nmr>,<Alec>,<proc1d>,<TOPSPIN 3.2>,
       <abs ABSG = 5 
        data hash MD5: 64K
-       B3 13 09 5A 8D F1 6B 06 ED 04 A5 DB 30 4E B7 9D>)
-(   6,<2017-02-21 16:04:03.446 +0000>,<nmr>,<hector>,<dirdata>,<TOPSPIN 3.2>,
-      <wrpa from 1 10 "02212017-24-tl-jm220-H" "C:/Data-icon/data/tl/nmr"
+       2F 67 C7 8F 03 C7 34 9D B9 76 30 8B B8 58 6F 1D>)
+(   6,<2016-10-11 15:06:13.166 +0100>,<nmr>,<Alec>,<dirdata>,<TOPSPIN 3.2>,
+      <wrpa from 1 10 "10112016-45-tl-fs68-A" "C:/Data-Icon/data/tl/nmr"
        data hash MD5: 64K
-       B3 13 09 5A 8D F1 6B 06 ED 04 A5 DB 30 4E B7 9D>)
+       2F 67 C7 8F 03 C7 34 9D B9 76 30 8B B8 58 6F 1D>)
 ##END=
 
 $$ hash MD5
-$$ F1 1E B3 3C 94 D6 2F F9 CA 7E 12 46 C8 28 6D 1D
+$$ F7 4B 7E CB 45 CD 78 E5 81 6E AE BC 27 8C 42 D5

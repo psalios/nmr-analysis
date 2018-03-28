@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ 2014-10-11 05:04:54.581 +0100  nmr@Alec
+$$ Z:/data/tl/nmr/10102014-10-tl-tl12-A/10/pdata/1/outd
+$$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
+##$CURPLOT= <chpr-nmr-col(PS)>
+##$CURPRIN= <$PRF102 (HP LaserJet P4015)>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/1d_h_a3_sta.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

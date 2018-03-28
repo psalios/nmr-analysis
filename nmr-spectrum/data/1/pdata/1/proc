@@ -4,8 +4,8 @@
 ##NPOINTS= 1	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmr
-$$ 2017-02-21 16:04:03.384 +0000  nmr@hector
-$$ Z:/data/tl/nmr/02212017-24-tl-jm220-H/10/pdata/1/proc
+$$ 2016-10-11 15:06:13.125 +0100  nmr@Alec
+$$ Z:/data/tl/nmr/10112016-45-tl-fs68-A/10/pdata/1/proc
 $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$ABSF1= 10
 ##$ABSF2= 0
@@ -80,9 +80,9 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$NSP= 1
 ##$NTH_PI= 0
 ##$NZP= 0
-##$OFFSET= 9.287105
+##$OFFSET= 13.00098
 ##$PC= 1
-##$PHC0= 4.12
+##$PHC0= 135.54
 ##$PHC1= 0
 ##$PH_mod= 0
 ##$PKNL= yes
@@ -95,14 +95,14 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$PSIGN= 0
 ##$PYNMP= <proc.py>
 ##$REVERSE= no
-##$SF= 700.13
+##$SF= 500.13
 ##$SI= 65536
 ##$SIGF1= 0
 ##$SIGF2= 0
 ##$SINO= 0
 ##$SIOLD= 65536
 ##$SPECTYP= <>
-##$SREGLST= <1H.DMSO>
+##$SREGLST= <1H.CDCl3>
 ##$SSB= 0
 ##$STSI= 0
 ##$STSR= 0
@@ -111,8 +111,8 @@ $$ process C:\Bruker\TopSpin3.2\prog\mod\dirdata.exe
 ##$S_DEV= 0
 ##$TDeff= 0
 ##$TDoff= 0
-##$TI= <1H Observe - Quantitative
-S:G (1:1)
+##$TI= <1H Observe
+1H Sample E for student test
 
 >
 ##$TILT= no

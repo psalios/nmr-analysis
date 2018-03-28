@@ -1,0 +1,27 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.2
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ Z:/data/tl/nmr/10112016-56-tl-fs68-A/14/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2016-10-11 19:52:40.753 +0100>,<nmr>,<Alec>,<go>,<TOPSPIN 3.2>,
+      <created by zg
+	started at 2016-10-11 19:34:40.206 +0100,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       28 55 6F 7E 96 79 98 7D 39 B3 4C 60 2F 88 84 42
+       data hash MD5: 64K
+       A0 B1 9F E0 AA C4 23 B3 49 65 4A D6 F7 88 85 0E>)
+(   2,<2016-10-11 19:52:41.804 +0100>,<nmr>,<Alec>,<audit>,<TOPSPIN 3.2>,
+      <user comment:
+       ICON-NMR User ID: tl
+       data hash MD5: 64K
+       A0 B1 9F E0 AA C4 23 B3 49 65 4A D6 F7 88 85 0E>)
+(   3,<2016-10-11 19:52:45.558 +0100>,<nmr>,<Alec>,<dirdata>,<TOPSPIN 3.2>,
+      <wrpa from 1 14 "10112016-56-tl-fs68-A" "C:/Data-Icon/data/tl/nmr"
+       data hash MD5: 64K
+       A0 B1 9F E0 AA C4 23 B3 49 65 4A D6 F7 88 85 0E>)
+##END=
+
+$$ hash MD5
+$$ 93 D1 36 39 57 F7 BF D1 3A 96 52 09 98 63 FB 86
