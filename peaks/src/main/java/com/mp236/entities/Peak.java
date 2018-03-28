@@ -13,6 +13,9 @@ public class Peak {
     @Column(name = "peak")
     private Double peak;
 
+    @Column(name = "class")
+    private String multiplicity;
+
     @Column(name = "spectrum_id")
     private Integer spectrumId;
 
@@ -40,9 +43,16 @@ public class Peak {
         this.spectrumId = spectrumId;
     }
 
+    public String getMultiplicity() {
+        return multiplicity;
+    }
+
+    public void setMultiplicity(String multiplicity) {
+        this.multiplicity = multiplicity;
+    }
+
     @Override
     public String toString() {
         return Double.toString(peak);
     }
-
 }

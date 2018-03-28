@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
 import os
+from bokeh.io import curdoc
+
 from logger import *
 from plot import Plot
-from bokeh.io import curdoc
 
 def readCompound(spectrum):
     with open("data/compounds/{}.svg".format(spectrum)) as f:

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.mp236.entities.Peak;
 import com.mp236.entities.PeakRepository;
@@ -30,26 +31,29 @@ public class SearchEngineController {
 
     @RequestMapping("/")
     public String welcome(
-            @RequestParam(value = "shift[]", defaultValue = "") double[] shifts,
-            @RequestParam(value = "multiplicity[]", defaultValue = "") String[] multiplicities,
-            @RequestParam(value = "deviation[]", defaultValue = "") double[] deviations,
+            @RequestParam(value = "shift[]", defaultValue = "") ArrayList<Double> shifts,
+            @RequestParam(value = "multiplicity[]", defaultValue = "") ArrayList<String> multiplicities,
+            @RequestParam(value = "deviation[]", defaultValue = "") ArrayList<Double> deviations,
+            @RequestParam(value = "style", defaultValue = "old") String style,
             Map<String, Object> model
     ) {
 
         List<Spectrum> spectrums = new ArrayList<>();
 
-        for (int i=0;i<shifts.length;i++) {
-            List<Double> peaks = peakRepository.findInRange(shifts[i] - deviations[i], shifts[i] + deviations[i])
+        for (int i=0;i<shifts.size();i++) {
+            List<Double> peaks = peakRepository.findInRange(shifts.get(i) - deviations.get(i), shifts.get(i) + deviations.get(i))
                     .stream()
                     .map(Peak::getPeak)
                     .collect(Collectors.toList());
 
-            List<Spectrum> tmp = spectrumRepository.findInPeakList(peaks);
+            if (!peaks.isEmpty()) {
+                List<Spectrum> tmp = spectrumRepository.findInPeakList(peaks);
 
-            if(i == 0) {
-                spectrums.addAll(tmp);
-            } else {
-                spectrums.retainAll(tmp);
+                if(i == 0) {
+                    spectrums.addAll(tmp);
+                } else {
+                    spectrums.retainAll(tmp);
+                }
             }
         }
 
@@ -64,39 +68,22 @@ public class SearchEngineController {
                     return compound;
                 }).collect(Collectors.toList());
 
+        StringJoiner stringJoiner = new StringJoiner("&");
+        IntStream.range(0, shifts.size())
+                .forEach(i -> stringJoiner
+                        .add("shift%5B%5D="+shifts.get(i))
+                        .add("multiplicity%5B%5D="+multiplicities.get(i))
+                        .add("deviation%5B%5D="+deviations.get(i)));
+        String query = stringJoiner.toString();
+
         model.put("compounds", compounds);
         model.put("spectrums", spectrums);
-
-//        Map<Spectrum, Integer> spectrumHash = new HashMap<>();
-//        for(int i=0;i<shifts.length;i++) {
-//            List<Double> peaks = peakRepository.findInRange(shifts[i] - deviations[i], shifts[i] + deviations[i])
-//                    .stream()
-//                    .map(Peak::getPeak)
-//                    .collect(Collectors.toList());
-//            List<Spectrum> spectrums = spectrumRepository.findInPeakList(peaks);
-//
-//            for(Spectrum s: spectrums) {
-//                int times = 0;
-//                if(spectrumHash.containsKey(s)) {
-//                    times = spectrumHash.get(s);
-//                }
-//                spectrumHash.put(s, times + 1);
-//            }
-//        }
-//
-//        Map<Integer, List<Spectrum>> spectrumMap = new TreeMap<>((o1, o2) -> o2 - o1);
-//        spectrumHash.forEach((spectrum, times) -> {
-//            if(!spectrumMap.containsKey(times)) {
-//                spectrumMap.put(times, new ArrayList<>());
-//            }
-//            spectrumMap.get(times).add(spectrum);
-//        });
-//
-//        List<List<Spectrum>> spectrums = new ArrayList<>(spectrumMap.values());
 
         model.put("shifts", shifts);
         model.put("multiplicities", multiplicities);
         model.put("deviations", deviations);
+        model.put("style", style);
+        model.put("query", query);
 
         return "welcome";
     }
