@@ -92,9 +92,9 @@ class Plot:
             row(self.multipletAnalysis.dataTable),
             row(self.multipletAnalysis.title),
             row(
-                column(self.multipletAnalysis.name),
                 column(self.multipletAnalysis.classes),
-                column(self.multipletAnalysis.integral)
+                column(self.multipletAnalysis.integral),
+                column(self.multipletAnalysis.j)
             ),
             row(self.multipletAnalysis.delete),
             row(self.multipletAnalysis.reportTitle),

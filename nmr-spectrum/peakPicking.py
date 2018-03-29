@@ -147,9 +147,10 @@ class PeakPicking(Observer):
 
         # Positive Peaks
         self.peaksIndices = list(self.manualPeakPickingOnData(self.pdata, dimensions))
-
         # Negative Peaks
         self.peaksIndices.extend(self.manualPeakPickingOnData(self.mpdata, dimensions))
+        # Sort Peaks
+        self.peaksIndices = sorted(self.peaksIndices, reverse=True)
 
         if len(self.peaksIndices) > 0:
             self.updateDataValues({

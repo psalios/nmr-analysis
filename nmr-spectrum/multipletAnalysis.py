@@ -18,17 +18,18 @@ class MultipletAnalysis:
 
     MULTIPLET_ERROR = 1000000
     MULTIPLETS = {
-        's': {'table': [1], 'sum': 1},
-        'd': {'table': [1, 1], 'sum': 2},
-        't': {'table': [1, 2, 1], 'sum': 3},
-        'q': {'table': [1, 3, 3, 1], 'sum': 4},
-        'p': {'table': [1, 4, 6, 4, 1], 'sum': 5},
-        'h': {'table': [1, 5, 10, 10, 5, 1], 'sum': 6},
-        'hept': {'table': [1, 6, 15, 20, 15, 6, 1], 'sum': 7},
-        'dd': {'table': [[1, 1], [1, 1]], 'sum': 4},
-        'ddd': {'table': [[1, 1], [1, 1], [1, 1], [1,1]], 'sum': 8},
-        'td': {'table': [[1, 2, 1], [1, 1]], 'sum': 5},
-        'ddt': {'table': [[1, 1], [1, 1], [1, 2, 1]], 'sum': 7}
+        's': {'table': [1], 'sum': 1, 'j': []},
+        'd': {'table': [1, 1], 'sum': 2, 'j': [[0,1]]},
+        't': {'table': [1, 2, 1], 'sum': 3, 'j': [[0,1]]},
+        'q': {'table': [1, 3, 3, 1], 'sum': 4, 'j': [[0,1]]},
+        'p': {'table': [1, 4, 6, 4, 1], 'sum': 5, 'j': [[0,1]]},
+        'h': {'table': [1, 5, 10, 10, 5, 1], 'sum': 6, 'j': [[0,1]]},
+        'hept': {'table': [1, 6, 15, 20, 15, 6, 1], 'sum': 7, 'j': [[0,1]]},
+        'dd': {'table': [[1, 1], [1, 1]], 'sum': 4, 'j': [[0,1], [0,2]]},
+        'ddd': {'table': [[1, 1], [1, 1], [1, 1], [1,1]], 'sum': 8, 'j': [[0,1], [0,2], [0,4]]},
+        'dt': {'table': [[1, 2, 1], [1, 2, 1]], 'sum': 6, 'j': [[0,1], [0,3]]},
+        'td': {'table': [1, 1, 2, 2, 1, 1], 'sum': 6, 'j': [[0,1], [0,2]]},
+        'ddt': {'table': [[1, 2, 1], [1, 2, 1], [1, 2, 1], [1, 2, 1]], 'sum': 12, 'j': [[0,1], [0,3], [0,6]]}
     }
 
     def __init__(self, logger, spectrumId, dic, udic, pdata, dataSource, peakPicking, integration, reference):
@@ -73,14 +74,17 @@ class MultipletAnalysis:
         self.createTool()
 
         self.title = Div(text="<strong>Edit Multiplet:</strong>", width=500)
-        self.name = TextInput(title="Name:", value="", placeholder="Name", width=150, disabled=True)
-        self.name.on_change('value', lambda attr, old, new: self.manualChange('name', new))
+        # self.name = TextInput(title="Name:", value="", placeholder="Name", width=150, disabled=True)
+        # self.name.on_change('value', lambda attr, old, new: self.manualChange('name', new))
 
-        self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","ddd","td","ddt"], width=150, disabled=True)
+        self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","ddd","dt","td","ddt"], width=100, disabled=True)
         self.classes.on_change('value', lambda attr, old, new: self.manualChange('classes', new))
 
-        self.integral = TextInput(title="Integral:", value="", placeholder="Integral", width=150, disabled=True)
+        self.integral = TextInput(title="Integral:", value="", placeholder="Integral", width=175, disabled=True)
         self.integral.on_change('value', lambda attr, old, new: self.changeIntegral(new))
+
+        self.j = TextInput(title='J-list:', value="", width=175, disabled=True)
+        self.j.on_change('value', lambda attr, old, new: self.manualChange('j', new))
 
         self.delete = Button(label="Delete Multiplet", button_type="danger", width=500, disabled=True)
         self.delete.on_click(self.deleteMultiplet)
@@ -117,14 +121,14 @@ class MultipletAnalysis:
             self.selected = ids[0]
 
             # Enable options
-            self.name.disabled = False
-            self.name.value = self.sources['table'].data['name'][self.selected]
-
             self.classes.disabled = False
             self.classes.value = self.sources['table'].data['classes'][self.selected]
 
             self.integral.disabled = False
             self.integral.value = str(self.sources['table'].data['integral'][self.selected])
+
+            self.j.disabled = False
+            self.j.value = self.sources['table'].data['j'][self.selected]
 
             self.delete.disabled = False
 
@@ -143,7 +147,7 @@ class MultipletAnalysis:
             multiplet = self.predictMultiplet(peaks)
 
             patch['classes'].append((pos, multiplet))
-            patch['j'].append((pos, self.calcJ(ppm)))
+            patch['j'].append((pos, self.calcJ(ppm, multiplet)))
         self.sources['table'].patch(patch)
 
     def manualMultipletAnalysis(self, dimensions):
@@ -153,7 +157,7 @@ class MultipletAnalysis:
         if not self.peakPicking.peaksIndices:
             return
 
-        integral = self.integration.calcIntegral(dimensions)
+        integral = round(self.integration.calcIntegral(dimensions), 3)
 
         peaks = [self.pdata[i] for i in self.peakPicking.peaksIndices]
         multiplet = self.predictMultiplet(peaks)
@@ -164,7 +168,7 @@ class MultipletAnalysis:
             'xStop':  [dimensions['x1']],
             'name':   ['A' if not self.sources['table'].data['name'] else chr(ord(self.sources['table'].data['name'][-1])+1)],
             'classes':  [multiplet],
-            'j': [self.calcJ(ppm)],
+            'j': [self.calcJ(ppm, multiplet)],
             'h': [round(integral)],
             'integral': [integral],
             'peaks': [ppm],
@@ -182,8 +186,14 @@ class MultipletAnalysis:
             '2d': {'indices': {}}
         }
 
-    def calcJ(self, ppm):
-        return round(abs(np.ediff1d(ppm).mean()) * getFrequency(self.udic) if len(ppm) > 1 else 0, 1)
+    def calcJ(self, ppm, multiplet):
+        if multiplet in self.MULTIPLETS:
+            js = self.MULTIPLETS[multiplet]['j']
+
+            calc = sorted([round(abs(ppm[j[0]] - ppm[j[1]]) * getFrequency(self.udic), 1) for j in js], reverse=True)
+            return ', '.join(str(j) for j in calc) + ' Hz'
+        return ""
+        # return round(abs(np.ediff1d(ppm).mean()) * getFrequency(self.udic) if len(ppm) > 1 else 0, 1)
 
     def predictMultiplet(self, peaks):
 
@@ -202,31 +212,22 @@ class MultipletAnalysis:
         if isinstance(multiplet[0], list):
             return self.checkMultiplet(multiplet[0], peaks) and self.checkMultiplet(multiplet[1:], peaks)
         else:
-            return self.checkMultiplicity(multiplet, peaks, None)
+            return self.checkMultiplicity(multiplet, peaks)
 
-    def checkMultiplicity(self, multiplet, peaks, one):
+    def checkMultiplicity(self, multiplet, peaks):
 
         if not multiplet:
             return True
 
-        for peak in peaks:
-            if one is None:
-                index = peaks.index(peak)
-                peaks.remove(peak)
-                if self.checkMultiplicity(list(multiplet)[1:], peaks, peak):
-                    return True
-                peaks.insert(index, peak)
-            else:
-                low = one * multiplet[0] - self.MULTIPLET_ERROR
-                high = one * multiplet[0] + self.MULTIPLET_ERROR
-                if peak >= low and peak <= high:
-                    index = peaks.index(peak)
-                    peaks.remove(peak)
-                    if self.checkMultiplicity(list(multiplet)[1:], peaks, one):
-                        return True
-                    peaks.insert(index, peak)
+        for (m, peak) in zip(multiplet[1:], peaks[1:]):
 
-        return False
+            low = m * peaks[0] - self.MULTIPLET_ERROR
+            high = m * peaks[0] + self.MULTIPLET_ERROR
+
+            if peak < low or peak > high:
+                return False
+
+        return True
 
     def dataChanged(self, data):
 
@@ -257,7 +258,7 @@ class MultipletAnalysis:
             text = getMetadata(self.dic, self.udic) + " δ = " + ", ".join(
                 ("{:0.2f}".format(np.median(peaks)) if classes != 'm' else "{:0.2f}-{:0.2f}".format(peaks[-1], peaks[0])) +
                 " ({}, ".format(classes) +
-                ("J={}, ".format(j) if j != 0 and classes != 'm' else "") +
+                ("J={}, ".format(j) if classes != 'm' and classes != 's' else "") +
                 "{:d}H)".format(int(h))
                 for (peaks, classes, j, h) in sorted(zip(data['peaks'], data['classes'], data['j'], data['h']), reverse=True) if h > 0
             ) + "."
@@ -335,9 +336,9 @@ class MultipletAnalysis:
         self.disableOptions()
 
     def disableOptions(self):
-        self.name.disabled = True
         self.classes.disabled = True
         self.integral.disabled = True
+        self.j.disabled = True
         self.delete.disabled = True
 
     def draw(self, plot):
