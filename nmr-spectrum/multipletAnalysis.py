@@ -257,7 +257,7 @@ class MultipletAnalysis:
             text = getMetadata(self.dic, self.udic) + " δ = " + ", ".join(
                 ("{:0.2f}".format(np.median(peaks)) if classes != 'm' else "{:0.2f}-{:0.2f}".format(peaks[-1], peaks[0])) +
                 " ({}, ".format(classes) +
-                ("J={}, ".format(j) if j != 0 else "") +
+                ("J={}, ".format(j) if j != 0 and classes != 'm' else "") +
                 "{:d}H)".format(int(h))
                 for (peaks, classes, j, h) in sorted(zip(data['peaks'], data['classes'], data['j'], data['h']), reverse=True) if h > 0
             ) + "."
