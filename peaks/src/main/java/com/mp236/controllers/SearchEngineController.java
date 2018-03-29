@@ -51,10 +51,6 @@ public class SearchEngineController {
                     .map(Peak::getPeak)
                     .collect(Collectors.toList());
 
-            System.out.println(start + " " + stop + " " + multiplicity);
-            peaks.forEach(System.out::println);
-            System.out.println("-------");
-
             if (!peaks.isEmpty()) {
                 List<Spectrum> tmp = spectrumRepository.findInPeakList(peaks);
 
