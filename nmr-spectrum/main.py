@@ -7,7 +7,7 @@ from logger import *
 from plot import Plot
 
 def readCompound(spectrum):
-    with open("data/compounds/{}.svg".format(spectrum)) as f:
+    with open("../data/compounds/{}.svg".format(spectrum)) as f:
         return f.read();
 
 logger = get_logger()
@@ -19,7 +19,7 @@ except:
     spectrum = 1
 
 compound = readCompound(spectrum)
-path = "data/{}/".format(spectrum)
+path = "../data/{}/".format(spectrum)
 if os.path.isdir(path):
     plot = Plot(logger, spectrum, path, compound)
     plot.create()

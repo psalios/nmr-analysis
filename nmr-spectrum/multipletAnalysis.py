@@ -16,7 +16,7 @@ from bokeh.models.callbacks import CustomJS
 
 class MultipletAnalysis:
 
-    MULTIPLET_ERROR = 100000
+    MULTIPLET_ERROR = 1000000
     MULTIPLETS = {
         's': {'table': [1], 'sum': 1},
         'd': {'table': [1, 1], 'sum': 2},

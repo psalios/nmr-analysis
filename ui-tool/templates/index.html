@@ -8,6 +8,20 @@
     <style>
         {% include 'style.css' %}
     </style>
+
+    <script type="text/javascript">
+        window.addEventListener('message', function(e) {
+            if ('id' in e.data) {
+                var spectrumId = parseInt(e.data.id);
+
+                var button = Bokeh.documents[0].get_model_by_id('myButton');
+                button.data = {
+                    'id': spectrumId
+                };
+                button.clicks++;
+            }
+        });
+    </script>
   </head>
   <body>
     <div class="content">

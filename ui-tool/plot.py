@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import nmrglue as ng
+
 from layouts.customRow import CustomRow
 
 from widgets.customButton import CustomButton
@@ -31,9 +33,12 @@ class Plot:
         self.deviations = deviations
 
         xr = Range1d(start=220, end=-20)
-        yr = Range1d(start=0, end=1e10)
+        # yr = Range1d(start=0, end=1e6)
 
-        self.plot = figure(x_axis_label="ppm", x_range=xr, y_range=yr, tools="save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
+        self.plot = figure(x_axis_label="ppm", x_range=xr, tools="save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
+
+        self.lineSource = ColumnDataSource(data=dict(x=[0], y=[0]))
+        self.plot.line('x', 'y', source=self.lineSource, line_width=2)
 
         # Remove grid from plot
         self.plot.xgrid.grid_line_color = None
@@ -60,8 +65,8 @@ class Plot:
             right='right',
             y=0.5,
             height=1,
-            line_alpha=0.3,
-            fill_alpha=0.3,
+            line_alpha=0.2,
+            fill_alpha=0.2,
             line_color="red",
             fill_color="red"
         )
@@ -92,12 +97,13 @@ class Plot:
 
         self.initSelect()
 
-        self.removeButton = CustomButton()
+        self.drawButton = CustomButton(id='myButton')
+        self.drawButton.on_click(self.drawPlot)
 
         curdoc().add_root(
             row(
                 column(row(self.plot)),
-                column(CustomRow(column(self.removeButton), hide=True))
+                column(CustomRow(column(self.drawButton), hide=True))
             )
         )
 
@@ -111,12 +117,26 @@ class Plot:
         left, right = [], []
         for (shift, deviation) in zip(self.shifts, self.deviations):
             left.append(shift - deviation)
-            right.append(shift + 2 * deviation)
+            right.append(shift + deviation)
 
         self.selectionSource.stream({
             'left': left,
             'right': right
         })
+
+    def drawPlot(self, data):
+        dic, _ = ng.bruker.read("../data/{}".format(data['id']))
+        _, pdata = ng.bruker.read_pdata("../data/{}/pdata/1/".format(data['id']))
+
+        udic = ng.bruker.guess_udic(dic, pdata)
+        uc = ng.fileiobase.uc_from_udic(udic)
+        ppmScale = uc.ppm_scale()
+
+        self.plot.y_range = None
+        self.lineSource.data = {
+            'x': ppmScale,
+            'y': pdata
+        }
 
     def delete(self, ids):
         if ids:

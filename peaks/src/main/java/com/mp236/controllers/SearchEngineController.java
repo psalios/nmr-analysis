@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.mp236.Compound;
 import com.mp236.entities.Peak;
 import com.mp236.entities.PeakRepository;
 import com.mp236.entities.Spectrum;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SearchEngineController {
 
-    private static final String COMPOUND_PATH = "/Users/mpsalios/Documents/sh/nmr-spectrum/nmr-spectrum/data/compounds/";
+    private static final String COMPOUND_PATH = "/Users/mpsalios/Documents/sh/nmr-spectrum/data/compounds/";
+    private static final String PLOT_PATH = "/Users/mpsalios/Documents/sh/nmr-spectrum/data/plot/";
     private static final String COMPOUND_EXTENSION = ".svg";
 
     @Autowired
@@ -57,15 +59,17 @@ public class SearchEngineController {
             }
         }
 
-        List<String> compounds = spectrums.stream()
-                .map(spectrum -> COMPOUND_PATH + spectrum.getSpectrum() + COMPOUND_EXTENSION)
-                .filter(spectrum -> new File(spectrum).exists())
+        List<Compound> compounds = spectrums.stream()
                 .map(spectrum -> {
-                    String compound = "";
-                    try {
-                        compound = String.join("", Files.readAllLines(Paths.get(spectrum), StandardCharsets.UTF_8));
-                    } catch (IOException ignored) { }
-                    return compound;
+                    String path = COMPOUND_PATH + spectrum.getSpectrum() + COMPOUND_EXTENSION;
+
+                    String image = "";
+                    if (new File(path).exists()) {
+                        try {
+                            image = String.join("", Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8));
+                        } catch (IOException ignored) { }
+                    }
+                    return new Compound(spectrum.getSpectrum(), image);
                 }).collect(Collectors.toList());
 
         StringJoiner stringJoiner = new StringJoiner("&");
