@@ -83,7 +83,7 @@ class Plot:
 
             var shift = (geometry['x0'] + geometry['x1']) / 2;
             var deviation = Math.abs(geometry['x1'] - shift);
-            var query = cb_data['query'] + "shift%5B%5D=" + shift + '&multiplicity%5B%5D=m&deviation%5B%5D=' + deviation + '&style=plot';
+            var query = cb_data['query'] + "shift%5B%5D=" + shift + '&multiplicity%5B%5D=any&deviation%5B%5D=' + deviation + '&style=plot';
 
             window.top.location.href = "http://localhost:8080?" + query;
         """)

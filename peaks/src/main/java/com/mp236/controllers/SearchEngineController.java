@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SearchEngineController {
 
     private static final String COMPOUND_PATH = "/Users/mpsalios/Documents/sh/nmr-spectrum/data/compounds/";
-    private static final String PLOT_PATH = "/Users/mpsalios/Documents/sh/nmr-spectrum/data/plot/";
     private static final String COMPOUND_EXTENSION = ".svg";
 
     @Autowired
@@ -43,10 +42,18 @@ public class SearchEngineController {
         List<Spectrum> spectrums = new ArrayList<>();
 
         for (int i=0;i<shifts.size();i++) {
-            List<Double> peaks = peakRepository.findInRange(shifts.get(i) - deviations.get(i), shifts.get(i) + deviations.get(i))
+            double start = shifts.get(i) - deviations.get(i);
+            double stop = shifts.get(i) + deviations.get(i);
+
+            String multiplicity = multiplicities.get(i).equals("any") ? "%" : multiplicities.get(i);
+            List<Double> peaks = peakRepository.findInRange(start, stop, multiplicity)
                     .stream()
                     .map(Peak::getPeak)
                     .collect(Collectors.toList());
+
+            System.out.println(start + " " + stop + " " + multiplicity);
+            peaks.forEach(System.out::println);
+            System.out.println("-------");
 
             if (!peaks.isEmpty()) {
                 List<Spectrum> tmp = spectrumRepository.findInPeakList(peaks);
@@ -56,10 +63,29 @@ public class SearchEngineController {
                 } else {
                     spectrums.retainAll(tmp);
                 }
+            } else {
+                spectrums.clear();
+                break;
             }
         }
 
-        List<Compound> compounds = spectrums.stream()
+        List<Compound> compounds = getCompounds(spectrums);
+
+        String query = paramsQuery(shifts, multiplicities, deviations);
+
+        model.put("compounds", compounds);
+
+        model.put("shifts", shifts);
+        model.put("multiplicities", multiplicities);
+        model.put("deviations", deviations);
+        model.put("style", style);
+        model.put("query", query);
+
+        return "welcome";
+    }
+
+    List<Compound> getCompounds(List<Spectrum> spectrums) {
+        return spectrums.stream()
                 .map(spectrum -> {
                     String path = COMPOUND_PATH + spectrum.getSpectrum() + COMPOUND_EXTENSION;
 
@@ -71,25 +97,16 @@ public class SearchEngineController {
                     }
                     return new Compound(spectrum.getSpectrum(), image);
                 }).collect(Collectors.toList());
+    }
 
+    String paramsQuery(List<Double> shifts, List<String> multiplicities, List<Double> deviations) {
         StringJoiner stringJoiner = new StringJoiner("&");
         IntStream.range(0, shifts.size())
                 .forEach(i -> stringJoiner
                         .add("shift%5B%5D="+shifts.get(i))
                         .add("multiplicity%5B%5D="+multiplicities.get(i))
                         .add("deviation%5B%5D="+deviations.get(i)));
-        String query = stringJoiner.toString();
-
-        model.put("compounds", compounds);
-        model.put("spectrums", spectrums);
-
-        model.put("shifts", shifts);
-        model.put("multiplicities", multiplicities);
-        model.put("deviations", deviations);
-        model.put("style", style);
-        model.put("query", query);
-
-        return "welcome";
+        return stringJoiner.toString();
     }
 
 }

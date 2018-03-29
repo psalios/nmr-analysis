@@ -42,18 +42,19 @@
                                 <td class="text-center"><input class="form-control" type="number" name="shift[]" step="0.01" th:value="${shift}"/></td>
                                 <td class="text-center">
                                     <select class="selectpicker" name="multiplicity[]">
-                                        <option value="m">m</option>
-                                        <option value="s">s</option>
-                                        <option value="d">d</option>
-                                        <option value="t">t</option>
-                                        <option value="q">q</option>
-                                        <option value="p">p</option>
-                                        <option value="h">h</option>
-                                        <option value="hept">hept</option>
-                                        <option value="dd">dd</option>
-                                        <option value="td">td</option>
-                                        <option value="ddt">ddt</option>
-                                        <option value="ddd">ddd</option>
+                                        <option value="any" th:selected="${multiplicities[iter.index] == 'any'}">any</option>
+                                        <option value="m" th:selected="${multiplicities[iter.index] == 'm'}">m</option>
+                                        <option value="s" th:selected="${multiplicities[iter.index] == 's'}">s</option>
+                                        <option value="d" th:selected="${multiplicities[iter.index] == 'd'}">d</option>
+                                        <option value="t" th:selected="${multiplicities[iter.index] == 't'}">t</option>
+                                        <option value="q" th:selected="${multiplicities[iter.index] == 'q'}">q</option>
+                                        <option value="p" th:selected="${multiplicities[iter.index] == 'p'}">p</option>
+                                        <option value="h" th:selected="${multiplicities[iter.index] == 'h'}">h</option>
+                                        <option value="hept" th:selected="${multiplicities[iter.index] == 'hept'}">hept</option>
+                                        <option value="dd" th:selected="${multiplicities[iter.index] == 'dd'}">dd</option>
+                                        <option value="td" th:selected="${multiplicities[iter.index] == 'td'}">td</option>
+                                        <option value="ddt" th:selected="${multiplicities[iter.index] == 'ddt'}">ddt</option>
+                                        <option value="ddd" th:selected="${multiplicities[iter.index] == 'ddd'}">ddd</option>
                                     </select>
                                 </td>
                                 <td class="text-center"><input class="form-control" type="number" name="deviation[]" step="0.01" th:value="${deviations[iter.index]}"/></td>
@@ -118,6 +119,7 @@
             '<td class="text-center"><input class="form-control" type="number" name="shift[]" step="0.01"/></td>' +
             '<td class="text-center">' +
                 '<select class="selectpicker" name="multiplicity[]">' +
+                    '<option value="any">any</option>' +
                     '<option value="m">m</option>' +
                     '<option value="s">s</option>' +
                     '<option value="d">d</option>' +
