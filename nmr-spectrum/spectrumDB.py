@@ -8,11 +8,11 @@ class SpectrumDB:
 
         try:
             with conn.cursor() as cursor:
-                cursor.execute("REPLACE INTO spectrum SET spectrum=%s", (h,))
+                cursor.execute("INSERT INTO spectrum SET spectrum=%s", (h,))
             conn.commit()
 
             with conn.cursor() as cursor:
-                cursor.execute("SELECT id FROM spectrum WHERE spectrum=%s", (h,))
+                cursor.execute("SELECT id FROM spectrum WHERE spectrum=%s ORDER BY date DESC LIMIT 1", (h,))
                 return int(cursor.fetchone()[0])
         finally:
             conn.close()
