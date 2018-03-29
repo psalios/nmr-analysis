@@ -16,7 +16,7 @@ from bokeh.plotting import figure
 from bokeh.layouts import row, column
 from bokeh.models.annotations import BoxAnnotation
 from bokeh.models.callbacks import CustomJS
-from bokeh.models.glyphs import HBar
+from bokeh.models.glyphs import HBar, Text
 from bokeh.models.ranges import Range1d
 from bokeh.models.sources import ColumnDataSource
 from bokeh.io import curdoc
@@ -33,7 +33,6 @@ class Plot:
         self.deviations = deviations
 
         xr = Range1d(start=220, end=-20)
-        # yr = Range1d(start=0, end=1e6)
 
         self.plot = figure(x_axis_label="ppm", x_range=xr, tools="save,reset", plot_width=self.WIDTH, plot_height=self.HEIGHT)
 
@@ -71,6 +70,17 @@ class Plot:
             fill_color="red"
         )
         renderer = self.plot.add_glyph(self.selectionSource, rect)
+        renderer.y_range_name = "box"
+
+        self.labelSource = ColumnDataSource(data=dict(x=[], y=[], text=[]))
+        label = Text(
+            x='x',
+            y='y',
+            text='text',
+            text_align='center',
+            text_font_size="10pt"
+        )
+        renderer = self.plot.add_glyph(self.labelSource, label)
         renderer.y_range_name = "box"
 
         removeTool = CustomTapTool()
@@ -115,13 +125,24 @@ class Plot:
 
     def initSelect(self):
         left, right = [], []
-        for (shift, deviation) in zip(self.shifts, self.deviations):
+        labelX, labelY, labelText = [], [], []
+        for (shift, multiplicity, deviation) in zip(self.shifts, self.multiplicities, self.deviations):
             left.append(shift - deviation)
             right.append(shift + deviation)
 
+            labelX.append(shift)
+            labelY.append(0.08)
+            labelText.append(multiplicity)
+
         self.selectionSource.stream({
-            'left': left,
+            'left':  left,
             'right': right
+        })
+
+        self.labelSource.stream({
+            'x':    labelX,
+            'y':    labelY,
+            'text': labelText
         })
 
     def drawPlot(self, data):
