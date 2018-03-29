@@ -31,7 +31,7 @@ CREATE TABLE `peaks` (
   UNIQUE KEY `unique_peak_spectrum` (`peak`,`spectrum_id`),
   KEY `fk_peaks_spectrum` (`spectrum_id`),
   CONSTRAINT `fk_peaks_spectrum` FOREIGN KEY (`spectrum_id`) REFERENCES `spectrum` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25051 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25091 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,9 +45,8 @@ CREATE TABLE `spectrum` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `spectrum` int(11) DEFAULT NULL,
   `date` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `spectrum` (`spectrum`)
-) ENGINE=InnoDB AUTO_INCREMENT=880 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=896 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -59,4 +58,4 @@ CREATE TABLE `spectrum` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-28  4:43:58
+-- Dump completed on 2018-03-29  6:04:19
