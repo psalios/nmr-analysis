@@ -154,6 +154,7 @@ class Plot:
                     )
                 )
             )
+            curdoc().title = "NMR Analysis Tool - " + str(self.id)
         except NameError:
             print("Please create plot first")
 
