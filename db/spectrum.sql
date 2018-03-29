@@ -1,0 +1,6 @@
+CREATE TABLE `spectrum` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `spectrum` int(11) DEFAULT NULL,
+  `date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=889 DEFAULT CHARSET=latin1;
