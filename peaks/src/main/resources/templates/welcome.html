@@ -80,7 +80,6 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-center">
-                        <!-- ?bokeh-session-id='+${bokehSessionID} -->
                         <iframe id="bokehIframe" th:src="'http://localhost:5006/ui-tool?'+${query}" width="810" height="610" frameBorder="0"></iframe>
                     </div>
                 </div>
@@ -95,7 +94,6 @@
                 <div th:if="${#lists.size(compounds) &gt; iter.index}" class="col-md-4" th:utext="${compounds[iter.index].getImage()}" th:onclick="'drawCompound('+${compounds[iter.index].getId()}+');'"></div>
                 <div th:if="${#lists.size(compounds) &gt; (iter.index + 1)}" class="col-md-4" th:utext="${compounds[iter.index+1].getImage()}" th:onclick="'drawCompound('+${compounds[iter.index+1].getId()}+');'"></div>
                 <div th:if="${#lists.size(compounds) &gt; (iter.index + 2)}" class="col-md-4" th:utext="${compounds[iter.index+2].getImage()}" th:onclick="'drawCompound('+${compounds[iter.index+2].getId()}+');'"></div>
-                <!--<div th:if="${#lists.size(compounds) &gt; (iter.index + 3)}" class="col-md-3" th:utext="${compounds[iter.index+3].getImage()}" th:onclick="'drawCompound('+${compounds[iter.index+3].getId()}+');'"></div>-->
             </div>
         </th:block>
     </div>
