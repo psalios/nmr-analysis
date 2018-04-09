@@ -74,8 +74,6 @@ class MultipletAnalysis:
         self.createTool()
 
         self.title = Div(text="<strong>Edit Multiplet:</strong>", width=500)
-        # self.name = TextInput(title="Name:", value="", placeholder="Name", width=150, disabled=True)
-        # self.name.on_change('value', lambda attr, old, new: self.manualChange('name', new))
 
         self.classes = Select(title="Class:", options=["m","s","d","t","q","p","h","hept","dd","ddd","dt","td","ddt"], width=100, disabled=True)
         self.classes.on_change('value', lambda attr, old, new: self.manualChange('classes', new))
@@ -193,7 +191,6 @@ class MultipletAnalysis:
             calc = sorted([round(abs(ppm[j[0]] - ppm[j[1]]) * getFrequency(self.udic), 1) for j in js], reverse=True)
             return ', '.join(str(j) for j in calc) + ' Hz'
         return ""
-        # return round(abs(np.ediff1d(ppm).mean()) * getFrequency(self.udic) if len(ppm) > 1 else 0, 1)
 
     def predictMultiplet(self, peaks):
 
